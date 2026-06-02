@@ -1,0 +1,42 @@
+# BARQ Joint Conventions
+# This file defines the reference frame contract for the entire codebase.
+# Nothing should hardcode these assumptions — always import from here.
+
+# World / body frame (ROS REP-103)
+# X — forward (nose of robot)
+# Y — left
+# Z — up
+
+leg_names: [FL, FR, RL, RR]
+joint_names: [coxa, femur, tibia]
+
+# Full joint list in order (matches servo ID order)
+joints:
+  - FL_coxa
+  - FL_femur
+  - FL_tibia
+  - FR_coxa
+  - FR_femur
+  - FR_tibia
+  - RL_coxa
+  - RL_femur
+  - RL_tibia
+  - RR_coxa
+  - RR_femur
+  - RR_tibia
+
+# Zero position: robot standing neutral, all legs straight down
+# Positive directions (after applying direction multiplier from robot_params.yaml):
+#   coxa  — leg swings away from body centreline (abduction)
+#   femur — leg swings forward
+#   tibia — lower leg swings forward (knee extends)
+
+# Mirroring convention (Option A):
+#   All joints commanded in semantic/symmetric frame.
+#   direction multiplier in robot_params.yaml absorbs physical mirroring.
+#   IK, gait, and RL policy never handle mirroring directly.
+
+# Rotation axes (in body frame):
+#   coxa  — rotates about X
+#   femur — rotates about Y
+#   tibia — rotates about Y
