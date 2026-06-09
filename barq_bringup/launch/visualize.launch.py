@@ -25,7 +25,7 @@ def generate_launch_description():
     desc_share = get_package_share_directory('barq_description')
     bringup_share = get_package_share_directory('barq_bringup')
 
-    urdf_path = os.path.join(desc_share, 'urdf', 'barq.urdf')
+    urdf_path = os.path.join(desc_share, 'urdf', 'barq.urdf.xacro')
     rviz_path = os.path.join(bringup_share, 'rviz', 'barq.rviz')
 
     # xacro passes a plain URDF through unchanged; keeps us future-proof if we

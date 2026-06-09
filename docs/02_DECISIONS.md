@@ -3,6 +3,17 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-006 — ros2_control: xacro `mode` arg + mock_components + JointGroupPositionController
+**Date:** 2026-06-10 · **Status:** Accepted
+Description is now `barq.urdf.xacro` with a `mode` arg (mock|gazebo|real); only the `<hardware>` plugin
+differs per mode (`mock_components/GenericSystem` now). Command path is a single
+`position_controllers/JointGroupPositionController` over all 12 joints (Float64MultiArray on
+`/joint_group_position_controller/commands`) — the topic IK (2C) and gait (2D) will publish to.
+**Why:** matches the "Mock->Sim->Real, only the hardware interface changes" principle; one grouped
+position command is the simplest fit for IK/gait output. Macro params are `lower`/`upper`, never
+`min`/`max` (those shadow xacro builtins and break the launch — see CHANGELOG 2026-06-10).
+
+---
 ## D-005 — Update robot_params.yaml from the URDF, not CAD
 **Date:** 2026-06-09 · **Status:** Accepted
 The file shipped with placeholder CAD values (body 0.218x0.108x0.05, coxa/femur/tibia 0.04/0.08/0.11,

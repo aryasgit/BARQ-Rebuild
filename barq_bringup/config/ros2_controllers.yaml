@@ -1,0 +1,29 @@
+# BARQ controllers (Stage 2B) — loaded by controller_manager (ros2_control_node).
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz (mock loop; the real Teensy loop runs at 500 Hz)
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_group_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+# Commands all 12 joints' position interfaces from a single Float64MultiArray on
+# /joint_group_position_controller/commands (order = the list below).
+# This is the topic the IK node (2C) / gait node (2D) will publish to.
+joint_group_position_controller:
+  ros__parameters:
+    joints:
+      - FL_hip_joint
+      - FL_knee_joint
+      - FL_ankle_joint
+      - FR_hip_joint
+      - FR_knee_joint
+      - FR_ankle_joint
+      - RL_hip_joint
+      - RL_knee_joint
+      - RL_ankle_joint
+      - RR_hip_joint
+      - RR_knee_joint
+      - RR_ankle_joint

@@ -25,6 +25,12 @@ How autonomous should commits/pushes be? **-> asked 2026-06-09.**
 
 ---
 ## Non-blocking notes (track, resolve opportunistically)
+## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
+ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the
+container. Harmless for mock/sim. For real hardware: add RT privileges to the container
+(`--cap-add=SYS_NICE --ulimit rtprio=99`, maybe a PREEMPT_RT-aware setup) so the control loop can hit
+its rate reliably.
+
 ## Q-004 — Coxa visual orientation front vs rear  (likely OK)
 Coxa visual `rpy` differs front/rear on the same side (FL roll=pi vs RL roll=0; FR roll=0 vs RR roll=pi).
 In the 2A RViz render the stance looks correct and symmetric — no obvious mirror error. Low priority;

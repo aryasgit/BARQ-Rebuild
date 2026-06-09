@@ -1,32 +1,35 @@
 # BARQ — Current Status
 
-**Last updated:** 2026-06-09
-**Current stage:** 2A complete -> starting 2B
+**Last updated:** 2026-06-10
+**Current stage:** 2B complete -> starting 2C (IK)
 
 ## Snapshot
-**BARQ renders correctly in RViz**, viewed from the Mac over VNC. All meshes load, TF publishes,
-and the 12 joints are driveable from the joint_state_publisher_gui sliders. Stage 2A is done.
+The full **ros2_control loop runs against mock hardware**: command 12 joint positions on a topic ->
+they flow through controller_manager -> `/joint_states` -> TF -> RViz. Verified headless. This is the
+exact machinery that will drive the real servos later (only the `<hardware>` plugin swaps).
 
 ## Done
-- [x] 5-package workspace; URDF (13 links / 12 joints, valid tree) + 6 meshes received & verified.
-- [x] URDF mesh refs -> `package://`; barq_description installs urdf/meshes/config; robot_params updated.
-- [x] `visualize.launch.py` + `barq.rviz`; `colcon build` green (5/5).
-- [x] Remote display solved: Jetson is headless; forced `:0` to a real mode (xorg.conf ConnectedMonitor
-      on DP-0) + x11vnc on `:0`, viewed via macOS Screen Sharing (`vnc://barq.local:5900`).
-- [x] **RViz visual check PASSED** — body + 4 legs + feet render, geometry looks correct, GPU GL 4.6.
+- [x] **Stage 2A** — BARQ renders in RViz over VNC; 12 joints driveable. (commit `c04a3a8`, branch `stage-2`)
+- [x] **Stage 2B** — ros2_control mock skeleton:
+  - `barq.urdf.xacro` with a `<ros2_control>` block (`mode` = mock|gazebo|real; mock = `mock_components/GenericSystem`)
+  - `ros2_controllers.yaml`: `joint_state_broadcaster` + `joint_group_position_controller` (all 12 joints)
+  - `control.launch.py` (rsp + controller_manager + spawners + optional rviz)
+  - Verified: 4 nodes up, both controllers ACTIVE, commanded pose appears in `/joint_states`.
 
 ## Next
-- [ ] Stage 2B — ros2_control mock skeleton (ros2_control.yaml + controller_manager + JointStateBroadcaster).
-- [ ] Optional: bump VNC desktop 1024x768 -> 1600x900 (needs a real EDID blob; see CHANGELOG).
-- [ ] Resolve open questions Q-001..Q-003 (tibia limit, simulator, git policy) when convenient.
+- [ ] **Stage 2C — IK node**: analytical 3-DOF IK (coxa/femur/tibia), unit-tested, publishing to
+      `/joint_group_position_controller/commands`; verify a foot target -> correct pose in RViz.
+- [ ] Then 2D (gait), 2E (physics sim).
+- [ ] Parked decisions: Q-001 tibia limit (**matters at 2C**), Q-002 simulator (2E), Q-003 git push.
 
-## How to view RViz (current working setup)
-1. Jetson: VNC server runs on `:0` (restart with `~/setup_vnc.sh` if it ever drops).
-2. RViz runs in a detached container `barq_rviz` (stop: `docker stop barq_rviz`). Or run it interactively:
-   `DISPLAY=:0 ~/run_barq_gui.sh` then `ros2 launch barq_bringup visualize.launch.py`.
-3. Mac: Finder -> Cmd-K -> `vnc://barq.local:5900` (or `vnc://10.79.88.160:5900`).
+## How to run
+- **Viz only (GUI sliders):** `ros2 launch barq_bringup visualize.launch.py`
+- **Full control loop:** `ros2 launch barq_bringup control.launch.py`
+  - `ros2 control list_controllers`
+  - `ros2 topic pub --once /joint_group_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0,0.3,-0.6, 0,0.3,-0.6, 0,0.3,-0.6, 0,0.3,-0.6]}"`
+- **Over VNC:** run it inside `DISPLAY=:0 ~/run_barq_gui.sh` (or a detached container), view `vnc://barq.local:5900`.
 
-## Display facts (headless Jetson)
-- Orin DP-0/DP-1 disconnected; NVIDIA Tegra driver. `~/fix_display.sh` forces DP-0 connected at a mode.
-- Currently **1024x768** (driver's default mode pool without EDID). 1600x900 needs an EDID blob.
-- Host screenshots of direct-GL windows come back black — verify via VNC, not host screenshots.
+## Notes
+- `/joint_states` is NOT in FL/FR/RL/RR order — always key by joint **name** (Q-005).
+- ros2_control_node logs a benign "Could not enable FIFO RT scheduling" warning under Docker (Q-009).
+- Headless Jetson display is 1024x768 (see memory `barq-remote-viz` / earlier changelog).

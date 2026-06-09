@@ -3,6 +3,25 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-10 — Stage 2B: ros2_control mock loop (verified)
+Renamed `barq.urdf` -> `barq.urdf.xacro` (added `xmlns:xacro`, a `mode` arg) and appended a
+`<ros2_control>` system block: `mock_components/GenericSystem` (mode=mock), all 12 joints with a
+position command interface + position/velocity state interfaces. Added
+`barq_bringup/config/ros2_controllers.yaml` (joint_state_broadcaster + joint_group_position_controller
+over all 12 joints) and `control.launch.py`. Pointed `visualize.launch.py` at the `.xacro`; `setup.py`
+installs `config/`; `package.xml` gains controller_manager / joint_state_broadcaster /
+position_controllers / ros2controlcli deps.
+
+**Gotcha fixed:** macro params named `min`/`max` shadow xacro builtins -> "redefining global symbol"
+warnings on **stderr** -> the launch `Command` substitution treats any stderr as failure and aborts
+before a single node starts. Renamed params to `lower`/`upper` (xacro now emits 0 bytes stderr).
+
+**Verified headless (mode=mock):** 4 nodes up; `joint_state_broadcaster` +
+`joint_group_position_controller` both ACTIVE; publishing `{hips=0, knees=+0.3, ankles=-0.6}` to
+`/joint_group_position_controller/commands` -> `/joint_states` reflects it. Benign: ros2_control_node
+can't set FIFO RT scheduling under Docker (Q-009).
+
+---
 ## 2026-06-09 — Stage 2A DONE: BARQ rendering in RViz over VNC
 After `fix_display.sh`, `:0` came up at 1024x768 with DP-0 forced connected (no more black).
 `xrandr --addmode` for 1600x900 was rejected by the NVIDIA driver (no EDID) -> stayed at 1024x768

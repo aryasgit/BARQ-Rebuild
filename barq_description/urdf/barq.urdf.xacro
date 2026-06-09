@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<robot name="barq">
+<robot name="barq" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <material name="dark_grey">  <color rgba="0.20 0.20 0.20 1.0"/> </material>
   <material name="light_grey"> <color rgba="0.65 0.65 0.65 1.0"/> </material>
@@ -313,5 +313,42 @@
       <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
     </inertial>
   </link>
+
+  <!-- ═══════════════ ros2_control (Stage 2B) ═══════════════ -->
+  <!-- mode: mock (now) | gazebo (2E) | real (Stage 4). Only the <hardware> plugin changes. -->
+  <xacro:arg name="mode" default="mock"/>
+
+  <xacro:macro name="barq_joint_if" params="name lower upper">
+    <joint name="${name}">
+      <command_interface name="position">
+        <param name="min">${lower}</param>
+        <param name="max">${upper}</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </xacro:macro>
+
+  <ros2_control name="barq_system" type="system">
+    <hardware>
+      <xacro:if value="${'$(arg mode)' == 'mock'}">
+        <plugin>mock_components/GenericSystem</plugin>
+      </xacro:if>
+      <!-- mode=gazebo (Stage 2E) and mode=real (Stage 4) plugins slot in here -->
+    </hardware>
+
+    <xacro:barq_joint_if name="FL_hip_joint"   lower="-0.785" upper="0.785"/>
+    <xacro:barq_joint_if name="FL_knee_joint"  lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="FL_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="FR_hip_joint"   lower="-0.785" upper="0.785"/>
+    <xacro:barq_joint_if name="FR_knee_joint"  lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="FR_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="RL_hip_joint"   lower="-0.785" upper="0.785"/>
+    <xacro:barq_joint_if name="RL_knee_joint"  lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="RL_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="RR_hip_joint"   lower="-0.785" upper="0.785"/>
+    <xacro:barq_joint_if name="RR_knee_joint"  lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="RR_ankle_joint" lower="-1.57"  upper="1.57"/>
+  </ros2_control>
 
 </robot>
