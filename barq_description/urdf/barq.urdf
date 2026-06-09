@@ -1,0 +1,317 @@
+<?xml version="1.0" ?>
+<robot name="barq">
+
+  <material name="dark_grey">  <color rgba="0.20 0.20 0.20 1.0"/> </material>
+  <material name="light_grey"> <color rgba="0.65 0.65 0.65 1.0"/> </material>
+
+  <!-- BASE LINK -->
+  <link name="base_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/base_link.dae" scale="1 1 1"/></geometry>
+      <material name="light_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry><box size="0.258 0.117 0.085"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.95"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="3.0e-3" ixy="0" ixz="0" iyy="5.5e-3" iyz="0" izz="6.5e-3"/>
+    </inertial>
+  </link>
+
+  <!-- ═══════════════ FL LEG ═══════════════ -->
+  <joint name="FL_hip_joint" type="revolute">
+    <parent link="base_link"/>    <child link="FL_coxa_link"/>
+    <origin rpy="0 0 0" xyz="0.108484 0.0171913 0.00022012"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="FL_coxa_link">
+    <visual>
+      <origin rpy="3.14159265358979 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="3.14159265358979 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.077"/>
+      <origin rpy="0 0 0" xyz="0.00872 0.0215346 0"/>
+      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="FL_knee_joint" type="revolute">
+    <parent link="FL_coxa_link"/>    <child link="FL_femur_link"/>
+    <origin rpy="0 0 0" xyz="0.01744 0.0430692 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="FL_femur_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0.009472 0.01769995 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <joint name="FL_ankle_joint" type="revolute">
+    <parent link="FL_femur_link"/>    <child link="FL_tibia_link"/>
+    <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="FL_tibia_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <!-- ═══════════════ RL LEG ═══════════════ -->
+  <joint name="RL_hip_joint" type="revolute">
+    <parent link="base_link"/>    <child link="RL_coxa_link"/>
+    <origin rpy="0 0 0" xyz="-0.108371 0.0167905 0.00022176"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="RL_coxa_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.077"/>
+      <origin rpy="0 0 0" xyz="-0.00872 0.0215346 0"/>
+      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="RL_knee_joint" type="revolute">
+    <parent link="RL_coxa_link"/>    <child link="RL_femur_link"/>
+    <origin rpy="0 0 0" xyz="-0.01744 0.0430692 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="RL_femur_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0.009472 0.01769995 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <joint name="RL_ankle_joint" type="revolute">
+    <parent link="RL_femur_link"/>    <child link="RL_tibia_link"/>
+    <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="RL_tibia_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <!-- ═══════════════ FR LEG ═══════════════ -->
+  <joint name="FR_hip_joint" type="revolute">
+    <parent link="base_link"/>    <child link="FR_coxa_link"/>
+    <origin rpy="0 0 0" xyz="0.108484 -0.0148092 0.00022176"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="FR_coxa_link">
+    <visual>
+      <origin rpy="0 0 1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.077"/>
+      <origin rpy="0 0 0" xyz="0.00872 -0.0215346 0"/>
+      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="FR_knee_joint" type="revolute">
+    <parent link="FR_coxa_link"/>    <child link="FR_femur_link"/>
+    <origin rpy="0 0 0" xyz="0.01744 -0.0430692 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="FR_femur_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0.00947205 -0.01769995 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <joint name="FR_ankle_joint" type="revolute">
+    <parent link="FR_femur_link"/>    <child link="FR_tibia_link"/>
+    <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="FR_tibia_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <!-- ═══════════════ RR LEG ═══════════════ -->
+  <joint name="RR_hip_joint" type="revolute">
+    <parent link="base_link"/>    <child link="RR_coxa_link"/>
+    <origin rpy="0 0 0" xyz="-0.108371 -0.01521 0.00022012"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="RR_coxa_link">
+    <visual>
+      <origin rpy="3.14159265358979 0 1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="3.14159265358979 0 1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.077"/>
+      <origin rpy="0 0 0" xyz="-0.00872 -0.0215346 0"/>
+      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="RR_knee_joint" type="revolute">
+    <parent link="RR_coxa_link"/>    <child link="RR_femur_link"/>
+    <origin rpy="0 0 0" xyz="-0.01744 -0.0430692 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="RR_femur_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0.00947205 -0.01769995 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+  <joint name="RR_ankle_joint" type="revolute">
+    <parent link="RR_femur_link"/>    <child link="RR_tibia_link"/>
+    <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+  <link name="RR_tibia_link">
+    <visual>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+      <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
+      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+    </inertial>
+  </link>
+
+</robot>

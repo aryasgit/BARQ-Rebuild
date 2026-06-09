@@ -4,22 +4,25 @@
 # TODO: Update link lengths and body dimensions once CAD is finalised.
 
 body:
-  length: 0.218        # TODO: update from final CAD
-  width: 0.108         # TODO: update from final CAD
-  height: 0.05         # TODO: update from final CAD
-  mass: 0.0            # TODO: fill in once weighed
+  length: 0.258        # from URDF base_link collision box
+  width:  0.117        # from URDF base_link collision box
+  height: 0.085        # from URDF base_link collision box
+  mass:   0.95         # body only; total incl. legs ~= 1.66 kg
 
 legs:
-  coxa_length:  0.04   # TODO: measure from CAD
-  femur_length: 0.08   # TODO: measure from CAD
-  tibia_length: 0.11   # TODO: measure from CAD
+  # Link lengths derived from URDF joint origins (see docs/00_OVERVIEW.md)
+  coxa_length:  0.0465   # sqrt(0.01744^2 + 0.0430692^2)
+  femur_length: 0.107    # sqrt(0.018944^2 + 0.0324^2 + 0.1^2)
+  tibia_length: 0.100    # ankle -> foot (Z)
 
-  # Hip joint offsets from body centre (x forward, y left, z up)
+  # Hip joint offsets from body centre (x forward, y left, z up).
+  # Exact values from URDF joint origins.
+  # NOTE: left/right Y offsets are NOT symmetric (~17mm L vs ~15mm R) -- as-designed.
   hip_offsets:
-    FL: [ 0.109,  0.054, 0.0]   # TODO: update from CAD
-    FR: [ 0.109, -0.054, 0.0]
-    RL: [-0.109,  0.054, 0.0]
-    RR: [-0.109, -0.054, 0.0]
+    FL: [ 0.108484,  0.0171913, 0.00022012]
+    FR: [ 0.108484, -0.0148092, 0.00022176]
+    RL: [-0.108371,  0.0167905, 0.00022176]
+    RR: [-0.108371, -0.01521,   0.00022012]
 
 servos:
   # ID assignments: legs in FL/FR/RL/RR order, joints in coxa/femur/tibia order
