@@ -18,7 +18,8 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
+                            SetEnvironmentVariable)
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
@@ -42,6 +43,10 @@ def generate_launch_description():
     sim_time = {'use_sim_time': True}
 
     return LaunchDescription([
+        # Let Gazebo resolve package://barq_description/... mesh URIs (GUI rendering).
+        SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH',
+                               os.path.dirname(desc_share)),
+
         DeclareLaunchArgument('gui', default_value='false',
                               description='Run the Gazebo GUI (default headless server)'),
         DeclareLaunchArgument('gait', default_value='false',
@@ -54,10 +59,11 @@ def generate_launch_description():
             launch_arguments={'gz_args': f'-r -s -v 3 {world}'}.items(),
             condition=UnlessCondition(gui),
         ),
+        # GUI renderer forced to classic ogre: ogre2 renders black on the Jetson's GL (Tegra).
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(rosgz_share, 'launch', 'gz_sim.launch.py')),
-            launch_arguments={'gz_args': f'-r -v 3 {world}'}.items(),
+            launch_arguments={'gz_args': f'-r -v 3 --render-engine-gui ogre {world}'}.items(),
             condition=IfCondition(gui),
         ),
 

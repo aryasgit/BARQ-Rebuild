@@ -46,6 +46,12 @@ stance (0, 1.047531, -1.928768); spawn z 0.17. gait_planner gains `forward_sign`
   slip — tuning headroom for later).
 19 unit tests pass. Stray ws-root demo files cleaned.
 
+**GUI over VNC (Jetson/Tegra specifics):** Gazebo GUI rendered BLACK with the default ogre2
+engine -> `--render-engine-gui ogre` in sim.launch.py fixes it. Robot meshes were invisible in
+the GUI (collisions fine) until `IGN_GAZEBO_RESOURCE_PATH` was set to the description share's
+parent so `package://barq_description/...` URIs resolve. Camera: `ign service /gui/follow`
+(+ /gui/follow/offset) locks the view onto barq. Verified: full meshes render, shadow, RTF ~100%.
+
 ---
 ## 2026-06-10 — Deep crouch: tibia judgment limit -2.2, stand_height 0.115; first push
 Team confirmed the ST3215s are **360-deg servos — no hard mechanical stop**; all joint limits are
