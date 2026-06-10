@@ -29,10 +29,13 @@ the RViz reversal session). `forward_sign=+1`; cmd_vel +x drives the body toward
 leg labels MATCH physical quadrants — the long-deferred rename is unnecessary. The earlier
 "head is at -X" mesh reading was wrong (treadmill-perception confusion in pinned-body RViz).
 
-## Q-015 — Lidar selection: RPLidar A2M12 vs lighter/3D alternatives (research in flight)
-Aryaman is leaning A2M12. Research subagent dispatched (specs/weight-on-2.45kg-robot, ROS2 Humble
-driver, 2D-on-walking-robot mitigations, alternatives, sim-first Gazebo integration). Decide after
-the report; then add the equivalent sensor to the SIM first (gpu_lidar + bridge + slam_toolbox).
+## Q-015 — Lidar selection · report in (docs/research/2026-06-11-lidar-selection.md), decision pending
+Research verdict: A2M12 works (best driver story) but is the wrong mass class for a 2.45 kg robot
+(190 g high-mounted ≈ 9% body mass, ~$229). **Recommended: LDROBOT STL-27L** (~45 g, 25 m,
+21.6 kHz, ~$142, strictly better specs) or LD19/D500 budget (~47 g). 3D Unitree L1 deferred.
+Either way: nose depth camera later for the below-plane hazard zone (everything under 0.22 m).
+**Jetson prep found live: `sudo apt remove brltty` (CP2102 hijacker) + add user to dialout.**
+Sim integration plan is lidar-agnostic and ready (§5 of the report) — build it now.
 
 ## Q-014 — Exact body CoM coordinates (Aryaman, pending)
 The base_link inertial origin is currently (0,0,0) = geometric center. Aryaman shifted the physical
