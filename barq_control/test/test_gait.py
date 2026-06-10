@@ -21,13 +21,24 @@ def _legxyz(out, leg):
 
 def test_zero_command_holds_neutral_stance():
     """No velocity command -> feet at the exact-model neutral stance (no stepping)."""
-    out = foot_targets(0.37, 0.0, 0.0, 0.0, HIPS, period=PERIOD, stand_height=0.13)
+    out = foot_targets(0.37, 0.0, 0.0, 0.0, HIPS, period=PERIOD, stand_height=0.13,
+                       rear_raise=0.0)
     for leg in LEGS:
         hx, hy, hz = HIPS[leg]
         x, y, z = _legxyz(out, leg)
         assert x == pytest.approx(hx + kx_of(leg), abs=1e-12)
         assert y == pytest.approx(hy + side_of(hy) * LAT, abs=1e-12)
         assert z == pytest.approx(hz - 0.13, abs=1e-12)
+
+
+def test_rear_raise_stance_trim():
+    """Rear feet sit rear_raise deeper than front (nose-down load-forward trim, D-016)."""
+    out = foot_targets(0.0, 0.0, 0.0, 0.0, HIPS, stand_height=0.13, rear_raise=0.02)
+    z = {leg: _legxyz(out, leg)[2] - HIPS[leg][2] for leg in LEGS}
+    assert z['FL'] == pytest.approx(-0.13, abs=1e-12)
+    assert z['FR'] == pytest.approx(-0.13, abs=1e-12)
+    assert z['RL'] == pytest.approx(-0.15, abs=1e-12)
+    assert z['RR'] == pytest.approx(-0.15, abs=1e-12)
 
 
 def test_periodicity():
@@ -40,7 +51,7 @@ def test_periodicity():
 def test_diagonal_pairs_in_sync():
     """FL+RR share a phase and FR+RL share the opposite phase (trot)."""
     for t in (0.0, 0.05, 0.1, 0.18, 0.25, 0.33, 0.45):
-        out = foot_targets(t, 0.12, 0.0, 0.0, HIPS, period=PERIOD)
+        out = foot_targets(t, 0.12, 0.0, 0.0, HIPS, period=PERIOD, rear_raise=0.0)
         z = {leg: _legxyz(out, leg)[2] for leg in LEGS}
         assert z['FL'] == pytest.approx(z['RR'], abs=1e-12)
         assert z['FR'] == pytest.approx(z['RL'], abs=1e-12)
@@ -51,7 +62,7 @@ def test_swinging_foot_lifts():
     for leg in LEGS:
         neutral_z = HIPS[leg][2] - 0.13
         max_z = max(_legxyz(foot_targets(k / 100.0 * PERIOD, 0.1, 0.0, 0.0, HIPS,
-                    period=PERIOD), leg)[2] for k in range(100))
+                    period=PERIOD, rear_raise=0.0), leg)[2] for k in range(100))
         assert max_z > neutral_z + 0.015, f'{leg} never lifts'
 
 

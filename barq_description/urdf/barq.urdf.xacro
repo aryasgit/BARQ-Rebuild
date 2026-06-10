@@ -325,11 +325,12 @@
     <xacro:barq_joint_if name="FR_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
     <xacro:barq_joint_if name="FR_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
     <xacro:barq_joint_if name="RL_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>
-    <xacro:barq_joint_if name="RL_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
-    <xacro:barq_joint_if name="RL_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
+    <!-- Rear inits match the rear_raise=0.02 stance trim (depth 0.15, D-016) -->
+    <xacro:barq_joint_if name="RL_knee_joint"  lower="-1.57"  upper="1.57" init="0.911998"/>
+    <xacro:barq_joint_if name="RL_ankle_joint" lower="-2.2"   upper="1.57" init="-1.652637"/>
     <xacro:barq_joint_if name="RR_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>
-    <xacro:barq_joint_if name="RR_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
-    <xacro:barq_joint_if name="RR_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
+    <xacro:barq_joint_if name="RR_knee_joint"  lower="-1.57"  upper="1.57" init="0.911998"/>
+    <xacro:barq_joint_if name="RR_ankle_joint" lower="-2.2"   upper="1.57" init="-1.652637"/>
   </ros2_control>
 
   <!-- ═══════════════ Gazebo (Stage 2E, mode:=gazebo) ═══════════════ -->

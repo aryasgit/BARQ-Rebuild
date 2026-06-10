@@ -35,6 +35,9 @@ class GaitPlanner(Node):
         # step 0.02 gives real swing clearance (foot sphere r=0.012 + contact/staircase margins).
         self.declare_parameter('step_height', 0.02)
         self.declare_parameter('stand_height', 0.13)
+        # Stance trim (Aryaman): rear legs extended by this much -> nose-down pitch, load
+        # shifts to the front feet, prevents backward body roll. ~5.3 deg at 0.02.
+        self.declare_parameter('rear_raise', 0.02)
         self.declare_parameter('rate', 50.0)
         # Forward = body +X (Aryaman, watching the PHYSICS walk in Gazebo, 2026-06-11; this is
         # the arc direction approved in the RViz reversal session). +1 => cmd_vel +x drives the
@@ -45,6 +48,7 @@ class GaitPlanner(Node):
         self.duty = float(self.get_parameter('duty').value)
         self.step_height = float(self.get_parameter('step_height').value)
         self.stand_height = float(self.get_parameter('stand_height').value)
+        self.rear_raise = float(self.get_parameter('rear_raise').value)
         self.dt = 1.0 / float(self.get_parameter('rate').value)
 
         self.vx = self.vy = self.wz = 0.0
@@ -70,7 +74,8 @@ class GaitPlanner(Node):
         # Z is unchanged by the mapping.
         ft = foot_targets(self.t, self.fwd * self.vx, self.fwd * self.vy, self.wz, self.hip,
                           period=self.period, duty=self.duty,
-                          step_height=self.step_height, stand_height=self.stand_height)
+                          step_height=self.step_height, stand_height=self.stand_height,
+                          rear_raise=self.rear_raise)
         msg = Float64MultiArray()
         msg.data = [float(v) for v in ft]
         self.pub.publish(msg)

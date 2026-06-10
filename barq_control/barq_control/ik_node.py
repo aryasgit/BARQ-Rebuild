@@ -43,17 +43,21 @@ class IKNode(Node):
         self.hip = {leg: legs['hip_offsets'][leg] for leg in LEGS}
 
         self.declare_parameter('stance_height', 0.13)
+        self.declare_parameter('rear_raise', 0.02)   # stance trim: rear extended (D-016)
         # -1 = legs fold forward (BARQ's physical config, Q-010; tibia stays in the servo's
         # [-1.571, 0] range). +1 is the mirrored branch and folds the legs backward.
         self.declare_parameter('knee_bend', -1.0)
         h = self.get_parameter('stance_height').value
         self.knee_bend = float(self.get_parameter('knee_bend').value)
 
-        # Default stance (exact model): foot under the knee-x, true lateral outboard, h below.
+        # Default stance (exact model): foot under the knee-x, true lateral outboard,
+        # h below (+rear_raise on the rear legs - nose-down stance trim, D-016).
+        raise_r = float(self.get_parameter('rear_raise').value)
         self.targets = []
         for leg in LEGS:
             hx, hy, hz = self.hip[leg]
-            self.targets += [hx + kx_of(leg), hy + side_of(hy) * LAT, hz - h]
+            depth = h + (0.0 if leg.startswith('F') else raise_r)
+            self.targets += [hx + kx_of(leg), hy + side_of(hy) * LAT, hz - depth]
 
         self.pub = self.create_publisher(
             Float64MultiArray, '/joint_group_position_controller/commands', 10)

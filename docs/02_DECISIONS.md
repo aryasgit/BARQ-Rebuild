@@ -3,6 +3,15 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-016 — Stance trim: rear_raise 0.02 (nose-down, load-forward)
+**Date:** 2026-06-11 · **Status:** Accepted
+Per Aryaman: front legs more contracted, rear more relaxed, shifting load to the front feet to
+prevent backward body roll. Implemented by EXTENDING the rear legs (`rear_raise`, default 0.02 m)
+rather than dropping the front — dropping the front would push its swing apex past the tibia -2.2
+envelope (exact-model in-plane reach floor at q3=-2.2 is 0.1079 m). Applied in gait + ik stance +
+URDF rear initial_values. Physics: +4.5 deg nose-down, best walk yet (+0.60 m/10 s), yaw drift
+nearly eliminated. Revisit once exact CoM coordinates land (Q-014).
+
 ## D-015 — Forward = body +X; forward_sign=+1 (supersedes D-011's direction premise)
 **Date:** 2026-06-11 · **Status:** Accepted (resolves Q-012)
 Aryaman validated the direction against the PHYSICS walk (the only unambiguous arbiter): forward is

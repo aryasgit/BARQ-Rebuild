@@ -24,23 +24,28 @@ def _side(hip_y):
 
 
 def foot_targets(t, vx, vy, wz, hip_offsets, lateral=0.0754692, kx_front=0.01744,
-                 period=0.5, duty=0.5, step_height=0.02, stand_height=0.13, deadband=1e-3):
+                 period=0.5, duty=0.5, step_height=0.02, stand_height=0.13,
+                 rear_raise=0.02, deadband=1e-3):
     """
     Return 12 body-frame foot coords [FLxyz, FRxyz, RLxyz, RRxyz] at gait time t.
 
     vx, vy: body linear velocity (m/s); wz: yaw rate (rad/s).
     Neutral foot: knee-x offset forward/back of the hip (exact URDF model), `lateral`
-    outboard, `stand_height` below. Constraint: stand_height - step_height >= ~0.095 m,
-    else the swing apex demands tibia beyond -2.2 (exact-model min in-plane reach ~0.092).
+    outboard, `stand_height` below. `rear_raise` extends the REAR legs by that much
+    (front more contracted than rear) -> the body pitches nose-down ~atan(raise/0.217),
+    shifting load to the front feet (anti backward-tip stance trim).
+    Constraint: depth - step_height >= ~0.108 m per leg pair, else the swing apex
+    demands tibia beyond -2.2 (exact-model in-plane reach at q3=-2.2 is 0.1079).
     """
     moving = (abs(vx) + abs(vy) + abs(wz)) > deadband
     out = []
     for leg in LEGS:
         hx, hy, hz = hip_offsets[leg]
-        kx = kx_front if leg.startswith('F') else -kx_front
+        front = leg.startswith('F')
+        kx = kx_front if front else -kx_front
         nx = hx + kx                      # neutral foot under the knee-x (support symmetric)
         ny = hy + _side(hy) * lateral     # ... and the true lateral offset outboard
-        nz = hz - stand_height
+        nz = hz - stand_height - (0.0 if front else rear_raise)
         if not moving:
             out += [nx, ny, nz]
             continue

@@ -3,6 +3,20 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Stance trim: rear_raise (load-forward, anti backward-tip) — D-016
+Aryaman observed the rear legs taking more load in sim and asked for front-more-contracted /
+rear-more-relaxed. Implemented as `rear_raise` (default 0.02 m): rear feet 2 cm deeper than front
+(rear depth 0.15, front 0.13) -> ~5 deg nose-down pitch, load shifts to the front feet. Raising the
+REAR (not dropping the front) keeps the front swing apex inside the tibia envelope (in-plane reach
+at q3=-2.2 is 0.1079 m; earlier comment said ~0.095 — corrected). Param in gait_planner + ik_node;
+URDF rear initial_values updated to the trimmed stance (knee 0.911998, ankle -1.652637); gait.py
+constraint note fixed; new unit test (20 pass; 3 symmetric-stance tests now pin rear_raise=0).
+
+Physics: settle pitch **+4.5 deg nose-down**; walk +0.603 m/10 s (best yet: 0.44 -> 0.52 -> 0.60);
+yaw drift -0.018 rad/10 s (was -0.031), lateral ~0.4 mm — the front-loaded stance tracks much better.
+Pending (Q-014): Aryaman will supply exact CoM coordinates -> update base_link inertial origin.
+
+---
 ## 2026-06-11 — Measured masses + real servo torque caps in the model
 Aryaman measured (servos+fasteners included): body **1.42 kg**, coxa **73.3 g**, femur **153.6 g**,
 tibia **30 g** -> total **2.448 kg** (was ~1.66 with estimates; femur was 3x underestimated).

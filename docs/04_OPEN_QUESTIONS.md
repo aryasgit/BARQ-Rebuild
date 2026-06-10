@@ -29,6 +29,12 @@ the RViz reversal session). `forward_sign=+1`; cmd_vel +x drives the body toward
 leg labels MATCH physical quadrants — the long-deferred rename is unnecessary. The earlier
 "head is at -X" mesh reading was wrong (treadmill-perception confusion in pinned-body RViz).
 
+## Q-014 — Exact body CoM coordinates (Aryaman, pending)
+The base_link inertial origin is currently (0,0,0) = geometric center. Aryaman shifted the physical
+CoM toward center and will measure exact coordinates; when they arrive, set them as the base_link
+inertial `<origin xyz>` and re-check the D-016 stance trim (rear_raise may shrink if the CoM is
+already forward). Until then the trim compensates empirically.
+
 ## Q-013 — Open-loop gait realizes ~40% of commanded speed in physics
 cmd_vel 0.12 m/s -> ~0.047 m/s realized (straight, level). Expected for an open-loop trot under a
 stiff velocity-loop actuator model (stance slip, no body-velocity feedback). Tuning levers: period,
