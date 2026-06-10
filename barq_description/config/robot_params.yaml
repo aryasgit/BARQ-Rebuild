@@ -7,7 +7,18 @@ body:
   length: 0.258        # from URDF base_link collision box
   width:  0.117        # from URDF base_link collision box
   height: 0.085        # from URDF base_link collision box
-  mass:   0.95         # body only; total incl. legs ~= 1.66 kg
+  mass:   1.42         # measured 2026-06-11 (Aryaman), incl. electronics/fasteners
+
+# Measured link masses (2026-06-11, Aryaman; servos+fasteners included). Total ~= 2.448 kg.
+link_masses:
+  coxa:  0.0733
+  femur: 0.1536
+  tibia: 0.030
+
+actuators:
+  model: ST3215
+  peak_torque_nm: 2.94    # 30 kg.cm mechanical peak (Aryaman 2026-06-11) -> URDF joint effort
+  max_speed_rad_s: 5.24
 
 legs:
   # EXACT leg kinematics (D-014): the URDF chain, modelled without approximation.

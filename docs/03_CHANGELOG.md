@@ -3,6 +3,20 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Measured masses + real servo torque caps in the model
+Aryaman measured (servos+fasteners included): body **1.42 kg**, coxa **73.3 g**, femur **153.6 g**,
+tibia **30 g** -> total **2.448 kg** (was ~1.66 with estimates; femur was 3x underestimated).
+ST3215 mechanical peak torque 30 kg.cm -> **2.94 N.m** set as `<limit effort>` on all 12 joints
+(was a fantasy 10.0; ign_ros2_control really enforces this in physics). Inertia tensors recomputed
+from primitive approximations at the measured masses (body box 2.47e-3/8.73e-3/9.50e-3; femur
+1.7e-4/1.6e-4/5.3e-5; coxa 3.2e-5/2.0e-5/3.2e-5; tibia 3.3e-5/3.1e-5/3.3e-6 — replacing
+placeholders). robot_params: body mass, `link_masses`, new `actuators` section.
+
+Physics A/B (same test as before): settle z **0.141779 identical**, level; walk +0.523 m/10 s
+(slightly BETTER than 0.44 — heavier robot has more friction authority); small yaw drift 1.8deg/10 s
+(open-loop). Conclusion: servos hold the real robot with ~5-10x stance-torque margin, proven in sim.
+
+---
 ## 2026-06-11 — Forward direction finalized: +X (forward_sign=+1)
 Aryaman watched the Gazebo walk and ruled the -X direction backwards: forward is **+X**, the arc
 direction approved in the RViz reversal session. One-parameter fix (`forward_sign` -1 -> +1).

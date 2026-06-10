@@ -15,10 +15,12 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry><box size="0.258 0.117 0.085"/></geometry>
     </collision>
+    <!-- Measured 2026-06-11 (Aryaman): incl. electronics/fasteners. Inertia: solid box
+         0.258 x 0.117 x 0.085 at the measured mass. -->
     <inertial>
-      <mass value="0.95"/>
+      <mass value="1.42"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="3.0e-3" ixy="0" ixz="0" iyy="5.5e-3" iyz="0" izz="6.5e-3"/>
+      <inertia ixx="2.47e-3" ixy="0" ixz="0" iyy="8.73e-3" iyz="0" izz="9.50e-3"/>
     </inertial>
   </link>
 
@@ -27,7 +29,7 @@
     <parent link="base_link"/>    <child link="FL_coxa_link"/>
     <origin rpy="0 0 0" xyz="0.108484 0.0171913 0.00022012"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_coxa_link">
@@ -37,9 +39,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.077"/>
+      <mass value="0.0733"/>
       <origin rpy="0 0 0" xyz="0.00872 0.0215346 0"/>
-      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+      <inertia ixx="3.2e-5" ixy="0" ixz="0" iyy="2.0e-5" iyz="0" izz="3.2e-5"/>
     </inertial>
   </link>
 
@@ -47,7 +49,7 @@
     <parent link="FL_coxa_link"/>    <child link="FL_femur_link"/>
     <origin rpy="0 0 0" xyz="0.01744 0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_femur_link">
@@ -57,9 +59,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.1536"/>
       <origin rpy="0 0 0" xyz="0.009472 0.01769995 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="1.7e-4" ixy="0" ixz="0" iyy="1.6e-4" iyz="0" izz="5.3e-5"/>
     </inertial>
   </link>
 
@@ -67,7 +69,7 @@
     <parent link="FL_femur_link"/>    <child link="FL_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_tibia_link">
@@ -82,9 +84,9 @@
       <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.030"/>
       <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="3.3e-5" ixy="0" ixz="0" iyy="3.1e-5" iyz="0" izz="3.3e-6"/>
     </inertial>
   </link>
 
@@ -93,7 +95,7 @@
     <parent link="base_link"/>    <child link="RL_coxa_link"/>
     <origin rpy="0 0 0" xyz="-0.108371 0.0167905 0.00022176"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_coxa_link">
@@ -103,9 +105,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.077"/>
+      <mass value="0.0733"/>
       <origin rpy="0 0 0" xyz="-0.00872 0.0215346 0"/>
-      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+      <inertia ixx="3.2e-5" ixy="0" ixz="0" iyy="2.0e-5" iyz="0" izz="3.2e-5"/>
     </inertial>
   </link>
 
@@ -113,7 +115,7 @@
     <parent link="RL_coxa_link"/>    <child link="RL_femur_link"/>
     <origin rpy="0 0 0" xyz="-0.01744 0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_femur_link">
@@ -123,9 +125,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.1536"/>
       <origin rpy="0 0 0" xyz="0.009472 0.01769995 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="1.7e-4" ixy="0" ixz="0" iyy="1.6e-4" iyz="0" izz="5.3e-5"/>
     </inertial>
   </link>
 
@@ -133,7 +135,7 @@
     <parent link="RL_femur_link"/>    <child link="RL_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_tibia_link">
@@ -148,9 +150,9 @@
       <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.030"/>
       <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="3.3e-5" ixy="0" ixz="0" iyy="3.1e-5" iyz="0" izz="3.3e-6"/>
     </inertial>
   </link>
 
@@ -159,7 +161,7 @@
     <parent link="base_link"/>    <child link="FR_coxa_link"/>
     <origin rpy="0 0 0" xyz="0.108484 -0.0148092 0.00022176"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_coxa_link">
@@ -169,9 +171,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.077"/>
+      <mass value="0.0733"/>
       <origin rpy="0 0 0" xyz="0.00872 -0.0215346 0"/>
-      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+      <inertia ixx="3.2e-5" ixy="0" ixz="0" iyy="2.0e-5" iyz="0" izz="3.2e-5"/>
     </inertial>
   </link>
 
@@ -179,7 +181,7 @@
     <parent link="FR_coxa_link"/>    <child link="FR_femur_link"/>
     <origin rpy="0 0 0" xyz="0.01744 -0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_femur_link">
@@ -189,9 +191,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.1536"/>
       <origin rpy="0 0 0" xyz="0.00947205 -0.01769995 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="1.7e-4" ixy="0" ixz="0" iyy="1.6e-4" iyz="0" izz="5.3e-5"/>
     </inertial>
   </link>
 
@@ -199,7 +201,7 @@
     <parent link="FR_femur_link"/>    <child link="FR_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_tibia_link">
@@ -214,9 +216,9 @@
       <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.030"/>
       <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="3.3e-5" ixy="0" ixz="0" iyy="3.1e-5" iyz="0" izz="3.3e-6"/>
     </inertial>
   </link>
 
@@ -225,7 +227,7 @@
     <parent link="base_link"/>    <child link="RR_coxa_link"/>
     <origin rpy="0 0 0" xyz="-0.108371 -0.01521 0.00022012"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10.0" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_coxa_link">
@@ -235,9 +237,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.077"/>
+      <mass value="0.0733"/>
       <origin rpy="0 0 0" xyz="-0.00872 -0.0215346 0"/>
-      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-4"/>
+      <inertia ixx="3.2e-5" ixy="0" ixz="0" iyy="2.0e-5" iyz="0" izz="3.2e-5"/>
     </inertial>
   </link>
 
@@ -245,7 +247,7 @@
     <parent link="RR_coxa_link"/>    <child link="RR_femur_link"/>
     <origin rpy="0 0 0" xyz="-0.01744 -0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_femur_link">
@@ -255,9 +257,9 @@
       <material name="dark_grey"/>
     </visual>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.1536"/>
       <origin rpy="0 0 0" xyz="0.00947205 -0.01769995 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="1.7e-4" ixy="0" ixz="0" iyy="1.6e-4" iyz="0" izz="5.3e-5"/>
     </inertial>
   </link>
 
@@ -265,7 +267,7 @@
     <parent link="RR_femur_link"/>    <child link="RR_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_tibia_link">
@@ -280,9 +282,9 @@
       <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.030"/>
       <origin rpy="0 0 0" xyz="0 0 -0.04999995"/>
-      <inertia ixx="1.0e-4" ixy="0" ixz="0" iyy="1.0e-4" iyz="0" izz="1.0e-5"/>
+      <inertia ixx="3.3e-5" ixy="0" ixz="0" iyy="3.1e-5" iyz="0" izz="3.3e-6"/>
     </inertial>
   </link>
 
