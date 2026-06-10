@@ -17,8 +17,8 @@ head-first, level, straight. Settle height matches prediction to 0.2 mm.
   - 25-agent adversarial review -> 3 confirmed findings, all fixed
   - **Exact URDF-true kinematics (D-014)** replacing the 3.4 cm-error idealized model,
     locked by chain-composition tests; stance initial_values kill the startup snap
-  - Physics verified: settle z 0.1418 (predicted 0.142), walk cmd +x -> head-first (-X),
-    19 unit tests green
+  - Physics verified: settle z 0.1418 (predicted 0.142); walk cmd +x -> **+X = forward**
+    (D-015, ruled by Aryaman against the physics walk; forward_sign=+1); 19 unit tests green
 
 ## Next (pick)
 - [ ] **Stage 3 — Teensy firmware** (parallel track; BNO085 + INA226 in hand)
