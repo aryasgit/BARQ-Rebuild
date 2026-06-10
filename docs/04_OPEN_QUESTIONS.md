@@ -3,21 +3,19 @@
 Pending ambiguities & decisions. When resolved, move the outcome to `02_DECISIONS.md`.
 
 ---
-## Q-001 — Tibia (ankle) joint limit conflict  · BLOCKING for IK (2C)
+## Q-001 — Tibia (ankle) joint limit conflict
 URDF + kickoff doc say tibia range is **+/-1.57 rad**. But `robot_params.yaml` servo config says
 **[-1.571, 0.0]** (bends one direction only). These disagree. Which is the true mechanical limit?
 - If servo is right -> tighten URDF `<limit upper>` to 0.0.
 - If URDF is right -> relax the servo entry.
 *Impact:* IK joint clamping, gait reachable workspace, safety limits. **-> asked 2026-06-09.**
+**Update 2026-06-10:** strong evidence for the servo config — the visually-correct leg fold (D-009,
+knee_bend=-1) keeps the tibia in [-1.57, 0] everywhere (stance -1.52; gait -1.03..-1.34). Pending only
+a mechanical confirmation; then tighten the URDF upper limit to 0.
 
-## Q-002 — Physics simulator: Gazebo vs MuJoCo  · BLOCKING for 2E + Dockerfile
-Kickoff doc Stage 2E says **Gazebo Harmonic**. But the Dockerfile installs **MuJoCo** (pip) and has
-**no Gazebo**; README says "MuJoCo/Gazebo".
-- Gazebo: matches the "Mock->Sim->Real, same ros2_control interface" principle (gz_ros2_control);
-  must be added to the Dockerfile.
-- MuJoCo: already installed, fast, RL-friendly (aligns with Stage 5); needs a custom bridge to the
-  ros2_control / joint interface.
-*Impact:* `barq_sim` design, Dockerfile, Stage 2E. **-> asked 2026-06-09.**
+## Q-002 — Physics simulator — RESOLVED 2026-06-10 -> D-010
+Both: **Gazebo for Stage 2E** (gz_ros2_control, drop-in for our stack; add to Dockerfile) and
+**MuJoCo/Isaac for RL** at Stage 5. Decided by Aryaman.
 
 ## Q-003 — Git commit/push policy  · BLOCKING for committing anything
 URDF + meshes are untracked; Stage 2A changes are uncommitted. Remote: `aryasgit/BARQ-Rebuild`.
@@ -25,10 +23,15 @@ How autonomous should commits/pushes be? **-> asked 2026-06-09.**
 
 ---
 ## Non-blocking notes (track, resolve opportunistically)
-## Q-010 — IK knee-bend direction (verify in RViz)
-`ik_node` uses `knee_bend=+1` (one of two valid IK branches). Confirm the knees bend the physically
-correct way when viewing the stance in RViz; if reversed, set the `knee_bend:=-1` param / flip the
-default. Cosmetic kinematic-branch choice, not a math error.
+## Q-010 — IK knee-bend direction — RESOLVED 2026-06-10 -> D-009
+Visual check showed +1 folded the legs backward; default flipped to `knee_bend=-1` (forward fold).
+Foot positions unchanged; tibia now stays within the servo's [-1.571, 0] range.
+
+## Q-012 — Direction of travel vs robot front (+X end) · deferred by Aryaman
+The gait drives toward +X (the FL/FR-hip end). Whether that end is the robot's physical FRONT is
+unresolved (an earlier frame-flip attempt was reverted as wrong). Revisit deliberately — likely at 2E
+when ground contact makes direction unambiguous, or against the real hardware/CAD. Until then cmd_vel
++x moves the robot toward its FL/FR end.
 
 ## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
 ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the

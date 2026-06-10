@@ -44,7 +44,9 @@ class IKNode(Node):
         self.hip = {leg: legs['hip_offsets'][leg] for leg in LEGS}
 
         self.declare_parameter('stance_height', 0.15)
-        self.declare_parameter('knee_bend', 1.0)
+        # -1 = legs fold forward (BARQ's physical config, Q-010; tibia stays in the servo's
+        # [-1.571, 0] range). +1 is the mirrored branch and folds the legs backward.
+        self.declare_parameter('knee_bend', -1.0)
         h = self.get_parameter('stance_height').value
         self.knee_bend = float(self.get_parameter('knee_bend').value)
 

@@ -17,9 +17,17 @@
   - Verified live: walking; diagonal pairs (FL+RR, FR+RL) in sync in `/joint_states`
   - **Foundation audit clean**; all 12 `barq_control` tests pass (incl. flake8 + pep257)
 
+## Recent fixes (2026-06-10, after 2D)
+- [x] **Leg fold corrected** (Q-010 -> D-009): IK knee-bend branch flipped to -1 — legs now fold
+      FORWARD (knees +, ankles − in [-1.57, 0], matching the servo tibia range). Foot paths unchanged.
+      13 tests pass. (A frame-flip attempt f4cd735 was reverted by request first.)
+- [x] **Simulator decided** (Q-002 -> D-010): Gazebo for 2E, MuJoCo/Isaac for RL.
+
 ## Next
-- [ ] **2E physics sim** (Gazebo vs MuJoCo = Q-002) — same ROS interface, adds real physics + ground contact
-- [ ] parked: Q-001 tibia limit, Q-003 git push
+- [ ] **2E physics sim (Gazebo)** — add gz_ros2_control to the Dockerfile; same ROS interface, adds
+      gravity + ground contact (body finally translates instead of stepping in place)
+- [ ] parked: Q-001 tibia limit (evidence now favors servo's [-1.571,0]), Q-003 git push,
+      Q-012 travel-direction vs robot front (deferred by Aryaman)
 - [ ] gait tuning continues at 2E (step_height / stand_height vs the ankle limit)
 
 ## How to run

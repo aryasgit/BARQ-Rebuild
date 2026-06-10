@@ -3,6 +3,20 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-10 — Knee-bend branch flipped: legs now fold FORWARD (Q-010 resolved)
+Aryaman (visual check over VNC): all legs folded backward — tibia closed toward the body to the rear;
+femur+tibia needed the mirrored pose ("45 -> 135", both joints, all legs). That is exactly the other
+analytical IK elbow branch. Fix: default `knee_bend` +1 -> **-1** in `leg_kinematics.ik_leg` and the
+`ik_node` param. Stance mirrors (knees -0.73 -> +0.73, ankles +1.52 -> -1.52); foot positions identical
+(FK-verified). New unit test `test_forward_fold_branch` (same foot point, q3 <= 0) — **13 tests pass**.
+Corroboration: servo config in robot_params has tibia range **[-1.571, 0]** — the -1 branch is the only
+one the real hardware can reach (strong evidence toward Q-001's one-directional tibia).
+Live-verified walking: knees +0.45..+0.70, ankles -1.03..-1.34 (inside the servo range), trot diagonals
+preserved. NOTE: direction-of-travel / which end is +X is deliberately deferred (Aryaman: "that's for
+later") — only the fold direction changed; gait paths and URDF untouched.
+(An earlier frame-flip attempt (f4cd735) was reverted by request — branch reset to 2982b06 first.)
+
+---
 ## 2026-06-10 — Stage 2D: trot gait planner (verified — BARQ walks)
 Added `barq_control/gait.py`: open-loop trot foot-trajectory generator (diagonal pairs FL+RR / FR+RL,
 50% duty, swing arc + stance sweep; step size scales with cmd velocity; neutral stance at zero cmd).

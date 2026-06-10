@@ -33,6 +33,19 @@ def test_roundtrip_grid():
     assert max_err < 1e-9, f'max angle round-trip error {max_err}'
 
 
+def test_forward_fold_branch():
+    """knee_bend=-1 (BARQ's branch): same foot point, q3 <= 0 (tibia within [-1.57, 0])."""
+    for side in (+1.0, -1.0):
+        for q1 in (-0.4, 0.0, 0.4):
+            for q2 in (-0.8, -0.3, 0.2, 0.7):
+                for q3 in (0.2, 0.6, 1.1):
+                    x, y, z = fk_leg(q1, q2, q3, L1, L2, L3, side)
+                    r1, r2, r3 = ik_leg(x, y, z, L1, L2, L3, side, knee_bend=-1.0)
+                    assert r3 <= 0.0
+                    fx, fy, fz = fk_leg(r1, r2, r3, L1, L2, L3, side)
+                    assert (fx, fy, fz) == pytest.approx((x, y, z), abs=1e-9)
+
+
 def test_unreachable_raises():
     """A foot target inside the coxa radius is rejected."""
     with pytest.raises(ValueError):

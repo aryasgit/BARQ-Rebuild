@@ -3,6 +3,21 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-010 — Simulator: Gazebo for 2E, MuJoCo for RL (both)
+**Date:** 2026-06-10 · **Status:** Accepted (resolves Q-002; re-recorded after the f4cd735 revert)
+Gazebo (`gz_ros2_control`) for the Stage 2E control-stack sim — our controllers/launch drop in as-is.
+MuJoCo/Isaac for RL training at Stage 5. Different jobs; they coexist. 2E adds Gazebo to the Dockerfile.
+
+## D-009 — IK knee-bend branch = -1 (legs fold forward)
+**Date:** 2026-06-10 · **Status:** Accepted (resolves Q-010)
+The analytical IK has two mirrored elbow branches reaching the same foot point. Visual check on the
+rendered robot showed +1 folds the legs backward (tibia closing rearward); BARQ's physical config is
+the forward fold. Default is now **-1** in `leg_kinematics.ik_leg` and the `ik_node` `knee_bend` param
+(±1 still selectable). Corroborated by the servo tibia range **[-1.571, 0]** in robot_params — the +1
+branch commanded ankle angles (+1.52) the hardware cannot reach. Foot placement unchanged (FK round-trip
+tested, `test_forward_fold_branch`). Travel-direction/±X conventions deliberately unchanged (deferred).
+
+---
 ## D-008 — Gait: open-loop trot, /cmd_vel -> /foot_targets
 **Date:** 2026-06-10 · **Status:** Accepted
 `gait.py` generates a trot (diagonal pairs FL+RR / FR+RL, 50% duty): stance foot sweeps back to push
