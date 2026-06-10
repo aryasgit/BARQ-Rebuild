@@ -3,6 +3,25 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-10 — Stage 2D: trot gait planner (verified — BARQ walks)
+Added `barq_control/gait.py`: open-loop trot foot-trajectory generator (diagonal pairs FL+RR / FR+RL,
+50% duty, swing arc + stance sweep; step size scales with cmd velocity; neutral stance at zero cmd).
+6 unit tests pass (zero-cmd stance, periodicity, diagonal sync, swing lift, step scaling, all targets
+IK-reachable). Added `gait_planner_node.py`: /cmd_vel (Twist) -> /foot_targets @ 50 Hz, gait params as
+ROS params. `control.launch.py` gains `gait:=true` (implies ik via a PythonExpression OR-condition).
+setup.py console_script + geometry_msgs dep.
+
+Lint: brought barq_control fully clean — import ordering (ament style), D213 docstrings, removed unused
+imports, line lengths. All 12 tests green (4 IK + 6 gait + flake8 + pep257).
+
+Verified live (headless): /cmd_vel x=0.15 -> all 6 nodes up, /joint_states cycles with correct diagonal
+pairing (FL_knee==RR_knee, FR_knee==RL_knee). Tuned defaults stand_height=0.18 / step_height=0.03 so the
+ankle stays within +/-1.57 during swing (at 0.16 the legs were too bent to lift without clamping).
+
+Foundation audit (pre-2D): clean build from scratch (5/5), interface counts all 12, barq_hardware (C++)
+and barq_sim correctly deferred to Stage 4 / 2E.
+
+---
 ## 2026-06-10 — Stage 2C: analytical IK node (verified)
 Added `barq_control/leg_kinematics.py`: idealized 3-DOF leg (clean link lengths from robot_params;
 coxa about X, femur/tibia about Y) with forward kinematics and closed-form analytical IK. Unit tests

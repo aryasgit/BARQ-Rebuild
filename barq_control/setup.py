@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'ik_node = barq_control.ik_node:main',
+            'gait_planner = barq_control.gait_planner_node:main',
         ],
     },
 )

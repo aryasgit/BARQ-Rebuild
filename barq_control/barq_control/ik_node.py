@@ -1,11 +1,12 @@
-"""BARQ IK node (Stage 2C).
+"""
+BARQ IK node (Stage 2C).
 
 Subscribes foot targets (body frame), runs per-leg analytical IK, and streams 12 joint positions to
 the position controller. Publishes a default standing stance until foot targets arrive.
 
-Input  : std_msgs/Float64MultiArray on /foot_targets — 12 values (m), body frame (REP-103):
+Input  : std_msgs/Float64MultiArray on /foot_targets - 12 values (m), body frame (REP-103):
          [FLx,FLy,FLz, FRx,FRy,FRz, RLx,RLy,RLz, RRx,RRy,RRz]
-Output : std_msgs/Float64MultiArray on /joint_group_position_controller/commands — 12 joint
+Output : std_msgs/Float64MultiArray on /joint_group_position_controller/commands - 12 joint
          positions (rad), order FL/FR/RL/RR x (coxa, femur, tibia).
 
 Geometry (link lengths + hip offsets) is read from barq_description/config/robot_params.yaml.
@@ -13,13 +14,12 @@ Geometry (link lengths + hip offsets) is read from barq_description/config/robot
 
 import os
 
-import rclpy
-import yaml
 from ament_index_python.packages import get_package_share_directory
+from barq_control.leg_kinematics import ik_leg, side_of
+import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
-
-from barq_control.leg_kinematics import ik_leg, side_of
+import yaml
 
 LEGS = ['FL', 'FR', 'RL', 'RR']
 COXA_LIMIT = 0.785
@@ -32,8 +32,10 @@ def _clamp(v, lim):
 
 
 class IKNode(Node):
+    """Foot targets -> per-leg analytical IK -> 12 joint commands for the position controller."""
 
     def __init__(self):
+        """Load geometry, set the default stance, and start streaming joint commands at 50 Hz."""
         super().__init__('ik_node')
         legs = self._load_params()['legs']
         self.L1 = legs['coxa_length']
@@ -89,6 +91,7 @@ class IKNode(Node):
 
 
 def main():
+    """Spin the IK node."""
     rclpy.init()
     rclpy.spin(IKNode())
 

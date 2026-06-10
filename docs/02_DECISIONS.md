@@ -3,6 +3,18 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-008 — Gait: open-loop trot, /cmd_vel -> /foot_targets
+**Date:** 2026-06-10 · **Status:** Accepted
+`gait.py` generates a trot (diagonal pairs FL+RR / FR+RL, 50% duty): stance foot sweeps back to push
+the body, swing foot lifts on a sine arc and returns; step size = body velocity x stance time (incl. a
+yaw term r x w). `gait_planner_node` maps `/cmd_vel` (Twist) -> `/foot_targets`; the existing IK node
+closes the loop. Open-loop for now (no `/robot_state` feedback) — matches the doc's 2D; state estimation
+is deferred until there's an IMU (sim/hardware). Defaults `stand_height=0.18`, `step_height=0.03` chosen
+so swing stays within the +/-1.57 ankle limit. **Why:** trot is the simplest statically-reasonable gait;
+reusing the `/foot_targets` contract keeps gait and IK decoupled and testable. Tuning continues at 2E
+against physics; tibia range (Q-001) may change the foot-trajectory envelope.
+
+---
 ## D-007 — IK: idealized 3-DOF analytical model, body-frame foot targets
 **Date:** 2026-06-10 · **Status:** Accepted
 `leg_kinematics.py` uses the idealized leg (clean link lengths L1/L2/L3 from robot_params; coxa about X,

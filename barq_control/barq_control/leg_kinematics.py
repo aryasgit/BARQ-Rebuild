@@ -1,4 +1,5 @@
-"""BARQ single-leg kinematics (idealized 3-DOF analytical model).
+"""
+BARQ single-leg kinematics (idealized 3-DOF analytical model).
 
 Frame (per leg, REP-103 body frame): x forward, y left, z up. Origin at the hip (coxa) joint.
 Joints:
@@ -15,9 +16,9 @@ Link lengths come from robot_params.yaml (derived from the URDF):
 
 At all-zero angles the leg points straight down: foot = (0, side*L1, -(L2+L3)).
 
-NOTE: this is the idealized model the project standardised on (clean link lengths). It ignores the
-small mesh-frame offsets in the URDF (sub-cm); foot placement is exact *for this model* and round-trips
-to machine precision (see test_ik.py). Knee-bend convention: q3 >= 0.
+NOTE: this is the idealized model the project standardised on (clean link lengths). It ignores
+the small mesh-frame offsets in the URDF (sub-cm); foot placement is exact *for this model* and
+round-trips to machine precision (see test_ik.py). Knee-bend convention: q3 >= 0.
 """
 
 import math
@@ -47,7 +48,8 @@ def _wrap(a):
 
 
 def ik_leg(x, y, z, L1, L2, L3, side, knee_bend=+1.0):
-    """Inverse kinematics: foot position (hip frame) -> (q1, q2, q3).
+    """
+    Inverse kinematics: foot position (hip frame) -> (q1, q2, q3).
 
     knee_bend selects the elbow solution: +1 or -1 (flip if the knee bends the wrong way in RViz).
     Raises ValueError if the target is outside the leg's reachable workspace.

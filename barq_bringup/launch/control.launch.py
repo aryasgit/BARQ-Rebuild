@@ -21,7 +21,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
-from launch.substitutions import Command, LaunchConfiguration
+from launch.substitutions import Command, LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
@@ -39,12 +39,17 @@ def generate_launch_description():
 
     use_rviz = LaunchConfiguration('rviz')
     use_ik = LaunchConfiguration('ik')
+    use_gait = LaunchConfiguration('gait')
+    # gait implies ik (gait feeds /foot_targets -> ik -> controller)
+    ik_or_gait = PythonExpression(["'", use_ik, "' == 'true' or '", use_gait, "' == 'true'"])
 
     return LaunchDescription([
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Launch RViz'),
         DeclareLaunchArgument('ik', default_value='false',
                               description='Also launch the IK node (Stage 2C)'),
+        DeclareLaunchArgument('gait', default_value='false',
+                              description='Also launch the gait planner (Stage 2D); implies ik'),
 
         Node(
             package='robot_state_publisher',
@@ -86,6 +91,13 @@ def generate_launch_description():
             package='barq_control',
             executable='ik_node',
             output='screen',
-            condition=IfCondition(use_ik),
+            condition=IfCondition(ik_or_gait),
+        ),
+
+        Node(
+            package='barq_control',
+            executable='gait_planner',
+            output='screen',
+            condition=IfCondition(use_gait),
         ),
     ])
