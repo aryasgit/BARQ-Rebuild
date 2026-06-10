@@ -10,6 +10,8 @@ updated after every iteration, change, decision, and choice.
 | [02_DECISIONS.md](02_DECISIONS.md) | Decision log (ADR-style). Every choice with its rationale. | Whenever a decision is made. |
 | [03_CHANGELOG.md](03_CHANGELOG.md) | Dated log of concrete changes to the repo. | After every change. |
 | [04_OPEN_QUESTIONS.md](04_OPEN_QUESTIONS.md) | Ambiguities & pending decisions awaiting input. | When raised / resolved. |
+| [05_RESEARCH_LOG.md](05_RESEARCH_LOG.md) | Publication record: overridden decisions, iteration metrics, what each override bought. | After every experiment / override (standing practice). |
+| [HANDOFF.md](HANDOFF.md) | Bootstrap guide for a new session: read order, environment facts, code entry points. | When the read-order or frontier shifts. |
 
 ## Conventions
 - Dates are absolute (YYYY-MM-DD).
