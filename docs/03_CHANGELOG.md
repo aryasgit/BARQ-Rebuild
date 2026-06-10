@@ -3,6 +3,17 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-10 — Gait reversed (head-first) + crouched stance
+Aryaman (after fold fix): gait stepped toward the tail end; wanted travel toward the head, and a lower
+body for stability. Two changes, both at the gait layer (URDF/IK/gait math untouched):
+1) `gait_planner_node` now maps cmd_vel (robot-centric, +x = head-first) into body axes by negating
+   linear x,y (yaw unchanged) — reverses the traversal arc. Q-012 documents the frame story.
+2) Crouch: defaults stand_height 0.18 -> 0.16, step_height 0.03 -> 0.012 (node + gait.py). Constraint
+   honored: stand-step >= ~0.147 m, else the swing apex demands tibia beyond -1.57 (leg geometry).
+New regression test `test_default_gait_stays_within_tibia_range` (full default cycle, tibia within
+[-1.571, 0]) — **14 tests pass**. Live: knees +0.56..+0.75, ankles ~-1.36..-1.55, diagonals intact.
+
+---
 ## 2026-06-10 — Knee-bend branch flipped: legs now fold FORWARD (Q-010 resolved)
 Aryaman (visual check over VNC): all legs folded backward — tibia closed toward the body to the rear;
 femur+tibia needed the mirrored pose ("45 -> 135", both joints, all legs). That is exactly the other

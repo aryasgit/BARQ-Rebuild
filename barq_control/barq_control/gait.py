@@ -24,7 +24,7 @@ def _side(hip_y):
 
 
 def foot_targets(t, vx, vy, wz, hip_offsets, L1,
-                 period=0.5, duty=0.5, step_height=0.03, stand_height=0.18, deadband=1e-3):
+                 period=0.5, duty=0.5, step_height=0.012, stand_height=0.16, deadband=1e-3):
     """
     Return 12 body-frame foot coords [FLxyz, FRxyz, RLxyz, RRxyz] at gait time t.
 

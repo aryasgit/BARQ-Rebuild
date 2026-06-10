@@ -66,6 +66,17 @@ def test_step_length_scales_with_velocity():
     assert fl_x_range(0.2) > fl_x_range(0.1) > fl_x_range(0.0)
 
 
+def test_default_gait_stays_within_tibia_range():
+    """With default gait params and the default IK branch, the tibia stays in [-1.571, 0]."""
+    for k in range(120):
+        out = foot_targets(k / 120.0 * PERIOD, 0.15, 0.0, 0.0, HIPS, L1, period=PERIOD)
+        for leg in LEGS:
+            hx, hy, hz = HIPS[leg]
+            fx, fy, fz = _legxyz(out, leg)
+            _, _, q3 = ik_leg(fx - hx, fy - hy, fz - hz, L1, L2, L3, side_of(hy))
+            assert -1.571 <= q3 <= 0.0, f'{leg} tibia {q3} outside servo range'
+
+
 def test_all_targets_reachable():
     """Every foot target over a cycle is solvable by the leg IK (within the workspace)."""
     for k in range(60):

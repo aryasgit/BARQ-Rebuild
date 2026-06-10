@@ -22,6 +22,9 @@
       FORWARD (knees +, ankles − in [-1.57, 0], matching the servo tibia range). Foot paths unchanged.
       13 tests pass. (A frame-flip attempt f4cd735 was reverted by request first.)
 - [x] **Simulator decided** (Q-002 -> D-010): Gazebo for 2E, MuJoCo/Isaac for RL.
+- [x] **Gait reversed + crouched** (D-011): cmd_vel +x now walks head-first (negated x,y mapping in
+      gait_planner only); stand_height 0.16 / step_height 0.012 for a lower, stabler stance.
+      14 tests pass (new: full-cycle tibia stays in [-1.571, 0]).
 
 ## Next
 - [ ] **2E physics sim (Gazebo)** — add gz_ros2_control to the Dockerfile; same ROS interface, adds

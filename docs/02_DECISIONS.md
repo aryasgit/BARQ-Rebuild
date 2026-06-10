@@ -3,6 +3,15 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-011 — cmd_vel is robot-centric; forward = head-first (mapped at the gait layer)
+**Date:** 2026-06-10 · **Status:** Accepted
+`/cmd_vel +x` means "walk head-first" (robot front = the body's -X end per the mesh; the URDF leg
+labels disagree — Q-012). The mapping lives in ONE place: `gait_planner_node` negates linear x,y into
+body axes (yaw unchanged). URDF, IK, and the pure gait generator stay in clean body-frame math.
+Crouch defaults: stand_height 0.16, step_height 0.012 (stand-step must stay >= ~0.147 m or the swing
+apex exceeds the -1.57 tibia limit). **Why:** smallest possible surface for the direction convention;
+trivially flippable at 2E when ground contact makes direction unambiguous.
+
 ## D-010 — Simulator: Gazebo for 2E, MuJoCo for RL (both)
 **Date:** 2026-06-10 · **Status:** Accepted (resolves Q-002; re-recorded after the f4cd735 revert)
 Gazebo (`gz_ros2_control`) for the Stage 2E control-stack sim — our controllers/launch drop in as-is.

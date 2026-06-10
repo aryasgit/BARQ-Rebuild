@@ -32,8 +32,10 @@ class GaitPlanner(Node):
 
         self.declare_parameter('period', 0.5)
         self.declare_parameter('duty', 0.5)
-        self.declare_parameter('step_height', 0.03)
-        self.declare_parameter('stand_height', 0.18)
+        # Crouched stance for stability. Constraint: stand_height - step_height must stay
+        # >= ~0.147 m, else the swing apex demands tibia beyond the -1.57 limit (leg geometry).
+        self.declare_parameter('step_height', 0.012)
+        self.declare_parameter('stand_height', 0.16)
         self.declare_parameter('rate', 50.0)
         self.period = float(self.get_parameter('period').value)
         self.duty = float(self.get_parameter('duty').value)
@@ -60,7 +62,10 @@ class GaitPlanner(Node):
 
     def _tick(self):
         self.t += self.dt
-        ft = foot_targets(self.t, self.vx, self.vy, self.wz, self.hip, self.L1,
+        # Robot FRONT is the body's -X end (head per the mesh; URDF leg labels disagree, Q-012).
+        # cmd_vel is robot-centric (+x = head-first), so map into body axes by negating linear
+        # x,y; yaw about Z is unchanged. This reverses the gait arc so it steps head-first.
+        ft = foot_targets(self.t, -self.vx, -self.vy, self.wz, self.hip, self.L1,
                           period=self.period, duty=self.duty,
                           step_height=self.step_height, stand_height=self.stand_height)
         msg = Float64MultiArray()

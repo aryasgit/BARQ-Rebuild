@@ -27,11 +27,13 @@ How autonomous should commits/pushes be? **-> asked 2026-06-09.**
 Visual check showed +1 folded the legs backward; default flipped to `knee_bend=-1` (forward fold).
 Foot positions unchanged; tibia now stays within the servo's [-1.571, 0] range.
 
-## Q-012 — Direction of travel vs robot front (+X end) · deferred by Aryaman
-The gait drives toward +X (the FL/FR-hip end). Whether that end is the robot's physical FRONT is
-unresolved (an earlier frame-flip attempt was reverted as wrong). Revisit deliberately — likely at 2E
-when ground contact makes direction unambiguous, or against the real hardware/CAD. Until then cmd_vel
-+x moves the robot toward its FL/FR end.
+## Q-012 — Frame/label story: robot front vs +X vs URDF leg names · partially handled, cleanup deferred
+Working model (per Aryaman's mesh reading): the robot's physical FRONT/head is the body's **-X** end —
+where the URDF joints *named* RL/RR sit; the FL/FR-named joints are at the tail (+X). As of D-011 the
+gait maps cmd_vel so **+x = head-first (toward -X)**; direction now looks right in RViz.
+Remaining cleanup (deferred): URDF leg labels don't match physical quadrants. A full rename touches
+URDF + ros2_control + controllers.yaml + joint_conventions + servo map + code, and likely a leg-mesh
+swap (mid<->mid_rev, foot<->foot_rev). Decide at 2E (ground contact) or against real hardware/CAD.
 
 ## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
 ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the
