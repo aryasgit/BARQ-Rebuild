@@ -22,14 +22,12 @@ Commit per milestone on `stage-2`, push to origin after each, author Aryaman Gup
 Visual check showed +1 folded the legs backward; default flipped to `knee_bend=-1` (forward fold).
 Foot positions unchanged; tibia now stays within the servo's [-1.571, 0] range.
 
-## Q-012 — Frame/label story: robot front vs +X vs URDF leg names · physics now agrees; rename still deferred
-Working model (per Aryaman's mesh reading): the robot's physical FRONT/head is the body's **-X** end —
-where the URDF joints *named* RL/RR sit; the FL/FR-named joints are at the tail (+X).
-**2026-06-11:** with the exact kinematics (D-014), Gazebo physics confirms cmd_vel +x walks the body
-toward **-X (head-first)** with `forward_sign=-1` — direction is settled end-to-end.
-Remaining cleanup (deferred): URDF leg labels don't match physical quadrants. A full rename touches
-URDF + ros2_control + controllers.yaml + joint_conventions + servo map + code, and likely a leg-mesh
-swap (mid<->mid_rev, foot<->foot_rev). Decide against real hardware/CAD before Stage 4.
+## Q-012 — Frame/label story — RESOLVED 2026-06-11 -> D-015
+Aryaman, watching the physics walk in Gazebo, ruled: **forward = body +X** (the arc direction set in
+the RViz reversal session). `forward_sign=+1`; cmd_vel +x drives the body toward +X — verified
+(+0.44 m straight, level). Consequence: the FL/FR-named hips sit at the +X (front) end, so the URDF
+leg labels MATCH physical quadrants — the long-deferred rename is unnecessary. The earlier
+"head is at -X" mesh reading was wrong (treadmill-perception confusion in pinned-body RViz).
 
 ## Q-013 — Open-loop gait realizes ~40% of commanded speed in physics
 cmd_vel 0.12 m/s -> ~0.047 m/s realized (straight, level). Expected for an open-loop trot under a

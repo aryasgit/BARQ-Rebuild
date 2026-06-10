@@ -3,6 +3,14 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-015 — Forward = body +X; forward_sign=+1 (supersedes D-011's direction premise)
+**Date:** 2026-06-11 · **Status:** Accepted (resolves Q-012)
+Aryaman validated the direction against the PHYSICS walk (the only unambiguous arbiter): forward is
+the body's **+X** — the FL/FR-labeled end. `gait_planner` `forward_sign=+1` (cmd_vel passes straight
+through; yaw unchanged). Verified in Gazebo: cmd +x -> +0.44 m, straight, level. Leg labels therefore
+match quadrants (no rename); D-011's "front = -X head" premise is retired — it came from reading a
+pinned-body RViz treadmill, which inverts casual perception.
+
 ## D-014 — Exact URDF-true leg kinematics replace the idealized model
 **Date:** 2026-06-11 · **Status:** Accepted
 `fk_exact`/`ik_exact` model the URDF chain without approximation: knee-x offset (+0.01744

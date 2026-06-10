@@ -3,6 +3,13 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Forward direction finalized: +X (forward_sign=+1)
+Aryaman watched the Gazebo walk and ruled the -X direction backwards: forward is **+X**, the arc
+direction approved in the RViz reversal session. One-parameter fix (`forward_sign` -1 -> +1).
+Physics-verified: cmd +x -> **+0.442 m in ~10 s, straight (-5 mm), level**, settle z again 0.141779.
+Resolves Q-012 (D-015): FL/FR labels are genuinely the front legs; no rename needed.
+
+---
 ## 2026-06-11 — Stage 2E COMPLETE: BARQ walks in Gazebo physics, head-first
 Multi-day bring-up, three phases:
 

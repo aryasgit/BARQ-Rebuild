@@ -24,7 +24,7 @@ head-first, level, straight. Settle height matches prediction to 0.2 mm.
 - [ ] **Stage 3 — Teensy firmware** (parallel track; BNO085 + INA226 in hand)
 - [ ] Gait quality in sim: realized speed ~40% of command (Q-013) — tune period/friction/steps
 - [ ] State estimator node (needs IMU — sim can provide one earlier if useful)
-- [ ] Q-012 leg-label rename (decide against CAD before Stage 4)
+- [x] ~~Q-012 leg-label rename~~ — resolved: labels match quadrants (D-015)
 
 ## How to run
 - **Physics sim (walks for real):** `ros2 launch barq_bringup sim.launch.py gait:=true gui:=true`
@@ -36,5 +36,5 @@ head-first, level, straight. Settle height matches prediction to 0.2 mm.
 - **One stack at a time** — host-network containers share the DDS graph (cross-talk!).
 
 ## Interfaces (unchanged)
-`/cmd_vel` (Twist, +x = head-first) · `/foot_targets` (12 xyz, body frame, FL/FR/RL/RR)
+`/cmd_vel` (Twist, +x = forward = body +X) · `/foot_targets` (12 xyz, body frame, FL/FR/RL/RR)
 · `/joint_group_position_controller/commands` (12 rad, FL/FR/RL/RR x coxa,femur,tibia)

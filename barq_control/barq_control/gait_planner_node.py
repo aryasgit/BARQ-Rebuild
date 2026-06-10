@@ -36,9 +36,10 @@ class GaitPlanner(Node):
         self.declare_parameter('step_height', 0.02)
         self.declare_parameter('stand_height', 0.13)
         self.declare_parameter('rate', 50.0)
-        # +1: cmd_vel +x sweeps the gait toward body -X (head end); -1 reverses. Set from the
-        # PHYSICS direction test (docs/03_CHANGELOG.md 2026-06-11), not RViz perception.
-        self.declare_parameter('forward_sign', -1.0)
+        # Forward = body +X (Aryaman, watching the PHYSICS walk in Gazebo, 2026-06-11; this is
+        # the arc direction approved in the RViz reversal session). +1 => cmd_vel +x drives the
+        # body toward +X. Flip to -1 only if the frame convention is ever re-decided (Q-012).
+        self.declare_parameter('forward_sign', 1.0)
         self.fwd = float(self.get_parameter('forward_sign').value)
         self.period = float(self.get_parameter('period').value)
         self.duty = float(self.get_parameter('duty').value)
@@ -65,9 +66,8 @@ class GaitPlanner(Node):
 
     def _tick(self):
         self.t += self.dt
-        # Robot FRONT is the body's -X end (head per the mesh; URDF leg labels disagree, Q-012).
-        # cmd_vel is robot-centric (+x = head-first); forward_sign maps it into body axes
-        # (yaw about Z is unchanged either way).
+        # cmd_vel is robot-centric (+x = forward = body +X per forward_sign above); yaw about
+        # Z is unchanged by the mapping.
         ft = foot_targets(self.t, self.fwd * self.vx, self.fwd * self.vy, self.wz, self.hip,
                           period=self.period, duty=self.duty,
                           step_height=self.step_height, stand_height=self.stand_height)
