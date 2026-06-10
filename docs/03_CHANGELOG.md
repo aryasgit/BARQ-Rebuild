@@ -3,6 +3,50 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Stage 2E COMPLETE: BARQ walks in Gazebo physics, head-first
+Multi-day bring-up, three phases:
+
+**1. Gazebo Fortress infrastructure.** Dockerfile: OSRF repo + slim package set
+(`ros-gz-sim`, `ros-gz-bridge`, `ign-ros2-control` — NOT the `ros-gz` metapackage: its
+demos/image extras pull Ubuntu libopencv-dev which collides with the dustynv image's CUDA
+opencv-dev; first build failed exactly there). `barq.urdf.xacro` mode:=gazebo branch
+(ign_ros2_control hardware + system plugin reading ros2_controllers.yaml). Collisions
+reduced to body box + 4 foot spheres (r=0.012 at the kinematic foot point) — mesh collisions
+are slow/unstable for contacts. Offline `barq_world.sdf` (no Fuel). `sim.launch.py`:
+gz server (+optional GUI), spawn from /robot_description, /clock bridge, spawners, gait:=true.
+GOTCHA: with --network host all containers share one DDS graph — running the RViz demo and
+the sim simultaneously cross-polluted /controller_manager etc. One stack at a time.
+
+**2. Adversarial review (25-agent workflow): 3 confirmed findings, 18 refuted.**
+(a) startup collapse-then-snap: no initial joint values + spawn 0.25 m; (b) the idealized
+leg model was off by up to 3.4 cm at the FRONT feet (knee x-offset +-0.01744 front/rear,
+femur 10.7deg in-plane angle, 0.0324 lateral ankle offset all folded into fake "lengths" —
+front/rear ASYMMETRIC, support polygon shifted, stand height 11 mm off); (c) zero swing
+clearance (step 0.012 = sphere r, apex 0.1 rad from the tibia clamp).
+Bonus correction: Humble ign_ros2_control applies position commands as a stiff velocity
+loop (JointVelocityCmd = error x update_rate), not literal teleports; initial values DO
+use JointPositionReset.
+
+**3. Exact kinematics + fixes (D-014).** `leg_kinematics.py`: fk_exact/ik_exact modelling
+the URDF chain exactly (q1-invariant x-offsets, femur in-plane L2P/A2, combined lateral
+LAT=0.0754692; URDF +q2 tilts the femur toward -X — the legacy model had this sign
+MIRRORED, the root of the direction confusion). Verified against a rotation-matrix
+composition of the raw URDF origins to <1e-12 (test_exact_kinematics.py); legacy model kept
+but marked not-for-control. ik_node + gait use the exact model; neutral foot = knee-x
+forward/back of hip (symmetric support polygon). Gait stand 0.13 / step 0.02 (real
+clearance; tibia apex -2.18 within -2.2). URDF: initial_value on all 12 joints = exact
+stance (0, 1.047531, -1.928768); spawn z 0.17. gait_planner gains `forward_sign` param.
+
+**Physics results** (headless, ign model --pose):
+- Settle: x=-0.000001, z=0.141779 vs predicted 0.142 (0.2 mm!), level, zero transient
+  (was: -3.2 cm startup lurch + 11 mm height anomaly — both were the model error).
+- Walk cmd_vel +x: **-0.376 m in ~8 s toward -X = HEAD-FIRST, the correct direction**
+  (was +X/tail-first; cause was the asymmetric foot placement + scuffing, not the mapping).
+  forward_sign=-1 confirmed as default. ~0.047 m/s realized of 0.12 commanded (open-loop
+  slip — tuning headroom for later).
+19 unit tests pass. Stray ws-root demo files cleaned.
+
+---
 ## 2026-06-10 — Deep crouch: tibia judgment limit -2.2, stand_height 0.115; first push
 Team confirmed the ST3215s are **360-deg servos — no hard mechanical stop**; all joint limits are
 design judgment (resolves Q-001's premise). Aryaman wanted a much deeper crouch (more femur, more

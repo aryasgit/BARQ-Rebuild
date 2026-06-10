@@ -23,19 +23,23 @@ def _side(hip_y):
     return 1.0 if hip_y >= 0.0 else -1.0
 
 
-def foot_targets(t, vx, vy, wz, hip_offsets, L1,
-                 period=0.5, duty=0.5, step_height=0.012, stand_height=0.115, deadband=1e-3):
+def foot_targets(t, vx, vy, wz, hip_offsets, lateral=0.0754692, kx_front=0.01744,
+                 period=0.5, duty=0.5, step_height=0.02, stand_height=0.13, deadband=1e-3):
     """
     Return 12 body-frame foot coords [FLxyz, FRxyz, RLxyz, RRxyz] at gait time t.
 
     vx, vy: body linear velocity (m/s); wz: yaw rate (rad/s).
+    Neutral foot: knee-x offset forward/back of the hip (exact URDF model), `lateral`
+    outboard, `stand_height` below. Constraint: stand_height - step_height >= ~0.095 m,
+    else the swing apex demands tibia beyond -2.2 (exact-model min in-plane reach ~0.092).
     """
     moving = (abs(vx) + abs(vy) + abs(wz)) > deadband
     out = []
     for leg in LEGS:
         hx, hy, hz = hip_offsets[leg]
-        nx = hx                      # neutral foot directly under the hip in x
-        ny = hy + _side(hy) * L1     # ... and L1 outboard in y
+        kx = kx_front if leg.startswith('F') else -kx_front
+        nx = hx + kx                      # neutral foot under the knee-x (support symmetric)
+        ny = hy + _side(hy) * lateral     # ... and the true lateral offset outboard
         nz = hz - stand_height
         if not moving:
             out += [nx, ny, nz]

@@ -1,42 +1,39 @@
 """
-BARQ single-leg kinematics (idealized 3-DOF analytical model).
+BARQ single-leg kinematics.
 
-Frame (per leg, REP-103 body frame): x forward, y left, z up. Origin at the hip (coxa) joint.
-Joints:
-  q1 = coxa  (abduction, rotates about body +X)
-  q2 = femur (rotates about body +Y)
-  q3 = tibia (rotates about body +Y; knee bend)
+Two models live here:
 
-Link lengths come from robot_params.yaml (derived from the URDF):
-  L1 = coxa_length  (lateral hip->knee offset)
-  L2 = femur_length
-  L3 = tibia_length
+EXACT (use this — fk_exact / ik_exact): matches the URDF joint chain to machine precision
+(verified against a rotation-matrix composition of the raw URDF origins in
+test_exact_kinematics.py). Frame (hip-relative, REP-103): x forward, y left, z up.
+  q1 = hip/coxa  (about +X), q2 = knee/femur (about +Y), q3 = ankle/tibia (about +Y)
 
-`side` = +1 for left legs (FL, RL: hip y > 0), -1 for right legs (FR, RR).
+URDF chain (lengths in m, from barq.urdf.xacro):
+  knee origin in coxa frame : (KX, side*0.0430692, 0)   KX = +0.01744 front, -0.01744 rear
+  ankle origin in femur frame: (0.018944, side*0.0324, -0.1)
+  foot point in tibia frame  : (0, 0, -0.1)
+Because the coxa rotates about X, the x-offsets are q1-invariant; the two lateral offsets
+combine into LAT = 0.0754692. The femur's (0.018944, -0.1) in-plane vector has magnitude
+L2P at fixed angle A2 from straight-down. Note: positive q2 (about +Y) tilts the femur
+toward -X — this sign is URDF truth and was the root cause of an early direction bug.
 
-At all-zero angles the leg points straight down: foot = (0, side*L1, -(L2+L3)).
-
-NOTE: this is the idealized model the project standardised on (clean link lengths). It ignores
-the small mesh-frame offsets in the URDF (sub-cm); foot placement is exact *for this model* and
-round-trips to machine precision (see test_ik.py). Knee-bend convention: q3 <= 0 (knee_bend=-1,
-legs fold forward; confirmed visually on BARQ and matches the servo tibia range [-1.571, 0]).
+LEGACY (fk_leg / ik_leg): the old idealized 3-DOF model (clean link lengths, q2 sign
+mirrored vs the URDF). Kept only for its unit tests; do NOT use for control. Its frame
+offsets error is up to 3.4 cm at the front feet — see docs/03_CHANGELOG.md 2026-06-11.
 """
 
 import math
 
-
-def fk_leg(q1, q2, q3, L1, L2, L3, side):
-    """Forward kinematics: joint angles -> foot position (x, y, z) in the hip frame."""
-    # Femur + tibia in the leg's sagittal plane (x forward, z down-negative).
-    foot_x = L2 * math.sin(q2) + L3 * math.sin(q2 + q3)
-    foot_z = -(L2 * math.cos(q2) + L3 * math.cos(q2 + q3))
-    # Lateral coxa offset, then rotate the (y, z) by the coxa angle about +X.
-    y0 = side * L1
-    z0 = foot_z
-    x = foot_x
-    y = y0 * math.cos(q1) - z0 * math.sin(q1)
-    z = y0 * math.sin(q1) + z0 * math.cos(q1)
-    return (x, y, z)
+# Exact URDF-derived constants (computed, not rounded; robot_params.yaml mirrors them).
+KX_FRONT = 0.01744                    # knee-origin x in coxa frame, front legs (rear = -)
+KNEE_Y = 0.0430692                    # knee-origin lateral offset (per side)
+ANKLE_X = 0.018944                    # ankle-origin x in femur frame
+ANKLE_Y = 0.0324                      # ankle-origin lateral offset (per side)
+FEMUR_Z = 0.1                         # femur vertical drop to ankle
+LAT = KNEE_Y + ANKLE_Y                # combined q1-plane lateral offset = 0.0754692
+L2P = math.hypot(ANKLE_X, FEMUR_Z)    # femur in-plane length
+A2 = math.atan2(ANKLE_X, FEMUR_Z)     # femur fixed in-plane angle
+L3 = 0.100                            # tibia: ankle -> foot point
 
 
 def _clamp(v, lo=-1.0, hi=1.0):
@@ -48,36 +45,76 @@ def _wrap(a):
     return (a + math.pi) % (2.0 * math.pi) - math.pi
 
 
-def ik_leg(x, y, z, L1, L2, L3, side, knee_bend=-1.0):
-    """
-    Inverse kinematics: foot position (hip frame) -> (q1, q2, q3).
-
-    knee_bend selects the elbow branch (two mirrored solutions reach the same foot):
-      -1 (default): q3 <= 0, legs fold FORWARD — BARQ's physical configuration (Q-010),
-                    and the only branch inside the servo tibia range [-1.571, 0].
-      +1          : q3 >= 0, legs fold backward (mirrored; kept for tests/analysis).
-    Raises ValueError if the target is outside the leg's reachable workspace.
-    """
-    R = math.hypot(y, z)
-    if R < abs(L1):
-        raise ValueError(f'target inside coxa radius (R={R:.4f} < L1={L1:.4f})')
-
-    # Coxa: cos(q1 - phi) = side*L1 / R, take the downward-hanging branch.
-    phi = math.atan2(z, y)
-    q1 = phi + math.acos(_clamp(side * L1 / R))
-
-    # Inverse-rotate to recover the sagittal-plane foot (x stays, z0 is the in-plane vertical).
-    z0 = -y * math.sin(q1) + z * math.cos(q1)
-    D = -z0  # downward reach (positive)
-
-    # Planar 2-link (L2, L3) for the foot at (x forward, D down).
-    r2 = x * x + D * D
-    cos_q3 = _clamp((r2 - L2 * L2 - L3 * L3) / (2.0 * L2 * L3))
-    q3 = knee_bend * math.acos(cos_q3)
-    q2 = math.atan2(x, D) - math.atan2(L3 * math.sin(q3), L2 + L3 * math.cos(q3))
-    return (_wrap(q1), _wrap(q2), _wrap(q3))
-
-
 def side_of(hip_offset_y):
     """+1 (left) if the hip is on the +y side, else -1 (right)."""
     return 1.0 if hip_offset_y >= 0.0 else -1.0
+
+
+def kx_of(leg_name, kx_front=KX_FRONT):
+    """Knee-origin x offset for a leg name ('FL','FR' front +, 'RL','RR' rear -)."""
+    return kx_front if leg_name.startswith('F') else -kx_front
+
+
+# ───────────────────────────── EXACT MODEL ─────────────────────────────
+
+def fk_exact(q1, q2, q3, kx, side, lat=LAT, l2p=L2P, a2=A2, l3=L3):
+    """URDF-true forward kinematics: joint angles -> foot point (x, y, z), hip frame."""
+    x = kx - l2p * math.sin(q2 - a2) - l3 * math.sin(q2 + q3)
+    zp = -(l2p * math.cos(q2 - a2) + l3 * math.cos(q2 + q3))
+    y0 = side * lat
+    y = y0 * math.cos(q1) - zp * math.sin(q1)
+    z = y0 * math.sin(q1) + zp * math.cos(q1)
+    return (x, y, z)
+
+
+def ik_exact(x, y, z, kx, side, knee_bend=-1.0, lat=LAT, l2p=L2P, a2=A2, l3=L3):
+    """
+    URDF-true inverse kinematics: foot point (hip frame) -> (q1, q2, q3).
+
+    knee_bend=-1 is BARQ's physical fold (matches the visually-confirmed stance).
+    Raises ValueError if the target is outside the workspace laterally.
+    """
+    R = math.hypot(y, z)
+    if R < lat:
+        raise ValueError(f'target inside lateral-offset radius (R={R:.4f} < {lat:.4f})')
+
+    phi = math.atan2(z, y)
+    q1 = _wrap(phi + math.acos(_clamp(side * lat / R)))
+
+    z0 = -y * math.sin(q1) + z * math.cos(q1)
+    D = -z0                       # in-plane downward reach (positive)
+    xm = -(x - kx)                # mirrored sagittal coordinate (URDF +q2 tilts femur -X)
+
+    r2 = xm * xm + D * D
+    cosd = _clamp((r2 - l2p * l2p - l3 * l3) / (2.0 * l2p * l3))
+    d = knee_bend * math.acos(cosd)
+    psi = math.atan2(xm, D) - math.atan2(l3 * math.sin(d), l2p + l3 * math.cos(d))
+    return (q1, _wrap(psi + a2), _wrap(d - a2))
+
+
+# ──────────────────────── LEGACY IDEALIZED MODEL ────────────────────────
+
+def fk_leg(q1, q2, q3, L1, L2, L3_, side):
+    """LEGACY idealized FK (q2 sign mirrored vs URDF). Not for control use."""
+    foot_x = L2 * math.sin(q2) + L3_ * math.sin(q2 + q3)
+    foot_z = -(L2 * math.cos(q2) + L3_ * math.cos(q2 + q3))
+    y0 = side * L1
+    y = y0 * math.cos(q1) - foot_z * math.sin(q1)
+    z = y0 * math.sin(q1) + foot_z * math.cos(q1)
+    return (foot_x, y, z)
+
+
+def ik_leg(x, y, z, L1, L2, L3_, side, knee_bend=-1.0):
+    """LEGACY idealized IK (q2 sign mirrored vs URDF). Not for control use."""
+    R = math.hypot(y, z)
+    if R < abs(L1):
+        raise ValueError(f'target inside coxa radius (R={R:.4f} < L1={L1:.4f})')
+    phi = math.atan2(z, y)
+    q1 = phi + math.acos(_clamp(side * L1 / R))
+    z0 = -y * math.sin(q1) + z * math.cos(q1)
+    D = -z0
+    r2 = x * x + D * D
+    cos_q3 = _clamp((r2 - L2 * L2 - L3_ * L3_) / (2.0 * L2 * L3_))
+    q3 = knee_bend * math.acos(cos_q3)
+    q2 = math.atan2(x, D) - math.atan2(L3_ * math.sin(q3), L2 + L3_ * math.cos(q3))
+    return (_wrap(q1), _wrap(q2), _wrap(q3))

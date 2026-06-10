@@ -15,7 +15,7 @@ Geometry (link lengths + hip offsets) is read from barq_description/config/robot
 import os
 
 from ament_index_python.packages import get_package_share_directory
-from barq_control.leg_kinematics import ik_leg, side_of
+from barq_control.leg_kinematics import ik_exact, kx_of, LAT, side_of
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
@@ -40,23 +40,20 @@ class IKNode(Node):
         """Load geometry, set the default stance, and start streaming joint commands at 50 Hz."""
         super().__init__('ik_node')
         legs = self._load_params()['legs']
-        self.L1 = legs['coxa_length']
-        self.L2 = legs['femur_length']
-        self.L3 = legs['tibia_length']
         self.hip = {leg: legs['hip_offsets'][leg] for leg in LEGS}
 
-        self.declare_parameter('stance_height', 0.115)
+        self.declare_parameter('stance_height', 0.13)
         # -1 = legs fold forward (BARQ's physical config, Q-010; tibia stays in the servo's
         # [-1.571, 0] range). +1 is the mirrored branch and folds the legs backward.
         self.declare_parameter('knee_bend', -1.0)
         h = self.get_parameter('stance_height').value
         self.knee_bend = float(self.get_parameter('knee_bend').value)
 
-        # Default stance: each foot L1 outboard of its hip and `h` below it (body frame).
+        # Default stance (exact model): foot under the knee-x, true lateral outboard, h below.
         self.targets = []
         for leg in LEGS:
             hx, hy, hz = self.hip[leg]
-            self.targets += [hx, hy + side_of(hy) * self.L1, hz - h]
+            self.targets += [hx + kx_of(leg), hy + side_of(hy) * LAT, hz - h]
 
         self.pub = self.create_publisher(
             Float64MultiArray, '/joint_group_position_controller/commands', 10)
@@ -82,8 +79,8 @@ class IKNode(Node):
             hx, hy, hz = self.hip[leg]
             fx, fy, fz = self.targets[3 * i:3 * i + 3]
             try:
-                q1, q2, q3 = ik_leg(fx - hx, fy - hy, fz - hz,
-                                    self.L1, self.L2, self.L3, side_of(hy), self.knee_bend)
+                q1, q2, q3 = ik_exact(fx - hx, fy - hy, fz - hz,
+                                      kx_of(leg), side_of(hy), self.knee_bend)
             except ValueError as exc:
                 self.get_logger().warn(f'{leg}: unreachable target: {exc}',
                                        throttle_duration_sec=2.0)

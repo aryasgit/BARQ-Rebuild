@@ -27,16 +27,19 @@ class GaitPlanner(Node):
         """Load geometry/params and start publishing foot targets at the configured rate."""
         super().__init__('gait_planner')
         legs = self._load_params()['legs']
-        self.L1 = legs['coxa_length']
         self.hip = {leg: legs['hip_offsets'][leg] for leg in LEGS}
 
         self.declare_parameter('period', 0.5)
         self.declare_parameter('duty', 0.5)
-        # Deep crouch. Constraint: stand_height - step_height must stay >= ~0.103 m, else the
-        # swing apex demands tibia beyond the -2.2 judgment limit (min 2-link reach ~0.094 m).
-        self.declare_parameter('step_height', 0.012)
-        self.declare_parameter('stand_height', 0.115)
+        # Exact-model geometry; constraint: stand - step >= ~0.095 m (tibia -2.2 at apex).
+        # step 0.02 gives real swing clearance (foot sphere r=0.012 + contact/staircase margins).
+        self.declare_parameter('step_height', 0.02)
+        self.declare_parameter('stand_height', 0.13)
         self.declare_parameter('rate', 50.0)
+        # +1: cmd_vel +x sweeps the gait toward body -X (head end); -1 reverses. Set from the
+        # PHYSICS direction test (docs/03_CHANGELOG.md 2026-06-11), not RViz perception.
+        self.declare_parameter('forward_sign', -1.0)
+        self.fwd = float(self.get_parameter('forward_sign').value)
         self.period = float(self.get_parameter('period').value)
         self.duty = float(self.get_parameter('duty').value)
         self.step_height = float(self.get_parameter('step_height').value)
@@ -63,9 +66,9 @@ class GaitPlanner(Node):
     def _tick(self):
         self.t += self.dt
         # Robot FRONT is the body's -X end (head per the mesh; URDF leg labels disagree, Q-012).
-        # cmd_vel is robot-centric (+x = head-first), so map into body axes by negating linear
-        # x,y; yaw about Z is unchanged. This reverses the gait arc so it steps head-first.
-        ft = foot_targets(self.t, -self.vx, -self.vy, self.wz, self.hip, self.L1,
+        # cmd_vel is robot-centric (+x = head-first); forward_sign maps it into body axes
+        # (yaw about Z is unchanged either way).
+        ft = foot_targets(self.t, self.fwd * self.vx, self.fwd * self.vy, self.wz, self.hip,
                           period=self.period, duty=self.duty,
                           step_height=self.step_height, stand_height=self.stand_height)
         msg = Float64MultiArray()

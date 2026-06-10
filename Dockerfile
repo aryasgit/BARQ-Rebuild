@@ -51,4 +51,17 @@ RUN rosdep init || true && rosdep update
 # Source ROS on every shell
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
 
+# Gazebo Fortress (the Humble-paired release) + ros2_control plugin (Stage 2E).
+# Appended as a late layer so earlier layers stay cached.
+RUN curl -sSL https://packages.osrfoundation.org/gazebo.gpg \
+    -o /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
+    echo "deb [arch=arm64 signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable jammy main" \
+    > /etc/apt/sources.list.d/gazebo-stable.list && \
+    apt-get update && \
+    # NOT the ros-gz metapackage: its demos/image extras pull Ubuntu libopencv-dev, which
+    # collides with the dustynv image's CUDA opencv-dev. Slim set only:
+    apt-get install -y ros-humble-ros-gz-sim ros-humble-ros-gz-bridge && \
+    (apt-get install -y ros-humble-ign-ros2-control || apt-get install -y ros-humble-gz-ros2-control) && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /root/barq_ws

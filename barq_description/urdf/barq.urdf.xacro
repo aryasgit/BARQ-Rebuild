@@ -36,10 +36,6 @@
       <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="3.14159265358979 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.077"/>
       <origin rpy="0 0 0" xyz="0.00872 0.0215346 0"/>
@@ -60,10 +56,6 @@
       <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.05"/>
       <origin rpy="0 0 0" xyz="0.009472 0.01769995 -0.04999995"/>
@@ -84,9 +76,10 @@
       <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
+    <!-- Contact sphere at the kinematic foot point (mesh collisions are unstable/slow in sim) -->
     <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
+      <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
       <mass value="0.05"/>
@@ -109,10 +102,6 @@
       <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.077"/>
       <origin rpy="0 0 0" xyz="-0.00872 0.0215346 0"/>
@@ -133,10 +122,6 @@
       <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/mid.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.05"/>
       <origin rpy="0 0 0" xyz="0.009472 0.01769995 -0.04999995"/>
@@ -157,9 +142,10 @@
       <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
+    <!-- Contact sphere at the kinematic foot point (mesh collisions are unstable/slow in sim) -->
     <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/foot.dae" scale="1 1 1"/></geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
+      <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
       <mass value="0.05"/>
@@ -182,10 +168,6 @@
       <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="0 0 1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.077"/>
       <origin rpy="0 0 0" xyz="0.00872 -0.0215346 0"/>
@@ -206,10 +188,6 @@
       <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.05"/>
       <origin rpy="0 0 0" xyz="0.00947205 -0.01769995 -0.04999995"/>
@@ -230,9 +208,10 @@
       <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
+    <!-- Contact sphere at the kinematic foot point (mesh collisions are unstable/slow in sim) -->
     <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
+      <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
       <mass value="0.05"/>
@@ -255,10 +234,6 @@
       <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="3.14159265358979 0 1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/coxa.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.077"/>
       <origin rpy="0 0 0" xyz="-0.00872 -0.0215346 0"/>
@@ -279,10 +254,6 @@
       <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
-    <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/mid_rev.dae" scale="1 1 1"/></geometry>
-    </collision>
     <inertial>
       <mass value="0.05"/>
       <origin rpy="0 0 0" xyz="0.00947205 -0.01769995 -0.04999995"/>
@@ -303,9 +274,10 @@
       <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
       <material name="dark_grey"/>
     </visual>
+    <!-- Contact sphere at the kinematic foot point (mesh collisions are unstable/slow in sim) -->
     <collision>
-      <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-      <geometry><mesh filename="package://barq_description/meshes/foot_rev.dae" scale="1 1 1"/></geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
+      <geometry><sphere radius="0.012"/></geometry>
     </collision>
     <inertial>
       <mass value="0.05"/>
@@ -318,13 +290,17 @@
   <!-- mode: mock (now) | gazebo (2E) | real (Stage 4). Only the <hardware> plugin changes. -->
   <xacro:arg name="mode" default="mock"/>
 
-  <xacro:macro name="barq_joint_if" params="name lower upper">
+  <!-- init = startup joint position (the exact-model standing stance, stand_height 0.13):
+       prevents the spawn collapse + first-command snap found in the 2E review. -->
+  <xacro:macro name="barq_joint_if" params="name lower upper init">
     <joint name="${name}">
       <command_interface name="position">
         <param name="min">${lower}</param>
         <param name="max">${upper}</param>
       </command_interface>
-      <state_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">${init}</param>
+      </state_interface>
       <state_interface name="velocity"/>
     </joint>
   </xacro:macro>
@@ -334,21 +310,37 @@
       <xacro:if value="${'$(arg mode)' == 'mock'}">
         <plugin>mock_components/GenericSystem</plugin>
       </xacro:if>
-      <!-- mode=gazebo (Stage 2E) and mode=real (Stage 4) plugins slot in here -->
+      <xacro:if value="${'$(arg mode)' == 'gazebo'}">
+        <plugin>ign_ros2_control/IgnitionSystem</plugin>
+      </xacro:if>
+      <!-- mode=real (Stage 4) plugin slots in here -->
     </hardware>
 
-    <xacro:barq_joint_if name="FL_hip_joint"   lower="-0.785" upper="0.785"/>
-    <xacro:barq_joint_if name="FL_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="FL_ankle_joint" lower="-2.2"   upper="1.57"/>
-    <xacro:barq_joint_if name="FR_hip_joint"   lower="-0.785" upper="0.785"/>
-    <xacro:barq_joint_if name="FR_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="FR_ankle_joint" lower="-2.2"   upper="1.57"/>
-    <xacro:barq_joint_if name="RL_hip_joint"   lower="-0.785" upper="0.785"/>
-    <xacro:barq_joint_if name="RL_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="RL_ankle_joint" lower="-2.2"   upper="1.57"/>
-    <xacro:barq_joint_if name="RR_hip_joint"   lower="-0.785" upper="0.785"/>
-    <xacro:barq_joint_if name="RR_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="RR_ankle_joint" lower="-2.2"   upper="1.57"/>
+    <xacro:barq_joint_if name="FL_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>
+    <xacro:barq_joint_if name="FL_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
+    <xacro:barq_joint_if name="FL_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
+    <xacro:barq_joint_if name="FR_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>
+    <xacro:barq_joint_if name="FR_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
+    <xacro:barq_joint_if name="FR_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
+    <xacro:barq_joint_if name="RL_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>
+    <xacro:barq_joint_if name="RL_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
+    <xacro:barq_joint_if name="RL_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
+    <xacro:barq_joint_if name="RR_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>
+    <xacro:barq_joint_if name="RR_knee_joint"  lower="-1.57"  upper="1.57" init="1.047531"/>
+    <xacro:barq_joint_if name="RR_ankle_joint" lower="-2.2"   upper="1.57" init="-1.928768"/>
   </ros2_control>
+
+  <!-- ═══════════════ Gazebo (Stage 2E, mode:=gazebo) ═══════════════ -->
+  <xacro:if value="${'$(arg mode)' == 'gazebo'}">
+    <gazebo>
+      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(find barq_bringup)/config/ros2_controllers.yaml</parameters>
+      </plugin>
+    </gazebo>
+    <gazebo reference="FL_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
+    <gazebo reference="FR_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
+    <gazebo reference="RL_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
+    <gazebo reference="RR_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
+  </xacro:if>
 
 </robot>

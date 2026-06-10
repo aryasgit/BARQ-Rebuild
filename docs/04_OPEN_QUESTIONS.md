@@ -22,13 +22,20 @@ Commit per milestone on `stage-2`, push to origin after each, author Aryaman Gup
 Visual check showed +1 folded the legs backward; default flipped to `knee_bend=-1` (forward fold).
 Foot positions unchanged; tibia now stays within the servo's [-1.571, 0] range.
 
-## Q-012 — Frame/label story: robot front vs +X vs URDF leg names · partially handled, cleanup deferred
+## Q-012 — Frame/label story: robot front vs +X vs URDF leg names · physics now agrees; rename still deferred
 Working model (per Aryaman's mesh reading): the robot's physical FRONT/head is the body's **-X** end —
-where the URDF joints *named* RL/RR sit; the FL/FR-named joints are at the tail (+X). As of D-011 the
-gait maps cmd_vel so **+x = head-first (toward -X)**; direction now looks right in RViz.
+where the URDF joints *named* RL/RR sit; the FL/FR-named joints are at the tail (+X).
+**2026-06-11:** with the exact kinematics (D-014), Gazebo physics confirms cmd_vel +x walks the body
+toward **-X (head-first)** with `forward_sign=-1` — direction is settled end-to-end.
 Remaining cleanup (deferred): URDF leg labels don't match physical quadrants. A full rename touches
 URDF + ros2_control + controllers.yaml + joint_conventions + servo map + code, and likely a leg-mesh
-swap (mid<->mid_rev, foot<->foot_rev). Decide at 2E (ground contact) or against real hardware/CAD.
+swap (mid<->mid_rev, foot<->foot_rev). Decide against real hardware/CAD before Stage 4.
+
+## Q-013 — Open-loop gait realizes ~40% of commanded speed in physics
+cmd_vel 0.12 m/s -> ~0.047 m/s realized (straight, level). Expected for an open-loop trot under a
+stiff velocity-loop actuator model (stance slip, no body-velocity feedback). Tuning levers: period,
+duty, step length scaling, foot friction, and ultimately state feedback (2D+ estimator) or RL (Stage 5).
+Not blocking; revisit when sim fidelity matters.
 
 ## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
 ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the

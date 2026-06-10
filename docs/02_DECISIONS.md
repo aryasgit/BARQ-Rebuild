@@ -3,6 +3,20 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-014 — Exact URDF-true leg kinematics replace the idealized model
+**Date:** 2026-06-11 · **Status:** Accepted
+`fk_exact`/`ik_exact` model the URDF chain without approximation: knee-x offset (+0.01744
+front / -0.01744 rear, q1-invariant), femur in-plane vector L2P=hypot(0.018944, 0.1) at fixed
+angle A2, combined lateral LAT=0.0754692, URDF-true q2 sign (+q2 tilts femur toward -X).
+Locked by test_exact_kinematics.py: FK == rotation-matrix composition of the raw URDF origins
+(<1e-12) + IK round-trip in the operational envelope. ik_node/gait consume it; neutral foot sits
+at the knee-x (symmetric support polygon). **Why:** the 25-agent 2E review proved the idealized
+model erred up to 3.4 cm at the front feet (asymmetric!), which caused the reversed walking
+direction, an 11 mm height error, and a forward-shifted support polygon. Physics after the swap:
+settle height within 0.2 mm of prediction, walk direction correct. Legacy fk_leg/ik_leg kept
+(tests only), marked not-for-control. Sim defaults: stand 0.13 / step 0.02; stance initial_value
+(0, 1.047531, -1.928768) on all 12 joints; spawn z 0.17; `forward_sign` param (default -1).
+
 ## D-013 — Git workflow: commit as we go, push to origin/stage-2, author = Aryaman
 **Date:** 2026-06-10 · **Status:** Accepted (resolves Q-003)
 Commits land on `stage-2` as milestones complete, authored `Aryaman Gupta <rayman3304@gmail.com>`

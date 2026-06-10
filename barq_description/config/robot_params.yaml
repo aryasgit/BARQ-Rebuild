@@ -10,10 +10,21 @@ body:
   mass:   0.95         # body only; total incl. legs ~= 1.66 kg
 
 legs:
-  # Link lengths derived from URDF joint origins (see docs/00_OVERVIEW.md)
+  # EXACT leg kinematics (D-014): the URDF chain, modelled without approximation.
+  # barq_control/leg_kinematics.py (fk_exact/ik_exact) computes from these same origins;
+  # verified against the raw URDF chain in test_exact_kinematics.py.
+  knee_x_front:   0.01744     # knee-origin x in coxa frame; rear legs are -0.01744
+  knee_y:         0.0430692   # knee-origin lateral offset (per side)
+  ankle_x:        0.018944    # ankle-origin x in femur frame (all legs)
+  ankle_y:        0.0324      # ankle-origin lateral offset (per side)
+  femur_z:        0.1         # femur vertical drop to ankle
+  lateral_offset: 0.0754692   # knee_y + ankle_y (combined q1-plane lateral)
+  tibia_length:   0.100       # ankle -> foot point
+
+  # LEGACY idealized lengths (up to 3.4 cm foot error at the front legs - do not use
+  # for control; kept only for reference/servo bring-up notes):
   coxa_length:  0.0465   # sqrt(0.01744^2 + 0.0430692^2)
   femur_length: 0.107    # sqrt(0.018944^2 + 0.0324^2 + 0.1^2)
-  tibia_length: 0.100    # ankle -> foot (Z)
 
   # Hip joint offsets from body centre (x forward, y left, z up).
   # Exact values from URDF joint origins.
