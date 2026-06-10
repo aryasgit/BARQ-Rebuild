@@ -75,7 +75,7 @@
     <parent link="FL_femur_link"/>    <child link="FL_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_tibia_link">
@@ -148,7 +148,7 @@
     <parent link="RL_femur_link"/>    <child link="RL_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_tibia_link">
@@ -221,7 +221,7 @@
     <parent link="FR_femur_link"/>    <child link="FR_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_tibia_link">
@@ -294,7 +294,7 @@
     <parent link="RR_femur_link"/>    <child link="RR_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="10.0" lower="-2.2" upper="1.57" velocity="5.24"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_tibia_link">
@@ -339,16 +339,16 @@
 
     <xacro:barq_joint_if name="FL_hip_joint"   lower="-0.785" upper="0.785"/>
     <xacro:barq_joint_if name="FL_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="FL_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="FL_ankle_joint" lower="-2.2"   upper="1.57"/>
     <xacro:barq_joint_if name="FR_hip_joint"   lower="-0.785" upper="0.785"/>
     <xacro:barq_joint_if name="FR_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="FR_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="FR_ankle_joint" lower="-2.2"   upper="1.57"/>
     <xacro:barq_joint_if name="RL_hip_joint"   lower="-0.785" upper="0.785"/>
     <xacro:barq_joint_if name="RL_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="RL_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="RL_ankle_joint" lower="-2.2"   upper="1.57"/>
     <xacro:barq_joint_if name="RR_hip_joint"   lower="-0.785" upper="0.785"/>
     <xacro:barq_joint_if name="RR_knee_joint"  lower="-1.57"  upper="1.57"/>
-    <xacro:barq_joint_if name="RR_ankle_joint" lower="-1.57"  upper="1.57"/>
+    <xacro:barq_joint_if name="RR_ankle_joint" lower="-2.2"   upper="1.57"/>
   </ros2_control>
 
 </robot>

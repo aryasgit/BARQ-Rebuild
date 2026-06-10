@@ -32,10 +32,10 @@ class GaitPlanner(Node):
 
         self.declare_parameter('period', 0.5)
         self.declare_parameter('duty', 0.5)
-        # Crouched stance for stability. Constraint: stand_height - step_height must stay
-        # >= ~0.147 m, else the swing apex demands tibia beyond the -1.57 limit (leg geometry).
+        # Deep crouch. Constraint: stand_height - step_height must stay >= ~0.103 m, else the
+        # swing apex demands tibia beyond the -2.2 judgment limit (min 2-link reach ~0.094 m).
         self.declare_parameter('step_height', 0.012)
-        self.declare_parameter('stand_height', 0.16)
+        self.declare_parameter('stand_height', 0.115)
         self.declare_parameter('rate', 50.0)
         self.period = float(self.get_parameter('period').value)
         self.duty = float(self.get_parameter('duty').value)

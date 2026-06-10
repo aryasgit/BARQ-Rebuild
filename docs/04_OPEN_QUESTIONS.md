@@ -3,23 +3,18 @@
 Pending ambiguities & decisions. When resolved, move the outcome to `02_DECISIONS.md`.
 
 ---
-## Q-001 — Tibia (ankle) joint limit conflict
-URDF + kickoff doc say tibia range is **+/-1.57 rad**. But `robot_params.yaml` servo config says
-**[-1.571, 0.0]** (bends one direction only). These disagree. Which is the true mechanical limit?
-- If servo is right -> tighten URDF `<limit upper>` to 0.0.
-- If URDF is right -> relax the servo entry.
-*Impact:* IK joint clamping, gait reachable workspace, safety limits. **-> asked 2026-06-09.**
-**Update 2026-06-10:** strong evidence for the servo config — the visually-correct leg fold (D-009,
-knee_bend=-1) keeps the tibia in [-1.57, 0] everywhere (stance -1.52; gait -1.03..-1.34). Pending only
-a mechanical confirmation; then tighten the URDF upper limit to 0.
+## Q-001 — Tibia joint limit — RESOLVED 2026-06-10 -> D-012
+The ST3215s are 360-deg servos: **no hard mechanical stop exists**; all limits are design judgment.
+Current judgment: tibia **[-2.2, 0]** (folds one way, deep), recorded across URDF / ros2_control /
+robot_params / ik_node. Residual follow-up lives in D-012: check link collision at full fold on the
+physical build before driving real servos to -2.2.
 
 ## Q-002 — Physics simulator — RESOLVED 2026-06-10 -> D-010
 Both: **Gazebo for Stage 2E** (gz_ros2_control, drop-in for our stack; add to Dockerfile) and
 **MuJoCo/Isaac for RL** at Stage 5. Decided by Aryaman.
 
-## Q-003 — Git commit/push policy  · BLOCKING for committing anything
-URDF + meshes are untracked; Stage 2A changes are uncommitted. Remote: `aryasgit/BARQ-Rebuild`.
-How autonomous should commits/pushes be? **-> asked 2026-06-09.**
+## Q-003 — Git commit/push policy — RESOLVED 2026-06-10 -> D-013
+Commit per milestone on `stage-2`, push to origin after each, author Aryaman Gupta. SSH over 443.
 
 ---
 ## Non-blocking notes (track, resolve opportunistically)

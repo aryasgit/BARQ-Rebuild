@@ -3,6 +3,20 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-10 — Deep crouch: tibia judgment limit -2.2, stand_height 0.115; first push
+Team confirmed the ST3215s are **360-deg servos — no hard mechanical stop**; all joint limits are
+design judgment (resolves Q-001's premise). Aryaman wanted a much deeper crouch (more femur, more
+tibia fold, narrow). Changes:
+- Tibia limit -1.57 -> **-2.2 rad (~126deg)** everywhere: URDF ankle joints (x4), ros2_control
+  command interfaces (x4), robot_params servo map (x4), ik_node clamp (now asymmetric [-2.2, 0]).
+- stand_height 0.16 -> **0.115 m (~28% lower)**; ik_node static stance matches. New floor:
+  min 2-link reach at q3=-2.2 is ~0.094 m -> stand-step must stay >= ~0.103 m.
+- Regression test bounds updated to [-2.2, 0]; **14 tests pass**; xacro 0 stderr; check_urdf OK.
+Live: femur +0.93..+0.98, tibia -1.96..-2.08, diagonals intact. Flag: verify no link collision at
+full fold on the physical build (D-012).
+Git: `stage-2` pushed to origin (first push) — SSH over 443; all commits authored Aryaman Gupta.
+
+---
 ## 2026-06-10 — Gait reversed (head-first) + crouched stance
 Aryaman (after fold fix): gait stepped toward the tail end; wanted travel toward the head, and a lower
 body for stability. Two changes, both at the gait layer (URDF/IK/gait math untouched):

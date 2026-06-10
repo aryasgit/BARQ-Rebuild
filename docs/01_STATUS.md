@@ -23,8 +23,13 @@
       13 tests pass. (A frame-flip attempt f4cd735 was reverted by request first.)
 - [x] **Simulator decided** (Q-002 -> D-010): Gazebo for 2E, MuJoCo/Isaac for RL.
 - [x] **Gait reversed + crouched** (D-011): cmd_vel +x now walks head-first (negated x,y mapping in
-      gait_planner only); stand_height 0.16 / step_height 0.012 for a lower, stabler stance.
-      14 tests pass (new: full-cycle tibia stays in [-1.571, 0]).
+      gait_planner only). Direction confirmed by Aryaman.
+- [x] **Deep crouch** (D-012, resolves Q-001): 360-deg servos -> limits are judgment; tibia now
+      [-2.2, 0] across URDF/ros2_control/robot_params/ik clamp; stand_height 0.115 (~28% lower).
+      Live: femur +0.93..0.98, tibia -1.96..-2.08. 14 tests pass. Collision-check at full fold
+      pending on physical build.
+- [x] **Git workflow set** (D-013, resolves Q-003): stage-2 pushed to origin (SSH over 443),
+      commits authored Aryaman Gupta; push per milestone.
 
 ## Next
 - [ ] **2E physics sim (Gazebo)** — add gz_ros2_control to the Dockerfile; same ROS interface, adds

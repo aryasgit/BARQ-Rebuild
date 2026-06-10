@@ -3,6 +3,21 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-013 — Git workflow: commit as we go, push to origin/stage-2, author = Aryaman
+**Date:** 2026-06-10 · **Status:** Accepted (resolves Q-003)
+Commits land on `stage-2` as milestones complete, authored `Aryaman Gupta <rayman3304@gmail.com>`
+(global git config; Claude co-author trailer retained). Push to GitHub after each milestone. Network
+detail: port 22 blocked -> SSH over 443 via ~/.ssh/config (Host github.com -> ssh.github.com:443);
+Jetson key registered to Aryaman's GitHub. Merge to main via PR when the team chooses.
+
+## D-012 — Joint limits are design judgment; tibia = [-2.2, 0]
+**Date:** 2026-06-10 · **Status:** Accepted (resolves Q-001)
+The ST3215s are 360-deg servos: no hard stops; every limit is a team judgment call. Current judgment:
+tibia [-2.2 rad, 0] (folds one way, ~126deg max), coxa +/-0.785, femur +/-1.57. Recorded consistently
+in URDF + ros2_control interfaces + robot_params + ik_node clamp. Enables stand_height 0.115 (deep
+crouch; min 2-link reach ~0.094 m). **Revisit on the physical build:** check link/mesh collision at
+full fold before driving real servos there.
+
 ## D-011 — cmd_vel is robot-centric; forward = head-first (mapped at the gait layer)
 **Date:** 2026-06-10 · **Status:** Accepted
 `/cmd_vel +x` means "walk head-first" (robot front = the body's -X end per the mesh; the URDF leg

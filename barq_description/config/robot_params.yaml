@@ -28,13 +28,13 @@ servos:
   # ID assignments: legs in FL/FR/RL/RR order, joints in coxa/femur/tibia order
   FL_coxa:  { id: 0,  direction:  1, zero_offset: 0.0, min_angle: -0.785, max_angle: 0.785 }
   FL_femur: { id: 1,  direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 1.571 }
-  FL_tibia: { id: 2,  direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 0.0   }
+  FL_tibia: { id: 2,  direction:  1, zero_offset: 0.0, min_angle: -2.2, max_angle: 0.0   }
   FR_coxa:  { id: 3,  direction: -1, zero_offset: 0.0, min_angle: -0.785, max_angle: 0.785 }
   FR_femur: { id: 4,  direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 1.571 }
-  FR_tibia: { id: 5,  direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 0.0   }
+  FR_tibia: { id: 5,  direction:  1, zero_offset: 0.0, min_angle: -2.2, max_angle: 0.0   }
   RL_coxa:  { id: 6,  direction:  1, zero_offset: 0.0, min_angle: -0.785, max_angle: 0.785 }
   RL_femur: { id: 7,  direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 1.571 }
-  RL_tibia: { id: 8,  direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 0.0   }
+  RL_tibia: { id: 8,  direction:  1, zero_offset: 0.0, min_angle: -2.2, max_angle: 0.0   }
   RR_coxa:  { id: 9,  direction: -1, zero_offset: 0.0, min_angle: -0.785, max_angle: 0.785 }
   RR_femur: { id: 10, direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 1.571 }
-  RR_tibia: { id: 11, direction:  1, zero_offset: 0.0, min_angle: -1.571, max_angle: 0.0   }
+  RR_tibia: { id: 11, direction:  1, zero_offset: 0.0, min_angle: -2.2, max_angle: 0.0   }

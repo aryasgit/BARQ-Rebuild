@@ -24,7 +24,9 @@ import yaml
 LEGS = ['FL', 'FR', 'RL', 'RR']
 COXA_LIMIT = 0.785
 KNEE_LIMIT = 1.57
-ANKLE_LIMIT = 1.57   # Q-001: URDF value; tighten if the tibia turns out to be one-directional
+# Tibia folds one way, deep. 360-deg servos have no hard stop; [-2.2, 0] is the team's
+# design judgment (Q-001/D-012) - revisit against link collision on the physical build.
+ANKLE_MIN, ANKLE_MAX = -2.2, 0.0
 
 
 def _clamp(v, lim):
@@ -43,7 +45,7 @@ class IKNode(Node):
         self.L3 = legs['tibia_length']
         self.hip = {leg: legs['hip_offsets'][leg] for leg in LEGS}
 
-        self.declare_parameter('stance_height', 0.15)
+        self.declare_parameter('stance_height', 0.115)
         # -1 = legs fold forward (BARQ's physical config, Q-010; tibia stays in the servo's
         # [-1.571, 0] range). +1 is the mirrored branch and folds the legs backward.
         self.declare_parameter('knee_bend', -1.0)
@@ -86,7 +88,8 @@ class IKNode(Node):
                 self.get_logger().warn(f'{leg}: unreachable target: {exc}',
                                        throttle_duration_sec=2.0)
                 return
-            cmd += [_clamp(q1, COXA_LIMIT), _clamp(q2, KNEE_LIMIT), _clamp(q3, ANKLE_LIMIT)]
+            cmd += [_clamp(q1, COXA_LIMIT), _clamp(q2, KNEE_LIMIT),
+                    min(max(q3, ANKLE_MIN), ANKLE_MAX)]
         msg = Float64MultiArray()
         msg.data = [float(v) for v in cmd]
         self.pub.publish(msg)
