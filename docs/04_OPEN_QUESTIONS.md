@@ -29,6 +29,11 @@ the RViz reversal session). `forward_sign=+1`; cmd_vel +x drives the body toward
 leg labels MATCH physical quadrants — the long-deferred rename is unnecessary. The earlier
 "head is at -X" mesh reading was wrong (treadmill-perception confusion in pinned-body RViz).
 
+## Q-015 — Lidar selection: RPLidar A2M12 vs lighter/3D alternatives (research in flight)
+Aryaman is leaning A2M12. Research subagent dispatched (specs/weight-on-2.45kg-robot, ROS2 Humble
+driver, 2D-on-walking-robot mitigations, alternatives, sim-first Gazebo integration). Decide after
+the report; then add the equivalent sensor to the SIM first (gpu_lidar + bridge + slam_toolbox).
+
 ## Q-014 — Exact body CoM coordinates (Aryaman, pending)
 The base_link inertial origin is currently (0,0,0) = geometric center. Aryaman shifted the physical
 CoM toward center and will measure exact coordinates; when they arrive, set them as the base_link

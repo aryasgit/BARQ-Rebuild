@@ -20,6 +20,10 @@ head-first, level, straight. Settle height matches prediction to 0.2 mm.
   - Physics verified: settle z 0.1418 (predicted 0.142); walk cmd +x -> **+X = forward**
     (D-015, ruled by Aryaman against the physics walk; forward_sign=+1); 19 unit tests green
 
+## Direction (Aryaman 2026-06-11): SIM-TO-THE-MAX until parts arrive
+Everything tunable in sim first (offsets, balance, stability); RL outlook improved by sim fidelity.
+Bench tooling ready in `diagnostics/` for the day servos arrive.
+
 ## Next (pick)
 - [ ] **Stage 3 — Teensy firmware** (parallel track; BNO085 + INA226 in hand)
 - [ ] Gait quality in sim: realized speed ~40% of command (Q-013) — tune period/friction/steps

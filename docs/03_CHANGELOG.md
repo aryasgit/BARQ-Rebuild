@@ -3,6 +3,23 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Strategy: sim-to-the-max; ST3215 bench diagnostics tool; lidar research
+Aryaman: no components delivered yet — continue maximizing the sim world (offsets/balance/stability
+tunable before hardware); RL outlook improved by sim fidelity. Two artifacts:
+- **`diagnostics/` (new)**: `st3215_diag.py` — standalone pyserial implementation of the Feetech
+  STS register protocol (1 Mbps) for the Waveshare ST3215 + Serial Bus Servo Driver boards (USB;
+  no Teensy/ROS needed). Commands: scan/ping/status/monitor/torque/set-id/calibrate-mid (Feetech
+  torque=128 midpoint trick)/move/sweep (tracking-error report)/limits/plan (BARQ ID map 0-11,
+  one driver board per leg). README: bench procedure per servo before assembly, calibration data
+  flow into robot_params `zero_offset`. Compiles + CLI verified; **hardware paths untested until
+  servos arrive**. Honest status: Teensy firmware (Stage 3) / C++ hw interface (Stage 4) still
+  unwritten — this is the repo's first hardware-facing artifact; the Teensy will reuse this
+  register map.
+- **Lidar**: research subagent dispatched on the SLAMTEC RPLidar A2M12 (fit for a 2.45 kg
+  quadruped, ROS2 Humble/Jetson wiring, making 2D useful on a walking robot, alternatives,
+  Gazebo-first integration). Report lands in chat; decision pending (Q-015).
+
+---
 ## 2026-06-11 — Stance trim: rear_raise (load-forward, anti backward-tip) — D-016
 Aryaman observed the rear legs taking more load in sim and asked for front-more-contracted /
 rear-more-relaxed. Implemented as `rear_raise` (default 0.02 m): rear feet 2 cm deeper than front
