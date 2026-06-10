@@ -3,6 +3,21 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-10 — Stage 2C: analytical IK node (verified)
+Added `barq_control/leg_kinematics.py`: idealized 3-DOF leg (clean link lengths from robot_params;
+coxa about X, femur/tibia about Y) with forward kinematics and closed-form analytical IK. Unit tests
+`test/test_ik.py` verify FK<->IK round-trip to 1e-9 across the workspace + neutral/unreachable cases
+(4 pass). Fixed an angle-wrap (`+acos` branch pushed q1 past pi -> normalize outputs to (-pi, pi]).
+Added `ik_node.py`: loads geometry, streams a default stance, subscribes `/foot_targets` (12 foot xyz,
+body frame, FL/FR/RL/RR), publishes 12 joint positions to the position controller @ 50 Hz, clamped to
+joint limits. `control.launch.py` gains `ik:=true`. Wired barq_control setup.py (console_script) +
+package.xml (rclpy/std_msgs/ament_index_python/yaml/barq_description deps).
+
+Verified live (headless): IK node @ 50 Hz; stance hips=0, knees=-0.73, ankles=1.52 (symmetric across
+4 legs); commanding feet 0.19 m below hips straightened the legs (knees -0.39, ankles 0.82). Knee-bend
+branch = +1 (verify visual direction in RViz, Q-010).
+
+---
 ## 2026-06-10 — Stage 2B: ros2_control mock loop (verified)
 Renamed `barq.urdf` -> `barq.urdf.xacro` (added `xmlns:xacro`, a `mode` arg) and appended a
 `<ros2_control>` system block: `mock_components/GenericSystem` (mode=mock), all 12 joints with a

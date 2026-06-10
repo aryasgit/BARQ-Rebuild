@@ -25,6 +25,11 @@ How autonomous should commits/pushes be? **-> asked 2026-06-09.**
 
 ---
 ## Non-blocking notes (track, resolve opportunistically)
+## Q-010 — IK knee-bend direction (verify in RViz)
+`ik_node` uses `knee_bend=+1` (one of two valid IK branches). Confirm the knees bend the physically
+correct way when viewing the stance in RViz; if reversed, set the `knee_bend:=-1` param / flip the
+default. Cosmetic kinematic-branch choice, not a math error.
+
 ## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
 ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the
 container. Harmless for mock/sim. For real hardware: add RT privileges to the container

@@ -38,10 +38,13 @@ def generate_launch_description():
         Command(['xacro ', xacro_path, ' mode:=mock']), value_type=str)
 
     use_rviz = LaunchConfiguration('rviz')
+    use_ik = LaunchConfiguration('ik')
 
     return LaunchDescription([
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Launch RViz'),
+        DeclareLaunchArgument('ik', default_value='false',
+                              description='Also launch the IK node (Stage 2C)'),
 
         Node(
             package='robot_state_publisher',
@@ -77,5 +80,12 @@ def generate_launch_description():
             output='screen',
             arguments=['-d', rviz_path],
             condition=IfCondition(use_rviz),
+        ),
+
+        Node(
+            package='barq_control',
+            executable='ik_node',
+            output='screen',
+            condition=IfCondition(use_ik),
         ),
     ])

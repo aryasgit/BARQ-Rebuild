@@ -3,6 +3,18 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-007 — IK: idealized 3-DOF analytical model, body-frame foot targets
+**Date:** 2026-06-10 · **Status:** Accepted
+`leg_kinematics.py` uses the idealized leg (clean link lengths L1/L2/L3 from robot_params; coxa about X,
+femur/tibia about Y), not the URDF's exact mesh-frame offsets. IK is closed-form, validated by FK<->IK
+round-trip to 1e-9. `ik_node` consumes `/foot_targets` (12 foot xyz, body frame, FL/FR/RL/RR) and emits
+12 joint positions to the position controller @ 50 Hz. Per-leg L/R is handled by the target + the leg's
+`side` sign — no separate mirror multiplier in sim; the servo-direction multipliers in robot_params
+apply only at the real-hardware layer (see [[D-001]]). `knee_bend=+1` branch (Q-010); outputs clamped to
+joint limits. **Why:** the project standardised on clean link lengths; closed-form IK is fast and exact
+for that model; the sub-cm URDF offsets are negligible for viz/gait and can be calibrated later.
+
+---
 ## D-006 — ros2_control: xacro `mode` arg + mock_components + JointGroupPositionController
 **Date:** 2026-06-10 · **Status:** Accepted
 Description is now `barq.urdf.xacro` with a `mode` arg (mock|gazebo|real); only the `<hardware>` plugin

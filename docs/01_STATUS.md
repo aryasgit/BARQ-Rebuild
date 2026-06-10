@@ -1,35 +1,40 @@
 # BARQ — Current Status
 
 **Last updated:** 2026-06-10
-**Current stage:** 2B complete -> starting 2C (IK)
+**Current stage:** 2C complete -> starting 2D (gait)
 
 ## Snapshot
-The full **ros2_control loop runs against mock hardware**: command 12 joint positions on a topic ->
-they flow through controller_manager -> `/joint_states` -> TF -> RViz. Verified headless. This is the
-exact machinery that will drive the real servos later (only the `<hardware>` plugin swaps).
+**Analytical IK works end-to-end**: give the IK node a foot position (body frame) and it computes the
+joint angles that place the foot there, streaming to the control loop -> RViz. Verified by unit tests
+(FK<->IK round-trip to 1e-9) and live (stance + foot-target response).
 
 ## Done
-- [x] **Stage 2A** — BARQ renders in RViz over VNC; 12 joints driveable. (commit `c04a3a8`, branch `stage-2`)
-- [x] **Stage 2B** — ros2_control mock skeleton:
-  - `barq.urdf.xacro` with a `<ros2_control>` block (`mode` = mock|gazebo|real; mock = `mock_components/GenericSystem`)
-  - `ros2_controllers.yaml`: `joint_state_broadcaster` + `joint_group_position_controller` (all 12 joints)
-  - `control.launch.py` (rsp + controller_manager + spawners + optional rviz)
-  - Verified: 4 nodes up, both controllers ACTIVE, commanded pose appears in `/joint_states`.
+- [x] **2A** — RViz visualization, 12 joints driveable. (`c04a3a8`)
+- [x] **2B** — ros2_control mock loop. (`2d792aa`)
+- [x] **2C** — analytical IK:
+  - `leg_kinematics.py` — idealized 3-DOF FK + analytical IK; unit-tested round-trip to 1e-9 (4 tests)
+  - `ik_node.py` — reads robot_params geometry; streams default stance; `/foot_targets` -> 12 joint cmds @ 50 Hz
+  - `control.launch.py ik:=true` brings up control loop + IK together
+  - Verified live: stance (hips 0, knees -0.73, ankles 1.52); feet 0.19 m below hips -> legs straighten
 
 ## Next
-- [ ] **Stage 2C — IK node**: analytical 3-DOF IK (coxa/femur/tibia), unit-tested, publishing to
-      `/joint_group_position_controller/commands`; verify a foot target -> correct pose in RViz.
-- [ ] Then 2D (gait), 2E (physics sim).
-- [ ] Parked decisions: Q-001 tibia limit (**matters at 2C**), Q-002 simulator (2E), Q-003 git push.
+- [ ] **2D — gait planner**: `/cmd_vel` -> foot trajectories (trot) -> `/foot_targets` -> (IK) -> walk in RViz
+- [ ] then 2E physics sim
+- [ ] parked: Q-001 tibia limit, Q-002 simulator, Q-003 git push, Q-010 knee-bend visual check
 
 ## How to run
-- **Viz only (GUI sliders):** `ros2 launch barq_bringup visualize.launch.py`
-- **Full control loop:** `ros2 launch barq_bringup control.launch.py`
-  - `ros2 control list_controllers`
-  - `ros2 topic pub --once /joint_group_position_controller/commands std_msgs/msg/Float64MultiArray "{data: [0,0.3,-0.6, 0,0.3,-0.6, 0,0.3,-0.6, 0,0.3,-0.6]}"`
-- **Over VNC:** run it inside `DISPLAY=:0 ~/run_barq_gui.sh` (or a detached container), view `vnc://barq.local:5900`.
+- Viz (sliders):       `ros2 launch barq_bringup visualize.launch.py`
+- Control loop:        `ros2 launch barq_bringup control.launch.py`
+- Control loop + IK:   `ros2 launch barq_bringup control.launch.py ik:=true`
+  - move feet: `ros2 topic pub --once /foot_targets std_msgs/msg/Float64MultiArray "{data: [FLx,FLy,FLz, FRx,FRy,FRz, RLx,RLy,RLz, RRx,RRy,RRz]}"`
+- IK unit tests:       `cd src/barq_control && python3 -m pytest test/test_ik.py`
+- Over VNC:            `DISPLAY=:0 ~/run_barq_gui.sh` then `vnc://barq.local:5900`
+
+## Interfaces
+- `/foot_targets` (Float64MultiArray[12]) — foot xyz in **body frame**, order FL, FR, RL, RR
+- `/joint_group_position_controller/commands` (Float64MultiArray[12]) — joint pos, FL/FR/RL/RR x (coxa, femur, tibia)
 
 ## Notes
-- `/joint_states` is NOT in FL/FR/RL/RR order — always key by joint **name** (Q-005).
-- ros2_control_node logs a benign "Could not enable FIFO RT scheduling" warning under Docker (Q-009).
-- Headless Jetson display is 1024x768 (see memory `barq-remote-viz` / earlier changelog).
+- RViz is kinematic-only (no ground/physics; body fixed) until 2E.
+- `/joint_states` not in FL/FR/RL/RR order — key by **name** (Q-005).
+- Benign FIFO RT scheduling warning under Docker (Q-009).

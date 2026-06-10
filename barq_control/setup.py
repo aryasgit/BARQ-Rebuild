@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'ik_node = barq_control.ik_node:main',
         ],
     },
 )
