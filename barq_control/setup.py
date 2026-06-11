@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'ik_node = barq_control.ik_node:main',
             'gait_planner = barq_control.gait_planner_node:main',
+            'odom_tf = barq_control.odom_tf_node:main',
         ],
     },
 )

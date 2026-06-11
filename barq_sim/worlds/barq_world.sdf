@@ -15,6 +15,12 @@
             name="ignition::gazebo::systems::SceneBroadcaster"/>
     <plugin filename="ignition-gazebo-contact-system"
             name="ignition::gazebo::systems::Contact"/>
+    <!-- Required for gpu_lidar (renders server-side). ogre2 + EGL headless on Tegra;
+         if /scan stays silent, fall back to <render_engine>ogre</render_engine> + X display. -->
+    <plugin filename="ignition-gazebo-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
 
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
@@ -23,6 +29,49 @@
       <specular>0.2 0.2 0.2 1</specular>
       <direction>-0.5 0.1 -0.9</direction>
     </light>
+
+    <!-- 8x6 m room + pillars: features for the 2D lidar / SLAM (walls taller than the
+         0.21 m scan plane). -->
+    <model name="room">
+      <static>true</static>
+      <link name="walls">
+        <collision name="n"><pose>0 3 0.25 0 0 0</pose>
+          <geometry><box><size>8.2 0.1 0.5</size></box></geometry></collision>
+        <visual name="nv"><pose>0 3 0.25 0 0 0</pose>
+          <geometry><box><size>8.2 0.1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.75 0.65 1</ambient><diffuse>0.8 0.75 0.65 1</diffuse></material></visual>
+        <collision name="s"><pose>0 -3 0.25 0 0 0</pose>
+          <geometry><box><size>8.2 0.1 0.5</size></box></geometry></collision>
+        <visual name="sv"><pose>0 -3 0.25 0 0 0</pose>
+          <geometry><box><size>8.2 0.1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.75 0.65 1</ambient><diffuse>0.8 0.75 0.65 1</diffuse></material></visual>
+        <collision name="e"><pose>4 0 0.25 0 0 0</pose>
+          <geometry><box><size>0.1 6 0.5</size></box></geometry></collision>
+        <visual name="ev"><pose>4 0 0.25 0 0 0</pose>
+          <geometry><box><size>0.1 6 0.5</size></box></geometry>
+          <material><ambient>0.7 0.75 0.8 1</ambient><diffuse>0.7 0.75 0.8 1</diffuse></material></visual>
+        <collision name="w"><pose>-4 0 0.25 0 0 0</pose>
+          <geometry><box><size>0.1 6 0.5</size></box></geometry></collision>
+        <visual name="wv"><pose>-4 0 0.25 0 0 0</pose>
+          <geometry><box><size>0.1 6 0.5</size></box></geometry>
+          <material><ambient>0.7 0.75 0.8 1</ambient><diffuse>0.7 0.75 0.8 1</diffuse></material></visual>
+        <collision name="p1"><pose>2 1.5 0.3 0 0 0</pose>
+          <geometry><box><size>0.4 0.4 0.6</size></box></geometry></collision>
+        <visual name="p1v"><pose>2 1.5 0.3 0 0 0</pose>
+          <geometry><box><size>0.4 0.4 0.6</size></box></geometry>
+          <material><ambient>0.6 0.45 0.3 1</ambient><diffuse>0.6 0.45 0.3 1</diffuse></material></visual>
+        <collision name="p2"><pose>-2 -1.2 0.3 0 0 0</pose>
+          <geometry><box><size>0.5 0.5 0.6</size></box></geometry></collision>
+        <visual name="p2v"><pose>-2 -1.2 0.3 0 0 0</pose>
+          <geometry><box><size>0.5 0.5 0.6</size></box></geometry>
+          <material><ambient>0.6 0.45 0.3 1</ambient><diffuse>0.6 0.45 0.3 1</diffuse></material></visual>
+        <collision name="p3"><pose>0.5 -2 0.25 0 0 0</pose>
+          <geometry><cylinder><radius>0.25</radius><length>0.5</length></cylinder></geometry></collision>
+        <visual name="p3v"><pose>0.5 -2 0.25 0 0 0</pose>
+          <geometry><cylinder><radius>0.25</radius><length>0.5</length></cylinder></geometry>
+          <material><ambient>0.45 0.55 0.45 1</ambient><diffuse>0.45 0.55 0.45 1</diffuse></material></visual>
+      </link>
+    </model>
 
     <model name="ground_plane">
       <static>true</static>

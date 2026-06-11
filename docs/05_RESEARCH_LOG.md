@@ -70,6 +70,14 @@ through mass and posture changes, i.e., the residual physics is now explained by
 - **Gazebo metapackage** → slim package set: the convenience metapackage broke the Jetson image
   (CUDA OpenCV file conflict); minimal dependencies are a deployment-correctness decision.
 
+## 2b. Sim-perception iteration (2026-06-11)
+| Probe | Result |
+|---|---|
+| Scan-plane leveling | odom->laser rotation ≈ 0.001 rad: the -4.5 deg mount counter-wedge exactly cancels the D-016 stance pitch — a *designed* prediction confirmed in physics |
+| Lidar rate | 9.7 Hz (light) / ~7 Hz (full SLAM load); headless EGL rendering works on Tegra |
+| SLAM output | 8x6 m room mapped: /map 161x121 @ 0.05 m, 1127 occupied / 16898 free cells after one fwd-arc-fwd lap |
+| Failures->fixes | empty world mapped nothing (features required); gz model-prefixed TF frames broke the scan chain -> forced-frame odom_tf node |
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.

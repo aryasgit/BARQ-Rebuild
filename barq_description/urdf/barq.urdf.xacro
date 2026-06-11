@@ -24,6 +24,27 @@
     </inertial>
   </link>
 
+  <!-- ═══════════════ LIDAR (STL-27L-class 2D, Q-015: purchase deferred, sim-first) ═══════════
+       Aft-of-center deck mount (nose reserved for a future depth camera). Pitched -4.5 deg to
+       counter the nose-down stance trim (D-016) so the scan plane is level at nominal stance.
+       Mass modelled so dynamics/RL train on the robot that will exist. -->
+  <link name="laser">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry><cylinder radius="0.019" length="0.035"/></geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <inertial>
+      <mass value="0.047"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1.0e-5" ixy="0" ixz="0" iyy="1.0e-5" iyz="0" izz="8.5e-6"/>
+    </inertial>
+  </link>
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>    <child link="laser"/>
+    <origin rpy="0 -0.0785 0" xyz="-0.04 0 0.066"/>
+  </joint>
+
   <!-- ═══════════════ FL LEG ═══════════════ -->
   <joint name="FL_hip_joint" type="revolute">
     <parent link="base_link"/>    <child link="FL_coxa_link"/>
@@ -344,6 +365,42 @@
     <gazebo reference="FR_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
     <gazebo reference="RL_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
     <gazebo reference="RR_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
+
+    <!-- 2D lidar (STL-27L-class: 360 deg, 25 m, 21.6 kHz -> 2160 samples @ 10 Hz).
+         frame/topic chosen for zero-config parity with the real driver (frame 'laser', /scan). -->
+    <gazebo reference="laser">
+      <sensor name="lidar2d" type="gpu_lidar">
+        <topic>scan</topic>
+        <update_rate>10</update_rate>
+        <ignition_frame_id>laser</ignition_frame_id>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>2160</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+          </scan>
+          <range><min>0.15</min><max>25.0</max><resolution>0.01</resolution></range>
+          <noise><type>gaussian</type><mean>0.0</mean><stddev>0.02</stddev></noise>
+        </lidar>
+        <always_on>1</always_on>
+        <visualize>false</visualize>
+      </sensor>
+    </gazebo>
+
+    <!-- Ground-truth odometry STOPGAP for SLAM (slam_toolbox needs odom->base_link TF; real
+         legged odometry comes with the state estimator). Makes SLAM look artificially clean. -->
+    <gazebo>
+      <plugin filename="ignition-gazebo-odometry-publisher-system"
+              name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+        <odom_publish_frequency>50</odom_publish_frequency>
+        <dimensions>3</dimensions>
+      </plugin>
+    </gazebo>
   </xacro:if>
 
 </robot>

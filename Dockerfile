@@ -64,4 +64,10 @@ RUN curl -sSL https://packages.osrfoundation.org/gazebo.gpg \
     (apt-get install -y ros-humble-ign-ros2-control || apt-get install -y ros-humble-gz-ros2-control) && \
     rm -rf /var/lib/apt/lists/*
 
+# SLAM + scan filtering (Stage: sim-perception; lidar-agnostic)
+RUN apt-get update && apt-get install -y \
+    ros-humble-slam-toolbox \
+    ros-humble-laser-filters \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /root/barq_ws

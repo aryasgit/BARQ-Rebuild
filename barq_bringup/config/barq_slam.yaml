@@ -1,0 +1,20 @@
+# slam_toolbox config for BARQ sim (2D mapping from the deck lidar).
+# Odometry is currently GROUND TRUTH from Gazebo (OdometryPublisher stopgap) - SLAM will look
+# artificially clean until the real legged-odometry estimator replaces it.
+slam_toolbox:
+  ros__parameters:
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_loss_function: HuberLoss
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /scan
+    mode: mapping
+    use_sim_time: true
+    resolution: 0.05
+    max_laser_range: 20.0
+    map_update_interval: 2.0
+    transform_publish_period: 0.05
+    # Integrate across gait cycles instead of matching every wobbling scan:
+    minimum_travel_distance: 0.2
+    minimum_travel_heading: 0.3

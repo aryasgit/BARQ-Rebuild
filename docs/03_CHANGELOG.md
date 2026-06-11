@@ -3,6 +3,30 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Sim perception: lidar + SLAM end-to-end in Gazebo (Q-015 sim-first)
+Full 2D-perception pipeline, hardware-free (lidar purchase deferred; STL-27L-class specs):
+- URDF: `laser` link (47 g modelled, aft deck, **-4.5 deg counter-wedge**) + `gpu_lidar`
+  (360 deg, 2160 samples, 25 m, +noise) + OdometryPublisher (ground-truth odom stopgap), all
+  gazebo-mode only; mock/RViz paths untouched.
+- World: Sensors render system (ogre2 + `--headless-rendering` EGL — WORKS on Tegra; MESA/EGL
+  warnings in the log are non-fatal) + an 8x6 m walled room with pillars (first attempt mapped
+  NOTHING: empty world = no lidar features. Mapping needs geometry).
+- Launch: /scan + /odom bridges; `slam:=true` -> slam_toolbox (async, barq_slam.yaml);
+  `odom_tf` node re-publishing /odom as TF with **forced** frame names — gz plugins model-prefix
+  TF frames (e.g. barq/odom), which silently breaks slam_toolbox's odom->laser chain (it dropped
+  every scan: "queue is full"). Image: + ros-humble-slam-toolbox, ros-humble-laser-filters.
+- Viewer: barq_slam.rviz (Map + LaserScan + RobotModel + Odometry, fixed frame odom).
+
+**Verified (post-Jetson-reboot, clean run):**
+- TF odom->laser: z 0.220 m, rotation ~0 — the counter-wedge EXACTLY cancels the D-016 stance
+  pitch (designed prediction confirmed in physics).
+- /scan 9.7 Hz light / ~7 Hz under full load; slam_toolbox "Registering sensor".
+- Drove fwd+arc+fwd; **/map: 161x121 @ 0.05 m = 8.05 x 6.05 m — the room, walls+pillars as
+  1127 occupied cells, 16898 free**; map->odom TF live. RTF ~41% with sensors+SLAM+GUIs.
+Note: Jetson rebooted mid-session (container Exited 255, /tmp wiped) — VNC/x11vnc needs re-run
+after reboots; xorg display config persists.
+
+---
 ## 2026-06-11 — Strategy: sim-to-the-max; ST3215 bench diagnostics tool; lidar research
 Aryaman: no components delivered yet — continue maximizing the sim world (offsets/balance/stability
 tunable before hardware); RL outlook improved by sim fidelity. Two artifacts:

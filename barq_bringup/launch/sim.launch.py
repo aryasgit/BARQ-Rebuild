@@ -30,6 +30,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 def generate_launch_description():
     desc_share = get_package_share_directory('barq_description')
     sim_share = get_package_share_directory('barq_sim')
+    bringup_share = get_package_share_directory('barq_bringup')
     rosgz_share = get_package_share_directory('ros_gz_sim')
 
     world = os.path.join(sim_share, 'worlds', 'barq_world.sdf')
@@ -40,6 +41,7 @@ def generate_launch_description():
 
     gui = LaunchConfiguration('gui')
     use_gait = LaunchConfiguration('gait')
+    use_slam = LaunchConfiguration('slam')
     sim_time = {'use_sim_time': True}
 
     return LaunchDescription([
@@ -51,12 +53,15 @@ def generate_launch_description():
                               description='Run the Gazebo GUI (default headless server)'),
         DeclareLaunchArgument('gait', default_value='false',
                               description='Also launch IK + gait planner (walk via /cmd_vel)'),
+        DeclareLaunchArgument('slam', default_value='false',
+                              description='Run slam_toolbox (2D mapping from the sim lidar)'),
 
-        # Gazebo server (and optional GUI). -r = run immediately.
+        # Gazebo server (and optional GUI). -r = run immediately. --headless-rendering: EGL
+        # context for the gpu_lidar Sensors system without an X display (ogre2-only path).
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(rosgz_share, 'launch', 'gz_sim.launch.py')),
-            launch_arguments={'gz_args': f'-r -s -v 3 {world}'}.items(),
+            launch_arguments={'gz_args': f'-r -s -v 3 --headless-rendering {world}'}.items(),
             condition=UnlessCondition(gui),
         ),
         # GUI renderer forced to classic ogre: ogre2 renders black on the Jetson's GL (Tegra).
@@ -86,8 +91,31 @@ def generate_launch_description():
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            arguments=['/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'],
+            arguments=[
+                '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock',
+                '/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan',
+                '/model/barq/odometry@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
+            ],
+            remappings=[('/model/barq/odometry', '/odom')],
             output='screen',
+        ),
+
+        # /odom -> TF odom->base_link with FORCED frame names (gz plugins may model-prefix
+        # frames, silently breaking slam_toolbox's odom->laser chain).
+        Node(
+            package='barq_control',
+            executable='odom_tf',
+            output='screen',
+            parameters=[sim_time],
+        ),
+
+        Node(
+            package='slam_toolbox',
+            executable='async_slam_toolbox_node',
+            output='screen',
+            parameters=[os.path.join(bringup_share, 'config', 'barq_slam.yaml'),
+                        sim_time],
+            condition=IfCondition(use_slam),
         ),
 
         Node(
