@@ -25,6 +25,8 @@ Claude's memory at `~/.claude/projects/-home-barq/memory/` holds the operational
 
 Hard-won rules you must not relearn the hard way:
 - **One ROS stack at a time** — host-network containers share one DDS graph (cross-talk).
+- **Cross-container ROS needs `-v /dev/shm:/dev/shm` on EVERY container** — FastDDS same-host
+  transport is shared memory; without it, discovery works but data silently never arrives.
 - Everything ROS runs inside the `barq:dev` Docker image; host has no ROS.
 - Gazebo GUI on this Jetson needs `--render-engine-gui ogre` + `IGN_GAZEBO_RESOURCE_PATH`
   (already wired into `sim.launch.py`).

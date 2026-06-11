@@ -3,6 +3,23 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Three defects found by live scrutiny (deadman, RViz durability, /dev/shm)
+Aryaman watched the live demo and caught BARQ wall-grinding forever + an empty RViz. Root causes:
+1. **No cmd_vel deadman**: gait_planner held the last velocity forever after a teleop Ctrl-C.
+   Added `cmd_timeout` (1.0 s default) — verified: "cmd_vel silent 1.0s - deadman stop".
+   Real safety fix; carries to hardware.
+2. **RViz late-joiner**: barq_slam.rviz robot_description subscription was Volatile -> late-started
+   viewers never got the model. Now Transient Local. Fixed frame odom (map frame only exists
+   after SLAM publishes).
+3. **Cross-container DDS data loss**: FastDDS uses /dev/shm for same-host transport; containers
+   have private /dev/shm -> viewers SAW topics (UDP discovery) but received NO data (tf/clock
+   dropped; the "empty RViz"). Fix: run ALL ROS containers with `-v /dev/shm:/dev/shm`.
+   Recorded in HANDOFF + memory — applies to every future multi-container setup.
+Also: slam yaml min_laser_range 0.3 (clears a startup warning).
+Verified end-to-end on screen: map (160x120) + live scan fan + robot model + odometry in RViz,
+all statuses Ok, while walking in Gazebo.
+
+---
 ## 2026-06-11 — Sim perception: lidar + SLAM end-to-end in Gazebo (Q-015 sim-first)
 Full 2D-perception pipeline, hardware-free (lidar purchase deferred; STL-27L-class specs):
 - URDF: `laser` link (47 g modelled, aft deck, **-4.5 deg counter-wedge**) + `gpu_lidar`

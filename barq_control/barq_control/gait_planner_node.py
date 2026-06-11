@@ -51,6 +51,12 @@ class GaitPlanner(Node):
         self.rear_raise = float(self.get_parameter('rear_raise').value)
         self.dt = 1.0 / float(self.get_parameter('rate').value)
 
+        # Deadman: zero the command if /cmd_vel goes silent (Ctrl-C of a teleop publisher
+        # must STOP the robot, not freeze the last velocity forever).
+        self.declare_parameter('cmd_timeout', 1.0)
+        self.cmd_timeout = float(self.get_parameter('cmd_timeout').value)
+        self.last_cmd_time = None
+
         self.vx = self.vy = self.wz = 0.0
         self.t = 0.0
 
@@ -67,9 +73,15 @@ class GaitPlanner(Node):
 
     def _on_cmd(self, msg):
         self.vx, self.vy, self.wz = msg.linear.x, msg.linear.y, msg.angular.z
+        self.last_cmd_time = self.get_clock().now()
 
     def _tick(self):
         self.t += self.dt
+        if self.last_cmd_time is not None and (self.vx or self.vy or self.wz):
+            age = (self.get_clock().now() - self.last_cmd_time).nanoseconds * 1e-9
+            if age > self.cmd_timeout:
+                self.vx = self.vy = self.wz = 0.0
+                self.get_logger().info('cmd_vel silent %.1fs - deadman stop' % age)
         # cmd_vel is robot-centric (+x = forward = body +X per forward_sign above); yaw about
         # Z is unchanged by the mapping.
         ft = foot_targets(self.t, self.fwd * self.vx, self.fwd * self.vy, self.wz, self.hip,
