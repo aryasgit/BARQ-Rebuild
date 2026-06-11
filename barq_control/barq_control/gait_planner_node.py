@@ -30,7 +30,8 @@ class GaitPlanner(Node):
         self.hip = {leg: legs['hip_offsets'][leg] for leg in LEGS}
 
         self.declare_parameter('period', 0.5)
-        self.declare_parameter('duty', 0.6)   # >0.5 = stance overlap: calmer load transfer, less heave (D-019)
+        # duty >0.5 = stance overlap: calmer load transfer, less heave (D-019)
+        self.declare_parameter('duty', 0.6)
         # Exact-model geometry; constraint: stand - step >= ~0.095 m (tibia -2.2 at apex).
         # step 0.02 gives real swing clearance (foot sphere r=0.012 + contact/staircase margins).
         self.declare_parameter('step_height', 0.02)
