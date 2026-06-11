@@ -78,6 +78,14 @@ through mass and posture changes, i.e., the residual physics is now explained by
 | SLAM output | 8x6 m room mapped: /map 161x121 @ 0.05 m, 1127 occupied / 16898 free cells after one fwd-arc-fwd lap |
 | Failures->fixes | empty world mapped nothing (features required); gz model-prefixed TF frames broke the scan chain -> forced-frame odom_tf node |
 
+## 2c. Autonomy iteration (2026-06-11)
+| Probe | Result |
+|---|---|
+| v/omega composition | cmd (0.12 m/s, 0.3 rad/s) walked a clean closed circle R~0.4 m (=v/omega) — yaw authority validated in physics |
+| First autonomous mission | NavigateToPose (1.6, 2.2): SUCCEEDED; final (1.548, 2.067), error 0.14 m; ~2.6 m around a pillar inflation zone |
+| Stack | lidar -> slam_toolbox -> nav2 (NavFn + RegulatedPurePursuit @ 0.12 m/s cmd) -> trot gait |
+| Defects found by live human scrutiny | missing cmd_vel deadman (fixed, 1 s timeout); RViz late-join durability; cross-container FastDDS /dev/shm data loss |
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.

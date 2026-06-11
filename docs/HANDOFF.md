@@ -52,6 +52,7 @@ straight, level, with measured masses (2.448 kg) and real torque caps (2.94 N·m
 stance trim (D-016)**. All pushed to `origin/stage-2` (github.com/aryasgit/BARQ-Rebuild).
 
 ## Current frontier
+- **Autonomy in sim is LIVE**: `sim.launch.py gait:=true slam:=true nav:=true` + RViz 2D Goal Pose.
 - **Next stage: 3 — Teensy firmware** (BNO085 + INA226 in hand; PlatformIO on the Mac).
 - Open: Q-013 (gait realizes ~half of commanded speed; tuning levers listed), Q-014 (exact CoM
   coordinates pending from Aryaman → base_link inertial origin), D-012 follow-up (check physical

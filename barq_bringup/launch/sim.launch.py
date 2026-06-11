@@ -42,6 +42,7 @@ def generate_launch_description():
     gui = LaunchConfiguration('gui')
     use_gait = LaunchConfiguration('gait')
     use_slam = LaunchConfiguration('slam')
+    use_nav = LaunchConfiguration('nav')
     sim_time = {'use_sim_time': True}
 
     return LaunchDescription([
@@ -55,6 +56,20 @@ def generate_launch_description():
                               description='Also launch IK + gait planner (walk via /cmd_vel)'),
         DeclareLaunchArgument('slam', default_value='false',
                               description='Run slam_toolbox (2D mapping from the sim lidar)'),
+        DeclareLaunchArgument('nav', default_value='false',
+                              description='Run nav2 (autonomous navigation; implies you also want slam:=true)'),
+
+        # nav2 stack (plans on the SLAM map, streams /cmd_vel into the gait)
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(get_package_share_directory('nav2_bringup'),
+                             'launch', 'navigation_launch.py')),
+            launch_arguments={
+                'use_sim_time': 'true',
+                'params_file': os.path.join(bringup_share, 'config', 'barq_nav2.yaml'),
+            }.items(),
+            condition=IfCondition(use_nav),
+        ),
 
         # Gazebo server (and optional GUI). -r = run immediately. --headless-rendering: EGL
         # context for the gpu_lidar Sensors system without an X display (ogre2-only path).

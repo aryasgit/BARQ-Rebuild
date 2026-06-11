@@ -70,4 +70,13 @@ RUN apt-get update && apt-get install -y \
     ros-humble-laser-filters \
     && rm -rf /var/lib/apt/lists/*
 
+# nav2 (autonomous navigation on the SLAM map). Its dep tree pulls Ubuntu libopencv-dev,
+# which collides with the dustynv image's CUDA opencv-dev on header files; force-overwrite
+# is safe here (headers only; nothing in this image compiles against OpenCV).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    -o Dpkg::Options::="--force-overwrite" \
+    ros-humble-navigation2 \
+    ros-humble-nav2-bringup \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /root/barq_ws

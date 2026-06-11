@@ -3,6 +3,22 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — AUTONOMOUS NAVIGATION: nav2 mission SUCCEEDED in sim
+nav2 added on top of the SLAM stack: `barq_nav2.yaml` tuned for a slow walker (RPP controller,
+desired 0.12 m/s, progress checker 5 cm/30 s, goal tol 0.15 m, footprint r=0.18, inflation 0.30,
+costmaps from /scan + SLAM map), `nav:=true` in sim.launch.py (nav2_bringup navigation_launch).
+Dockerfile: navigation2 + nav2-bringup — its dep tree hits the dustynv CUDA-opencv header
+conflict; fixed with --force-overwrite (headers only) + --no-install-recommends. (Build #4
+FAILED on this and the failure initially read as success — check the actual log tail, not the
+task exit code.) RViz: green /plan path + costmap display; "2D Goal Pose" tool = click-to-navigate.
+
+**First autonomous mission**: NavigateToPose (1.6, 2.2) from origin -> SUCCEEDED, final pose
+(1.548, 2.067), error 0.14 m (< 0.15 tol), ~2.6 m walked around a pillar inflation zone.
+Full loop: lidar -> SLAM -> costmaps -> NavFn plan -> RPP -> cmd_vel -> trot gait -> IK -> physics.
+Also: cmd circle test (0.12 m/s + 0.3 rad/s) closed a clean R=0.4 m circle — v/omega composition
+verified in physics.
+
+---
 ## 2026-06-11 — Three defects found by live scrutiny (deadman, RViz durability, /dev/shm)
 Aryaman watched the live demo and caught BARQ wall-grinding forever + an empty RViz. Root causes:
 1. **No cmd_vel deadman**: gait_planner held the last velocity forever after a teleop Ctrl-C.

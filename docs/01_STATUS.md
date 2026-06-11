@@ -28,6 +28,7 @@ Bench tooling ready in `diagnostics/` for the day servos arrive.
 - [ ] **Stage 3 — Teensy firmware** (parallel track; BNO085 + INA226 in hand)
 - [ ] Gait quality in sim: realized speed ~40% of command (Q-013) — tune period/friction/steps
 - [x] **Sim perception**: lidar (STL-27L-class) + SLAM mapping the 8x6 room in Gazebo (slam:=true)
+- [x] **Autonomy**: nav2 mission SUCCEEDED — click-to-navigate via RViz "2D Goal Pose" (nav:=true)
 - [ ] State estimator node (replace ground-truth odom_tf stopgap; needs sim IMU)
 - [x] ~~Q-012 leg-label rename~~ — resolved: labels match quadrants (D-015)
 
