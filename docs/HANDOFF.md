@@ -32,6 +32,8 @@ Hard-won rules you must not relearn the hard way:
   (already wired into `sim.launch.py`).
 - RViz "treadmill" perception of walking direction is unreliable; judge direction in physics.
 - Don't trust `gnome-screenshot` for GL windows; verify via VNC or `ign model -m barq --pose`.
+- **`timeout -k 2 N ros2 ...` always** — the ros2 CLI swallows SIGTERM under load; plain timeout
+  hangs forever (this wedged four sessions before being diagnosed).
 - **Compute budget on the Orin**: sim + SLAM + nav2 + GUI renderers saturate it — action handshakes
   time out (goal silently lost). During missions: no Gazebo GUI on the Jetson, use robust python
   action clients (not the CLI), check the actual log not the task exit code.

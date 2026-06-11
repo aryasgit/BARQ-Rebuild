@@ -3,6 +3,16 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-017 — State estimator v1: stance-diagonal legged odometry + IMU yaw
+**Date:** 2026-06-11 · **Status:** Accepted
+`state_estimator_node`: body planar velocity from stance-foot FK deltas (exact model), yaw from the
+IMU quaternion (`/imu/data` — same topic/format the Stage-3 BNO085 will publish), integrated at
+50 Hz -> `/odom_est` (+ owns the odom->base_link TF when `odom_source:=estimated`). Stance detection
+compares trot DIAGONAL z-sums (trim-immune; per-foot "lowest" breaks under D-016 — see research log).
+Ground truth stays available as `/odom_gt` for A/B in every sim run. Measured drift ~4-5% of distance.
+v1 limits: planar only, no slip rejection, trot-specific stance logic. **Why:** closes the last
+ground-truth dependency in the autonomy stack and establishes hardware interface parity for Stage 3.
+
 ## D-016 — Stance trim: rear_raise 0.02 (nose-down, load-forward)
 **Date:** 2026-06-11 · **Status:** Accepted
 Per Aryaman: front legs more contracted, rear more relaxed, shifting load to the front feet to

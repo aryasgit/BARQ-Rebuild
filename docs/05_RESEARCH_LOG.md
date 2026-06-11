@@ -95,6 +95,15 @@ through mass and posture changes, i.e., the residual physics is now explained by
 | Dynamic speed | RPP cost+curvature regulation enabled LIVE mid-mission via dynamic params: 0.22 m/s open-space ceiling, auto-slow near obstacles/turns |
 | Compute finding | full sim load (physics+SLAM+nav2+2 GUI renderers) on one Orin times out action handshakes -> goal silently lost. Sim-only problem (physics/GUI loads absent on real robot), but informed the mission protocol: no robot-side GUIs, robust action clients, verify by telemetry not exit codes |
 
+## 2e. State estimator iteration (2026-06-11) — closing the last dishonest seam
+| Probe | Result |
+|---|---|
+| Sim IMU | BNO085-class noise on `/imu/data` — the exact topic the Stage-3 hardware will fill (interface parity by construction) |
+| Legged odometry v1 | stance-diagonal FK deltas + IMU yaw, 50 Hz; planar (x, y, yaw) |
+| **Drift vs ground truth** | **0.075 m after a fwd+arc+fwd lap (~1.6 m path) ≈ 4–5% of distance** — inside the typical 1–10% band for kinematic legged odometry |
+| Designed-feature-breaks-estimator bug | The D-016 rear_raise trim made "two lowest feet = stance" always select BOTH REAR legs -> per-leg cyclic motion averaged to zero -> odometry flatlined (0.0015 m vs 0.86 m truth). Fix: compare stance DIAGONALS (each holds one front + one rear leg, so the trim cancels). Locked by unit test |
+| Lesson | Estimator assumptions must be audited against every gait/stance *feature*, not just the nominal gait — a stance trim is invisible to the gait but fatal to a naive contact heuristic |
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.

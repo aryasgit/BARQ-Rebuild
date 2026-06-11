@@ -17,6 +17,8 @@
             name="ignition::gazebo::systems::Contact"/>
     <!-- Required for gpu_lidar (renders server-side). ogre2 + EGL headless on Tegra;
          if /scan stays silent, fall back to <render_engine>ogre</render_engine> + X display. -->
+    <plugin filename="ignition-gazebo-imu-system"
+            name="ignition::gazebo::systems::Imu"/>
     <plugin filename="ignition-gazebo-sensors-system"
             name="ignition::gazebo::systems::Sensors">
       <render_engine>ogre2</render_engine>

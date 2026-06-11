@@ -22,7 +22,8 @@ from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
                             SetEnvironmentVariable)
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import (Command, LaunchConfiguration, PathJoinSubstitution,
+                                  PythonExpression)
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
@@ -44,6 +45,7 @@ def generate_launch_description():
     use_gait = LaunchConfiguration('gait')
     use_slam = LaunchConfiguration('slam')
     use_nav = LaunchConfiguration('nav')
+    odom_source = LaunchConfiguration('odom_source')
     sim_time = {'use_sim_time': True}
 
     return LaunchDescription([
@@ -61,6 +63,8 @@ def generate_launch_description():
                               description='Run slam_toolbox (2D mapping from the sim lidar)'),
         DeclareLaunchArgument('nav', default_value='false',
                               description='Run nav2 (autonomous navigation; implies you also want slam:=true)'),
+        DeclareLaunchArgument('odom_source', default_value='ground_truth',
+                              description='odom->base_link TF source: ground_truth | estimated (legged odometry)'),
 
         # nav2 stack (plans on the SLAM map, streams /cmd_vel into the gait)
         IncludeLaunchDescription(
@@ -112,19 +116,35 @@ def generate_launch_description():
             arguments=[
                 '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock',
                 '/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan',
+                '/imu@sensor_msgs/msg/Imu[ignition.msgs.IMU',
                 '/model/barq/odometry@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
             ],
-            remappings=[('/model/barq/odometry', '/odom')],
+            remappings=[('/model/barq/odometry', '/odom_gt'),
+                        ('/imu', '/imu/data')],
             output='screen',
         ),
 
-        # /odom -> TF odom->base_link with FORCED frame names (gz plugins may model-prefix
-        # frames, silently breaking slam_toolbox's odom->laser chain).
+        # Ground-truth TF (odom->base_link, forced frame names). Default odometry source;
+        # disabled when odom_source:=estimated hands TF to the state estimator.
         Node(
             package='barq_control',
             executable='odom_tf',
             output='screen',
             parameters=[sim_time],
+            remappings=[('/odom', '/odom_gt')],
+            condition=IfCondition(PythonExpression(
+                ["'", odom_source, "' == 'ground_truth'"])),
+        ),
+
+        # Legged-odometry state estimator: always running (publishes /odom_est for A/B
+        # against /odom_gt); owns the odom->base_link TF when odom_source:=estimated.
+        Node(
+            package='barq_control',
+            executable='state_estimator',
+            output='screen',
+            parameters=[sim_time,
+                        {'publish_tf': PythonExpression(
+                            ["'", odom_source, "' == 'estimated'"])}],
         ),
 
         Node(

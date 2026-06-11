@@ -31,7 +31,8 @@ Bench tooling ready in `diagnostics/` for the day servos arrive.
 - [x] **Autonomy**: nav2 mission SUCCEEDED — click-to-navigate via RViz "2D Goal Pose" (nav:=true)
 - [x] **Obstacle course COMPLETED**: 16 m, doorway+slalom+box field, autonomous spin/wait recoveries,
       dynamic confidence-regulated speed (0.22 ceiling) — see RESEARCH_LOG 2d
-- [ ] State estimator node (replace ground-truth odom_tf stopgap; needs sim IMU)
+- [x] **State estimator v1**: sim IMU + stance-diagonal legged odometry, drift ~4-5%; SLAM validated
+      on honest odometry (`odom_source:=estimated`) — last ground-truth seam closed (D-017)
 - [x] ~~Q-012 leg-label rename~~ — resolved: labels match quadrants (D-015)
 
 ## How to run

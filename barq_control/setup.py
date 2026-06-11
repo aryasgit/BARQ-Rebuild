@@ -23,6 +23,7 @@ setup(
             'ik_node = barq_control.ik_node:main',
             'gait_planner = barq_control.gait_planner_node:main',
             'odom_tf = barq_control.odom_tf_node:main',
+            'state_estimator = barq_control.state_estimator_node:main',
         ],
     },
 )

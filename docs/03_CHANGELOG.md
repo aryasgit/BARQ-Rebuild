@@ -3,6 +3,26 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — State estimator v1: SLAM now runs on honest legged odometry (D-017)
+The last ground-truth seam closed. Added: sim IMU (BNO085-class noise, `/imu/data` — Stage-3
+hardware topic parity) + imu-system plugin in both worlds; `state_estimator_node` (stance-diagonal
+FK velocity + IMU yaw @ 50 Hz -> `/odom_est`, owns odom->base_link TF when
+`odom_source:=estimated`); ground truth always available as `/odom_gt` for A/B; nav2/rviz odometry
+displays point at `/odom_gt`. 4 new unit tests (24 pass).
+
+**Bug worth a paper paragraph**: "two lowest feet = stance" always picked BOTH REAR legs — the
+D-016 rear_raise trim made rears permanently deepest; per-leg cyclic motion averages zero ->
+odometry flatlined (0.0015 m vs 0.86 m truth). Fix: compare trot DIAGONAL z-sums (each diagonal =
+one front + one rear, trim cancels). Estimator assumptions must be audited against stance features.
+
+**Measured**: drift 0.075 m over a ~1.6 m lap (~4-5% of distance — typical for kinematic legged
+odometry). Honest-SLAM validation: full map built on estimated odom (161x121, 1332 occ); map->odom
+correction live at [-0.108, -0.079] ≈ mirror of est-vs-gt error — SLAM absorbing real drift.
+
+Ops gotcha solved: recurring wedged execs = `ros2` CLI swallowing SIGTERM under load + `timeout`
+never escalating. ALWAYS `timeout -k 2 N ros2 ...`. (In HANDOFF.)
+
+---
 ## 2026-06-11 — Dynamic speed (confidence-regulated) + compute-budget findings
 Per Aryaman: fast when confident, slow when computing/near obstacles. RPP already supports exactly
 this — enabled **cost-regulated velocity scaling** (slows by costmap proximity) on top of the

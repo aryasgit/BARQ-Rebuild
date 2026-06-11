@@ -53,7 +53,7 @@ Visualization Manager:
       Name: Odometry
       Enabled: true
       Topic:
-        Value: /odom
+        Value: /odom_gt
         Depth: 10
         Durability Policy: Volatile
         Reliability Policy: Reliable

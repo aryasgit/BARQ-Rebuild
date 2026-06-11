@@ -390,6 +390,29 @@
       </sensor>
     </gazebo>
 
+    <!-- IMU (BNO085-class noise) on the body. Topic name matches what the real Teensy/BNO085
+         will publish at Stage 3 — the state estimator is hardware-parity by construction. -->
+    <gazebo reference="base_link">
+      <sensor name="imu" type="imu">
+        <topic>imu</topic>
+        <update_rate>100</update_rate>
+        <ignition_frame_id>base_link</ignition_frame_id>
+        <always_on>1</always_on>
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.002</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.002</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.002</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.02</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.02</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.02</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </gazebo>
+
     <!-- Ground-truth odometry STOPGAP for SLAM (slam_toolbox needs odom->base_link TF; real
          legged odometry comes with the state estimator). Makes SLAM look artificially clean. -->
     <gazebo>

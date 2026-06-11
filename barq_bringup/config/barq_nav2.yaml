@@ -6,7 +6,7 @@ bt_navigator:
     use_sim_time: true
     global_frame: map
     robot_base_frame: base_link
-    odom_topic: /odom
+    odom_topic: /odom_gt
     bt_loop_duration: 10
     default_server_timeout: 40
     navigators: ["navigate_to_pose", "navigate_through_poses"]
@@ -105,7 +105,7 @@ velocity_smoother:
     min_velocity: [-0.10, -0.06, -0.5]
     max_accel: [0.3, 0.3, 1.5]
     max_decel: [-0.5, -0.5, -2.5]
-    odom_topic: "/odom"
+    odom_topic: "/odom_gt"
     odom_duration: 0.3
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
