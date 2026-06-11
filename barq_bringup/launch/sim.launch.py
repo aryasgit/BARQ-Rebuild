@@ -16,7 +16,9 @@ Try it:
 
 import os
 
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import (get_package_prefix,
+                                         get_package_share_directory,
+                                         PackageNotFoundError)
 from launch import LaunchDescription
 from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
                             SetEnvironmentVariable)
@@ -39,7 +41,8 @@ def generate_launch_description():
     xacro_path = os.path.join(desc_share, 'urdf', 'barq.urdf.xacro')
 
     robot_description = ParameterValue(
-        Command(['xacro ', xacro_path, ' mode:=gazebo']), value_type=str)
+        Command(['xacro ', xacro_path, ' mode:=gazebo',
+                 ' foot_mu:=', LaunchConfiguration('foot_mu')]), value_type=str)
 
     gui = LaunchConfiguration('gui')
     use_gait = LaunchConfiguration('gait')
@@ -48,10 +51,20 @@ def generate_launch_description():
     odom_source = LaunchConfiguration('odom_source')
     sim_time = {'use_sim_time': True}
 
+    # Workspace-patched ign_ros2_control (src/external/gz_ros2_control) must shadow the
+    # /opt binary: upstream 0.7.x constructs its node before reading <parameters>, so
+    # position_proportional_gain (sim servo stiffness, D-018) is unreachable without it.
+    try:
+        plugin_path = os.path.join(get_package_prefix('gz_ros2_control'), 'lib')
+    except PackageNotFoundError:
+        plugin_path = ''   # overlay not built: binary plugin, gain stuck at default 0.1
+    plugin_path += ':' + os.environ.get('IGN_GAZEBO_SYSTEM_PLUGIN_PATH', '')
+
     return LaunchDescription([
         # Let Gazebo resolve package://barq_description/... mesh URIs (GUI rendering).
         SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH',
                                os.path.dirname(desc_share)),
+        SetEnvironmentVariable('IGN_GAZEBO_SYSTEM_PLUGIN_PATH', plugin_path),
 
         DeclareLaunchArgument('world_file', default_value='barq_world.sdf',
                               description='World in barq_sim/worlds (barq_course.sdf = obstacle course)'),
@@ -65,6 +78,12 @@ def generate_launch_description():
                               description='Run nav2 (autonomous navigation; implies you also want slam:=true)'),
         DeclareLaunchArgument('odom_source', default_value='ground_truth',
                               description='odom->base_link TF source: ground_truth | estimated (legged odometry)'),
+        DeclareLaunchArgument('foot_mu', default_value='0.9',
+                              description='Foot-ground friction coefficient (sweepable; D-018 maps the envelope)'),
+        DeclareLaunchArgument('gait_duty', default_value='0.6',
+                              description='Stance fraction of the gait cycle (D-019 tuning)'),
+        DeclareLaunchArgument('gait_period', default_value='0.5',
+                              description='Gait cycle period in seconds (D-019 tuning)'),
 
         # nav2 stack (plans on the SLAM map, streams /cmd_vel into the gait)
         IncludeLaunchDescription(
@@ -184,7 +203,9 @@ def generate_launch_description():
             package='barq_control',
             executable='gait_planner',
             output='screen',
-            parameters=[sim_time],
+            parameters=[sim_time,
+                        {'duty': LaunchConfiguration('gait_duty'),
+                         'period': LaunchConfiguration('gait_period')}],
             condition=IfCondition(use_gait),
         ),
     ])

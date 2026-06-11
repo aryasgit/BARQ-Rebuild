@@ -3,6 +3,37 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-019 — Swing reshaped (smoothstep horizontal, soft touchdown); duty default 0.6
+**Date:** 2026-06-11 · **Status:** Accepted
+The swing foot's horizontal travel now follows a smoothstep (forward motion concentrated mid-swing,
+at max clearance; touchdown at ~zero relative velocity) instead of linear; gait duty default
+0.5 -> 0.6 (brief double-support overlap, calmer load transfer). **Why:** the friction sweep (D-018)
+proved realized speed (~45-50% of commanded) was mu-INVARIANT — the fingerprint of swing-foot DRAG,
+not slip: front swing clearance is reach-capped at ~20 mm (apex depth 0.110 m vs absolute fold limit
+0.1079 m at the D-012 tibia stop) and trot heave eats it, so grounded swing feet slid forward against
+the stance push (both forces Coulomb -> the ratio cancels mu). Measured: 47% -> ~60% realized at
+duty 0.6 (left veer +0.3 rad/10 s, corrected by nav2 in missions), 47% dead-straight at duty 0.55
+(`gait_duty` launch arg flips the trade per run; see Q-016). Locked by the 8 gait unit tests
+(shape-agnostic properties) + `diagnostics/sim_walk_metric.py` regression line.
+
+## D-018 — Sim actuation made ST3215-true (vendored plugin patch for servo stiffness)
+**Date:** 2026-06-11 · **Status:** Accepted
+Three changes pin the sim actuator to the real servo: (1) URDF joint velocity caps 5.24 -> **4.71
+rad/s** (= 0.222 s/60 deg @12 V Waveshare spec; effort already 2.94 N·m), verified ENGINE-side via
+`ign sdf -p` (all 12 joints) and a saturated step that slews at exactly the cap; (2) foot friction
+parameterized (`foot_mu` xacro/launch arg, default 0.9) and swept; (3) sim servo stiffness raised to
+ST3215-class: the plugin's position loop is `joint_vel = gain x update_rate x error` (engine-clipped
+at the velocity cap) and the default gain 0.1 (k=10/s) is ~6x softer than the real servo's internal
+loop — trot tracking lagged 75-93 mrad RMS. Found upstream bug: ign_ros2_control 0.7.x constructs
+its node BEFORE installing `<parameters>` files into the rcl global arguments, so
+`position_proportional_gain` could never be set from yaml. **Vendored + 3-line patch** in
+`external/gz_ros2_control` (PROVENANCE.md + BARQ.patch; launch shadows the /opt binary via
+IGN_GAZEBO_SYSTEM_PLUGIN_PATH). Now gain 0.6 (k=60/s) in ros2_controllers.yaml: step response = 50 ms
+rise vs 51 ms theoretical pure slew, tracking 17.8 mrad mean RMS (3.1x better). Provisional until
+bench ID on real servos (st3215_diag sweep produces the same metrics — direct sim-vs-bench match).
+Known approximation: rectangular torque-speed envelope (constant 2.94 N·m cap + 4.71 rad/s cap) vs
+the real motor's derating triangle — conservative at high speed, optimistic near the corner.
+
 ## D-017 — State estimator v1: stance-diagonal legged odometry + IMU yaw
 **Date:** 2026-06-11 · **Status:** Accepted
 `state_estimator_node`: body planar velocity from stance-foot FK deltas (exact model), yaw from the

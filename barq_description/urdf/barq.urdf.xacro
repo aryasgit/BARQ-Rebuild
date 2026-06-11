@@ -50,7 +50,7 @@
     <parent link="base_link"/>    <child link="FL_coxa_link"/>
     <origin rpy="0 0 0" xyz="0.108484 0.0171913 0.00022012"/>
     <axis xyz="1 0 0"/>
-    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_coxa_link">
@@ -70,7 +70,7 @@
     <parent link="FL_coxa_link"/>    <child link="FL_femur_link"/>
     <origin rpy="0 0 0" xyz="0.01744 0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_femur_link">
@@ -90,7 +90,7 @@
     <parent link="FL_femur_link"/>    <child link="FL_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FL_tibia_link">
@@ -116,7 +116,7 @@
     <parent link="base_link"/>    <child link="RL_coxa_link"/>
     <origin rpy="0 0 0" xyz="-0.108371 0.0167905 0.00022176"/>
     <axis xyz="1 0 0"/>
-    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_coxa_link">
@@ -136,7 +136,7 @@
     <parent link="RL_coxa_link"/>    <child link="RL_femur_link"/>
     <origin rpy="0 0 0" xyz="-0.01744 0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_femur_link">
@@ -156,7 +156,7 @@
     <parent link="RL_femur_link"/>    <child link="RL_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.018944 0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RL_tibia_link">
@@ -182,7 +182,7 @@
     <parent link="base_link"/>    <child link="FR_coxa_link"/>
     <origin rpy="0 0 0" xyz="0.108484 -0.0148092 0.00022176"/>
     <axis xyz="1 0 0"/>
-    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_coxa_link">
@@ -202,7 +202,7 @@
     <parent link="FR_coxa_link"/>    <child link="FR_femur_link"/>
     <origin rpy="0 0 0" xyz="0.01744 -0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_femur_link">
@@ -222,7 +222,7 @@
     <parent link="FR_femur_link"/>    <child link="FR_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="FR_tibia_link">
@@ -248,7 +248,7 @@
     <parent link="base_link"/>    <child link="RR_coxa_link"/>
     <origin rpy="0 0 0" xyz="-0.108371 -0.01521 0.00022012"/>
     <axis xyz="1 0 0"/>
-    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="5.24"/>
+    <limit effort="2.94" lower="-0.785" upper="0.785" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_coxa_link">
@@ -268,7 +268,7 @@
     <parent link="RR_coxa_link"/>    <child link="RR_femur_link"/>
     <origin rpy="0 0 0" xyz="-0.01744 -0.0430692 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-1.57" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_femur_link">
@@ -288,7 +288,7 @@
     <parent link="RR_femur_link"/>    <child link="RR_tibia_link"/>
     <origin rpy="0 0 0" xyz="0.0189441 -0.03239997 -0.0999999"/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="5.24"/>
+    <limit effort="2.94" lower="-2.2" upper="1.57" velocity="4.71"/>
     <dynamics damping="0.05" friction="0.0"/>
   </joint>
   <link name="RR_tibia_link">
@@ -358,13 +358,18 @@
   <xacro:if value="${'$(arg mode)' == 'gazebo'}">
     <gazebo>
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <!-- position_proportional_gain (sim servo stiffness) lives in this yaml:
+             it is a node parameter on /gz_ros2_control, not an SDF tag. -->
         <parameters>$(find barq_bringup)/config/ros2_controllers.yaml</parameters>
       </plugin>
     </gazebo>
-    <gazebo reference="FL_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
-    <gazebo reference="FR_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
-    <gazebo reference="RL_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
-    <gazebo reference="RR_tibia_link"><mu1>0.9</mu1><mu2>0.9</mu2></gazebo>
+    <!-- Foot-ground friction, sweepable for sim-to-real envelope mapping (D-018).
+         0.9 ~= printed TPU pad on wood/tile; the real value gets measured on hardware. -->
+    <xacro:arg name="foot_mu" default="0.9"/>
+    <gazebo reference="FL_tibia_link"><mu1>$(arg foot_mu)</mu1><mu2>$(arg foot_mu)</mu2></gazebo>
+    <gazebo reference="FR_tibia_link"><mu1>$(arg foot_mu)</mu1><mu2>$(arg foot_mu)</mu2></gazebo>
+    <gazebo reference="RL_tibia_link"><mu1>$(arg foot_mu)</mu1><mu2>$(arg foot_mu)</mu2></gazebo>
+    <gazebo reference="RR_tibia_link"><mu1>$(arg foot_mu)</mu1><mu2>$(arg foot_mu)</mu2></gazebo>
 
     <!-- 2D lidar (STL-27L-class: 360 deg, 25 m, 21.6 kHz -> 2160 samples @ 10 Hz).
          frame/topic chosen for zero-config parity with the real driver (frame 'laser', /scan). -->

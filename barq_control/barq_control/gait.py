@@ -24,7 +24,7 @@ def _side(hip_y):
 
 
 def foot_targets(t, vx, vy, wz, hip_offsets, lateral=0.0754692, kx_front=0.01744,
-                 period=0.5, duty=0.5, step_height=0.02, stand_height=0.13,
+                 period=0.5, duty=0.6, step_height=0.02, stand_height=0.13,
                  rear_raise=0.02, deadband=1e-3):
     """
     Return 12 body-frame foot coords [FLxyz, FRxyz, RLxyz, RRxyz] at gait time t.
@@ -58,8 +58,14 @@ def foot_targets(t, vx, vy, wz, hip_offsets, lateral=0.0754692, kx_front=0.01744
             dx, dy, dz = sx * (0.5 - prog), sy * (0.5 - prog), 0.0
         else:                                    # swing: sweep - -> + and lift
             prog = (phase - duty) / (1.0 - duty)
-            dx = sx * (prog - 0.5)
-            dy = sy * (prog - 0.5)
+            # Horizontal travel on a smoothstep: the foot moves forward mid-swing (at max
+            # clearance) and touches down with ~zero relative velocity. The original linear
+            # profile dragged grounded swing feet (front clearance is reach-capped at
+            # ~20 mm, eaten by trot heave) - drag force ratio is mu-invariant, which is why
+            # realized speed sat at ~45% of commanded across the friction sweep (D-019).
+            s = prog * prog * (3.0 - 2.0 * prog)
+            dx = sx * (s - 0.5)
+            dy = sy * (s - 0.5)
             dz = step_height * math.sin(math.pi * prog)
         out += [nx + dx, ny + dy, nz + dz]
     return out

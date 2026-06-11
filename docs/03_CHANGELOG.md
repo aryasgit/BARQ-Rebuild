@@ -3,6 +3,27 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Sim made ST3215-true: actuation honesty + swing-drag fix (D-018, D-019)
+Sim-fidelity sweep so hardware drop-in meets a calibrated world, not a flattering one:
+- **Actuator envelope engine-verified** (`ign sdf -p`): effort 2.94 N·m, velocity 5.24 -> **4.71
+  rad/s** (Waveshare 0.222 s/60deg @12 V), foot mu — all 12 joints, in the SDF the engine loads.
+- **Servo stiffness now real AND configurable**: found ign_ros2_control 0.7.x constructs its node
+  before reading `<parameters>` -> `position_proportional_gain` unreachable (stuck k=10/s, ~6x
+  soft). **Vendored + 3-line patch** `external/gz_ros2_control` (PROVENANCE.md, BARQ.patch);
+  launch shadows the /opt binary via IGN_GAZEBO_SYSTEM_PLUGIN_PATH. Now k=60/s in
+  ros2_controllers.yaml: step = 50 ms rise (51 theoretical), trot tracking 17.8 mrad mean RMS
+  (was 55.4). Bench-matchable via the same metrics in st3215_diag.
+- **Q-013 SOLVED**: friction sweep (foot_mu arg, 0.25/0.5/0.9) showed realized speed mu-invariant
+  ~47% -> swing-foot drag, not slip (Coulomb ratio cancels mu). Front clearance is reach-capped at
+  20 mm (2 mm from the tibia fold limit). **Swing smoothstep** (travel mid-swing, soft touchdown)
+  + duty 0.6: ~60% realized; duty 0.55 walks dead straight at 47% (`gait_duty` launch arg; Q-016
+  tracks the yaw-vs-duty mechanism).
+- New diagnostics: `sim_actuation_probe.py` (step/track), `sim_walk_metric.py` (WALK regression
+  line), `analyze_track_bag.py` (offline tracking from ros2 bag — immune to rclpy starvation,
+  which produced misleading numbers twice on the loaded Jetson).
+- Launch args added: `foot_mu`, `gait_duty`, `gait_period`. Gait unit tests: 8/8 green.
+
+---
 ## 2026-06-11 — Stage 3 opened: Jetson<->Teensy protocol, test-first on BOTH ends
 The binary protocol (docs/06_PROTOCOL.md) implemented twice and pinned to shared golden vectors:
 - **Python** `barq_control/barq_protocol.py` (CRC16-CCITT-FALSE framing, CMD/STATE/PING-PONG,

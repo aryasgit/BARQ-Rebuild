@@ -27,7 +27,11 @@ Bench tooling ready in `diagnostics/` for the day servos arrive.
 ## Next (pick)
 - [x] **Stage 3 opened**: Jetson<->Teensy protocol test-first on both ends (golden-vector pinned);
       loopback firmware v0 compiles for teensy41 — flash-day ready (docs/06_PROTOCOL.md)
-- [ ] Gait quality in sim: realized speed ~40% of command (Q-013) — tune period/friction/steps
+- [x] **Sim actuation made ST3215-true (D-018)**: velocity caps 4.71, k=60/s servo stiffness
+      (vendored plugin patch — external/gz_ros2_control), tracking 17.8 mrad RMS, friction
+      parameterized + swept
+- [x] **Q-013 solved (D-019)**: speed deficit was swing-foot drag (mu-invariant fingerprint);
+      smoothstep swing + duty 0.6 -> ~60% realized (0.55 = dead straight, 47%; Q-016 tracks yaw)
 - [x] **Sim perception**: lidar (STL-27L-class) + SLAM mapping the 8x6 room in Gazebo (slam:=true)
 - [x] **Autonomy**: nav2 mission SUCCEEDED — click-to-navigate via RViz "2D Goal Pose" (nav:=true)
 - [x] **Obstacle course COMPLETED**: 16 m, doorway+slalom+box field, autonomous spin/wait recoveries,
@@ -39,6 +43,10 @@ Bench tooling ready in `diagnostics/` for the day servos arrive.
 ## How to run
 - **Physics sim (walks for real):** `ros2 launch barq_bringup sim.launch.py gait:=true gui:=true`
   - drive: `ros2 topic pub -r 10 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.12}}"`
+  - sim-fidelity knobs: `foot_mu:=0.5 gait_duty:=0.55 gait_period:=0.5`; metrics:
+    `diagnostics/sim_walk_metric.py`, `sim_actuation_probe.py step`, bag + `analyze_track_bag.py`
+  - NOTE fresh clones: build `gz_ros2_control` once (`GZ_VERSION=fortress colcon build
+    --packages-select gz_ros2_control`) or the sim silently falls back to the soft /opt plugin
   - headless verify: `gui:=false`; pose: `ign model -m barq --pose`
 - Kinematic-only RViz: `control.launch.py gait:=true` · sliders: `visualize.launch.py`
 - Tests: `cd src/barq_control && python3 -m pytest test/`

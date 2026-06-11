@@ -1,0 +1,20 @@
+diff --git a/gz_ros2_control/src/gz_ros2_control_plugin.cpp b/gz_ros2_control/src/gz_ros2_control_plugin.cpp
+index b7cfe3b..fdb6404 100644
+--- a/gz_ros2_control/src/gz_ros2_control_plugin.cpp
++++ b/gz_ros2_control/src/gz_ros2_control_plugin.cpp
+@@ -354,7 +354,14 @@ void GazeboSimROS2ControlPlugin::Configure(
+   }
+ 
+   std::string node_name = "gz_ros2_control";
+-  this->dataPtr->node_ = rclcpp::Node::make_shared(node_name, ns);
++  // BARQ patch (sim-to-real fidelity): upstream constructs this node BEFORE installing
++  // the <parameters> files into the context's global arguments (further down), so node
++  // parameters declared on it later in initSim - notably position_proportional_gain -
++  // can never be set from the yaml. Pass the already-collected argument list (contains
++  // --ros-args --params-file ...) into this node's own options instead.
++  rclcpp::NodeOptions barq_node_options;
++  barq_node_options.arguments(arguments);
++  this->dataPtr->node_ = std::make_shared<rclcpp::Node>(node_name, ns, barq_node_options);
+   this->dataPtr->executor_ = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
+   this->dataPtr->executor_->add_node(this->dataPtr->node_);
+   auto spin = [this]()

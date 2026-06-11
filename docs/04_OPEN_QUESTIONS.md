@@ -43,11 +43,21 @@ CoM toward center and will measure exact coordinates; when they arrive, set them
 inertial `<origin xyz>` and re-check the D-016 stance trim (rear_raise may shrink if the CoM is
 already forward). Until then the trim compensates empirically.
 
-## Q-013 — Open-loop gait realizes ~40% of commanded speed in physics
-cmd_vel 0.12 m/s -> ~0.047 m/s realized (straight, level). Expected for an open-loop trot under a
-stiff velocity-loop actuator model (stance slip, no body-velocity feedback). Tuning levers: period,
-duty, step length scaling, foot friction, and ultimately state feedback (2D+ estimator) or RL (Stage 5).
-Not blocking; revisit when sim fidelity matters.
+## Q-013 — Open-loop gait realizes ~40-50% of commanded speed — RESOLVED 2026-06-11 -> D-019
+Root cause found by elimination: invariant to foot friction (mu 0.25-0.9 sweep) AND to actuator
+stiffness (k=10 vs 60/s) -> not slip, not lag — swing-foot DRAG (grounded swing feet slide forward
+against the stance push; both forces Coulomb, so mu cancels — that invariance IS the fingerprint).
+Front clearance is reach-capped at ~20 mm and trot heave consumes it. Swing reshaping + duty 0.6
+recover ~60% realized (D-019); the residual gap is heave-driven intermittent contact. Full fix
+needs body-state feedback in the gait (estimator exists) or RL (Stage 5).
+
+## Q-016 — Open-loop yaw bias flips sign with gait duty (zero-crossing ~0.55)
+Straight-line 10 s walks, fresh spawns: duty 0.50 -> yaw -0.26 rad (right veer, 51%); duty 0.55 ->
+-0.04 rad (straight, 47%); duty 0.60 -> +0.32 +/- 0.06 rad (left veer, ~60%). Mechanism unknown
+(double-support overlap timing x diagonal-pair chirality?). Missions are unaffected — nav2 RPP
+closes the heading loop (obstacle course completed with worse) — so default stays duty 0.6 for
+speed; `gait_duty:=0.55` for straight open-loop demos. Candidate proper fix: estimator yaw-rate
+feedback into `wz` in the gait planner (~20 lines); measure both before/after for the log.
 
 ## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
 ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the

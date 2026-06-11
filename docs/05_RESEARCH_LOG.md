@@ -104,6 +104,48 @@ through mass and posture changes, i.e., the residual physics is now explained by
 | Designed-feature-breaks-estimator bug | The D-016 rear_raise trim made "two lowest feet = stance" always select BOTH REAR legs -> per-leg cyclic motion averaged to zero -> odometry flatlined (0.0015 m vs 0.86 m truth). Fix: compare stance DIAGONALS (each holds one front + one rear leg, so the trim cancels). Locked by unit test |
 | Lesson | Estimator assumptions must be audited against every gait/stance *feature*, not just the nominal gait — a stance trim is invisible to the gait but fatal to a naive contact heuristic |
 
+## 2f. Sim actuation honesty + the swing-drag discovery (2026-06-11)
+Goal: close sim-to-real gaps before hardware arrives ("borderline away from dropping the stack in").
+Method: instrument first (`diagnostics/sim_actuation_probe.py` step mode; `sim_walk_metric.py`;
+bag-based tracking via `analyze_track_bag.py` after live rclpy sampling proved starvation-prone on a
+loaded Jetson — C++ bag recorder is immune), then change one truth at a time. Walks here: vx=0.15,
+10 s, flat ground, fresh spawns.
+
+| Probe | Result |
+|---|---|
+| Engine-side envelope check | `xacro … \| ign sdf -p`: effort 2.94 N·m x12, velocity cap x12, foot mu — all present in the SDF the engine actually loads (not just our URDF) |
+| Step response, stock plugin | 0.3 rad knee step: rise 200 ms, peak vel exactly 3.00 rad/s = 10 x error -> the plugin's position loop is `vel = gain x update_rate x error`, gain 0.1 -> k=10/s, ~6x softer than an ST3215 |
+| Velocity-cap enforcement | 1.2 rad ankle step: peak vel pinned at exactly the URDF cap during slew -> engine clips; cap tightened 5.24 -> 4.71 rad/s (0.222 s/60 deg @12 V spec) |
+| Trot tracking, k=10/s | bag of 838 states/420 cmds: knee/ankle RMS 75-93 mrad, peaks ~200 mrad (11.5 deg) — the swing arc was never executed fully |
+| Upstream bug | `position_proportional_gain` is a node parameter, but ign_ros2_control 0.7.x creates its node BEFORE installing `<parameters>` into rcl global args -> the knob is unreachable by config. Vendored + 3-line patch (external/gz_ros2_control, BARQ.patch) |
+| Step response, k=60/s | rise 50 ms vs 51 ms theoretical pure slew at 4.71 rad/s; zero overshoot — textbook servo behaviour |
+| Trot tracking, k=60/s | mean RMS 17.8 mrad (3.1x better); hips ~0 |
+| Friction sweep (vx=0.15, 10 s) | mu 0.9: 0.071 m/s; mu 0.5: 0.074; mu 0.25: 0.067 — realized speed **mu-INVARIANT at ~45-49%** |
+| The deduction | mu-invariance + stiffness-invariance kills both slip and lag hypotheses. Remaining mechanism: grounded swing feet DRAG forward against stance push; both forces Coulomb -> u/vx = (N_st-N_sw)/(N_st+N_sw), mu cancels. FK-from-bag confirmed feet lift the full 20 mm relative to the HIP — but front apex depth 0.110 m sits 2 mm from the 0.1079 m fold limit: ~20 mm is the kinematic clearance CEILING at this crouch, and trot heave eats it |
+| Fix + map (fresh spawns) | smoothstep swing (forward travel mid-swing, ~zero-velocity touchdown): duty 0.50 -> 51% yaw -0.26; duty 0.55 -> 47% yaw -0.04 (straight); duty 0.60 -> 57-62% yaw +0.26..0.43. Speed/straightness trade exposed as `gait_duty`; default 0.6 (nav2 closes heading in missions) |
+
+Overridden decisions (the publication thread):
+- "Foot friction at Gazebo default" -> explicit, parameterized, swept; the sweep's *null result* was
+  the key instrument: mu-invariance is the fingerprint that separates kinematic loss from frictional loss.
+- "Sim servo = plugin default" -> spec-derived k=60/s via a vendored 3-line patch; the sim stiffness
+  knob now exists to be MATCHED to the bench (st3215_diag measures the same step metrics).
+- "Linear swing profile" (inherited from the first gait) -> smoothstep; +27% relative speed.
+- Q-013's original hypothesis ("stance slip / no feedback") -> refuted by its own tuning levers:
+  the friction lever did nothing, which is what solved it.
+
+Lessons:
+1. **A null result from a parameter sweep is evidence, not failure** — mu-invariance did more
+   diagnostic work than any positive result this session.
+2. **Verify at the engine, not the source**: `ign sdf -p` catches what URDF-level review cannot
+   (and float repr means grep for the tag, not the value).
+3. **Live sampling on a loaded SBC lies** (rclpy executor starvation produced plausible-looking
+   garbage twice); record with the C++ bag recorder, analyze offline, and gate every metric on its
+   own sample-rate sanity check.
+4. **Config knobs can be load-bearing and dead**: the stiffness parameter existed, was documented,
+   and could never be set — construction-order bugs hide where nobody integration-tests defaults.
+5. **Between-run state is part of the experiment**: mid-stride teleports made every gait config look
+   broken (collapses to -10%) until runs were isolated to fresh spawns.
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.

@@ -18,7 +18,7 @@ link_masses:
 actuators:
   model: ST3215
   peak_torque_nm: 2.94    # 30 kg.cm mechanical peak (Aryaman 2026-06-11) -> URDF joint effort
-  max_speed_rad_s: 5.24
+  max_speed_rad_s: 4.71    # 0.222 s/60deg @12V no-load (Waveshare spec) -> URDF joint velocity cap
 
 legs:
   # EXACT leg kinematics (D-014): the URDF chain, modelled without approximation.
