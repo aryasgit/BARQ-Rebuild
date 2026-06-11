@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<!-- BARQ obstacle course (10 x 8 m): doorway -> slalom -> box field. Corridors ~1 m
+     (footprint r=0.18 + inflation 0.30). All obstacles 0.5 m tall (lidar plane 0.21 m). -->
+<sdf version="1.8">
+  <world name="barq_course">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="ignition-gazebo-physics-system"
+            name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="ignition-gazebo-user-commands-system"
+            name="ignition::gazebo::systems::UserCommands"/>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system"
+            name="ignition::gazebo::systems::SceneBroadcaster"/>
+    <plugin filename="ignition-gazebo-contact-system"
+            name="ignition::gazebo::systems::Contact"/>
+    <plugin filename="ignition-gazebo-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="course">
+      <static>true</static>
+      <link name="parts">
+        <!-- outer walls (10 x 8) -->
+        <collision name="wn"><pose>0 4 0.25 0 0 0</pose><geometry><box><size>10.2 0.1 0.5</size></box></geometry></collision>
+        <visual name="wnv"><pose>0 4 0.25 0 0 0</pose><geometry><box><size>10.2 0.1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.75 0.65 1</ambient><diffuse>0.8 0.75 0.65 1</diffuse></material></visual>
+        <collision name="ws"><pose>0 -4 0.25 0 0 0</pose><geometry><box><size>10.2 0.1 0.5</size></box></geometry></collision>
+        <visual name="wsv"><pose>0 -4 0.25 0 0 0</pose><geometry><box><size>10.2 0.1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.75 0.65 1</ambient><diffuse>0.8 0.75 0.65 1</diffuse></material></visual>
+        <collision name="we"><pose>5 0 0.25 0 0 0</pose><geometry><box><size>0.1 8 0.5</size></box></geometry></collision>
+        <visual name="wev"><pose>5 0 0.25 0 0 0</pose><geometry><box><size>0.1 8 0.5</size></box></geometry>
+          <material><ambient>0.7 0.75 0.8 1</ambient><diffuse>0.7 0.75 0.8 1</diffuse></material></visual>
+        <collision name="ww"><pose>-5 0 0.25 0 0 0</pose><geometry><box><size>0.1 8 0.5</size></box></geometry></collision>
+        <visual name="wwv"><pose>-5 0 0.25 0 0 0</pose><geometry><box><size>0.1 8 0.5</size></box></geometry>
+          <material><ambient>0.7 0.75 0.8 1</ambient><diffuse>0.7 0.75 0.8 1</diffuse></material></visual>
+
+        <!-- doorway wall at x=1.5 with a 1.0 m gap centered on y=0 -->
+        <collision name="d1"><pose>1.5 2.25 0.25 0 0 0</pose><geometry><box><size>0.1 3.5 0.5</size></box></geometry></collision>
+        <visual name="d1v"><pose>1.5 2.25 0.25 0 0 0</pose><geometry><box><size>0.1 3.5 0.5</size></box></geometry>
+          <material><ambient>0.75 0.55 0.45 1</ambient><diffuse>0.75 0.55 0.45 1</diffuse></material></visual>
+        <collision name="d2"><pose>1.5 -2.25 0.25 0 0 0</pose><geometry><box><size>0.1 3.5 0.5</size></box></geometry></collision>
+        <visual name="d2v"><pose>1.5 -2.25 0.25 0 0 0</pose><geometry><box><size>0.1 3.5 0.5</size></box></geometry>
+          <material><ambient>0.75 0.55 0.45 1</ambient><diffuse>0.75 0.55 0.45 1</diffuse></material></visual>
+
+        <!-- slalom pillars beyond the doorway -->
+        <collision name="s1"><pose>2.7 0.9 0.25 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry></collision>
+        <visual name="s1v"><pose>2.7 0.9 0.25 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry>
+          <material><ambient>0.6 0.45 0.3 1</ambient><diffuse>0.6 0.45 0.3 1</diffuse></material></visual>
+        <collision name="s2"><pose>3.5 -0.9 0.25 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry></collision>
+        <visual name="s2v"><pose>3.5 -0.9 0.25 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry>
+          <material><ambient>0.6 0.45 0.3 1</ambient><diffuse>0.6 0.45 0.3 1</diffuse></material></visual>
+        <collision name="s3"><pose>4.2 0.7 0.25 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry></collision>
+        <visual name="s3v"><pose>4.2 0.7 0.25 0 0 0</pose><geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry>
+          <material><ambient>0.6 0.45 0.3 1</ambient><diffuse>0.6 0.45 0.3 1</diffuse></material></visual>
+
+        <!-- box field west of start -->
+        <collision name="b1"><pose>-1.6 0.9 0.25 0 0 0</pose><geometry><box><size>0.6 0.6 0.5</size></box></geometry></collision>
+        <visual name="b1v"><pose>-1.6 0.9 0.25 0 0 0</pose><geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+          <material><ambient>0.5 0.55 0.65 1</ambient><diffuse>0.5 0.55 0.65 1</diffuse></material></visual>
+        <collision name="b2"><pose>-2.8 -0.6 0.25 0 0 0</pose><geometry><box><size>0.7 0.7 0.5</size></box></geometry></collision>
+        <visual name="b2v"><pose>-2.8 -0.6 0.25 0 0 0</pose><geometry><box><size>0.7 0.7 0.5</size></box></geometry>
+          <material><ambient>0.5 0.55 0.65 1</ambient><diffuse>0.5 0.55 0.65 1</diffuse></material></visual>
+        <collision name="b3"><pose>-2.0 -2.2 0.25 0 0 0</pose><geometry><box><size>0.6 0.6 0.5</size></box></geometry></collision>
+        <visual name="b3v"><pose>-2.0 -2.2 0.25 0 0 0</pose><geometry><box><size>0.6 0.6 0.5</size></box></geometry>
+          <material><ambient>0.5 0.55 0.65 1</ambient><diffuse>0.5 0.55 0.65 1</diffuse></material></visual>
+        <collision name="b4"><pose>-3.4 1.6 0.25 0 0 0</pose><geometry><box><size>0.7 0.7 0.5</size></box></geometry></collision>
+        <visual name="b4v"><pose>-3.4 1.6 0.25 0 0 0</pose><geometry><box><size>0.7 0.7 0.5</size></box></geometry>
+          <material><ambient>0.5 0.55 0.65 1</ambient><diffuse>0.5 0.55 0.65 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>24 24</size></plane></geometry>
+          <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>24 24</size></plane></geometry>
+          <material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

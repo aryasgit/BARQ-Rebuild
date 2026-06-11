@@ -76,9 +76,9 @@ def test_step_length_scales_with_velocity():
 
 
 def test_default_gait_stays_within_joint_limits():
-    """Default gait params through the EXACT IK keep every joint inside its limits."""
+    """Default gait at the nav2 speed ceiling (0.22 m/s) keeps every joint inside its limits."""
     for k in range(120):
-        out = foot_targets(k / 120.0 * PERIOD, 0.15, 0.0, 0.0, HIPS, period=PERIOD)
+        out = foot_targets(k / 120.0 * PERIOD, 0.22, 0.0, 0.0, HIPS, period=PERIOD)
         for leg in LEGS:
             hx, hy, hz = HIPS[leg]
             fx, fy, fz = _legxyz(out, leg)

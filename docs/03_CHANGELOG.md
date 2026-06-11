@@ -3,6 +3,22 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Dynamic speed (confidence-regulated) + compute-budget findings
+Per Aryaman: fast when confident, slow when computing/near obstacles. RPP already supports exactly
+this — enabled **cost-regulated velocity scaling** (slows by costmap proximity) on top of the
+curvature regulation: desired_linear_vel 0.12 -> **0.22**, cost_scaling_dist 0.45/gain 0.8,
+velocity_smoother ceiling 0.22. Applied LIVE to the running course mission via dynamic parameters
+(robot visibly sped up mid-tour), persisted in barq_nav2.yaml. Joint-limit envelope verified at the
+0.22 ceiling (unit test now covers it; 20 pass).
+
+Compute findings (obstacle-course session): action handshake timed out under full load (sim+SLAM+
+nav2+2 GUI renderers) — goal silently lost, robot static. Mitigations now: shed Gazebo GUI during
+missions (RViz is the mission view), robust python action client (explicit accept/result) instead of
+the CLI. Production note: the two biggest sim-era loads (physics+lidar rendering, GUI rendering)
+DO NOT EXIST on the real robot; the Teensy split already isolates hard-real-time from Jetson load.
+Course world `barq_course.sdf` (10x8: doorway + slalom + box field) + `world_file:=` launch arg.
+
+---
 ## 2026-06-11 — AUTONOMOUS NAVIGATION: nav2 mission SUCCEEDED in sim
 nav2 added on top of the SLAM stack: `barq_nav2.yaml` tuned for a slow walker (RPP controller,
 desired 0.12 m/s, progress checker 5 cm/30 s, goal tol 0.15 m, footprint r=0.18, inflation 0.30,

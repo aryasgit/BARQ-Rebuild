@@ -22,7 +22,7 @@ from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
                             SetEnvironmentVariable)
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
@@ -33,7 +33,8 @@ def generate_launch_description():
     bringup_share = get_package_share_directory('barq_bringup')
     rosgz_share = get_package_share_directory('ros_gz_sim')
 
-    world = os.path.join(sim_share, 'worlds', 'barq_world.sdf')
+    world_path = PathJoinSubstitution(
+        [sim_share, 'worlds', LaunchConfiguration('world_file')])
     xacro_path = os.path.join(desc_share, 'urdf', 'barq.urdf.xacro')
 
     robot_description = ParameterValue(
@@ -50,6 +51,8 @@ def generate_launch_description():
         SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH',
                                os.path.dirname(desc_share)),
 
+        DeclareLaunchArgument('world_file', default_value='barq_world.sdf',
+                              description='World in barq_sim/worlds (barq_course.sdf = obstacle course)'),
         DeclareLaunchArgument('gui', default_value='false',
                               description='Run the Gazebo GUI (default headless server)'),
         DeclareLaunchArgument('gait', default_value='false',
@@ -76,14 +79,14 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(rosgz_share, 'launch', 'gz_sim.launch.py')),
-            launch_arguments={'gz_args': f'-r -s -v 3 --headless-rendering {world}'}.items(),
+            launch_arguments={'gz_args': ['-r -s -v 3 --headless-rendering ', world_path]}.items(),
             condition=UnlessCondition(gui),
         ),
         # GUI renderer forced to classic ogre: ogre2 renders black on the Jetson's GL (Tegra).
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(rosgz_share, 'launch', 'gz_sim.launch.py')),
-            launch_arguments={'gz_args': f'-r -v 3 --render-engine-gui ogre {world}'}.items(),
+            launch_arguments={'gz_args': ['-r -v 3 --render-engine-gui ogre ', world_path]}.items(),
             condition=IfCondition(gui),
         ),
 

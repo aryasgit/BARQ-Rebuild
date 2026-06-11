@@ -6,9 +6,9 @@ transform that slam_toolbox/nav need. Replaced by the real state estimator + leg
 later; keeping it a separate node makes that swap a one-line launch change.
 """
 
-import rclpy
 from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
+import rclpy
 from rclpy.node import Node
 from tf2_ros import TransformBroadcaster
 
