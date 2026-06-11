@@ -1,0 +1,10 @@
+<library path="barq_hw">
+  <class name="barq_hw/BarqSystem"
+         type="barq_hw::BarqSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      BARQ quadruped system interface: 12 position-commanded joints over the BARQ binary
+      protocol v1 (Jetson-Teensy serial). State: position + velocity per joint at 100 Hz.
+    </description>
+  </class>
+</library>

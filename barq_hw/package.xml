@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>barq_hw</name>
+  <version>0.1.0</version>
+  <description>
+    BARQ Stage-4 ros2_control hardware interface (protocol v1 over serial) plus the host
+    Teensy emulator that runs the real firmware superloop on a PTY for zero-hardware
+    integration testing.
+  </description>
+  <maintainer email="rayman3304@gmail.com">Aryaman Gupta</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

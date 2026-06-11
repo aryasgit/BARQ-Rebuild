@@ -3,6 +3,22 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-020 — Stage-4 hardware interface: shared firmware core + PTY emulator = drop-in contract
+**Date:** 2026-06-11 · **Status:** Accepted
+`barq_hw/BarqSystem` (C++ SystemInterface) speaks protocol v1 over a serial fd: CMD @ 100 Hz out,
+freshest STATE in (pos+vel), activation requires a live STATE (controllers start from the MEASURED
+pose — anti-lurch on real metal), stale link (>300 ms) = controller stop, firmware 200 ms deadman
+below that. The firmware superloop was extracted into `loop_core.{h,cpp}` (pure C++, caller owns
+clock+IO): `main.cpp` is now a thin Arduino shim and `teensy_emulator` runs the SAME LoopCore on a
+host PTY — so the integration test exercises real firmware DECISION LOGIC, not a mock. Single
+sources of truth: one codec (protocol.cpp, golden-vector-pinned to Python), one superloop, compiled
+for MCU and host by PlatformIO and CMake respectively (monorepo relative path, documented).
+**Why this shape:** the whole Jetson-side stack — gait -> IK -> controller_manager -> serial bytes
+-> firmware -> telemetry — runs TODAY with zero hardware (9/9 integration checks, 3 mrad round-trip
+= the int16-mrad floor; full-gait rehearsal at 100 Hz /joint_states): hardware day reduces to
+flashing the same LoopCore, filling servo-bus/IMU/power stubs, and `device:=/dev/ttyACM0`.
+
+---
 ## D-019 — Swing reshaped (smoothstep horizontal, soft touchdown); duty default 0.6
 **Date:** 2026-06-11 · **Status:** Accepted
 The swing foot's horizontal travel now follows a smoothstep (forward motion concentrated mid-swing,

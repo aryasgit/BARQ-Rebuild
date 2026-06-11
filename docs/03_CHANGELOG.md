@@ -3,6 +3,22 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Stage 4: hardware interface DONE, integration-tested against real firmware logic (D-020)
+- **barq_hw** package: `BarqSystem` SystemInterface (protocol v1 over serial; activation
+  requires live STATE -> controllers start from measured pose; stale-link ERROR; name-keyed
+  joint->servo-slot map) + `teensy_emulator` (the REAL firmware LoopCore on a PTY).
+- **Firmware refactor**: superloop logic -> `loop_core.{h,cpp}` shared verbatim by `main.cpp`
+  (Arduino shim) and the emulator. pio native 6/6, teensy41 compiles.
+- **mode:=real** wired in the xacro (`device` arg) + `real.launch.py` — the LITERAL robot
+  launch line, used by the integration test today and the robot later.
+- **integration_pty.py 9/9**: Python codec vs firmware bench (PING/PONG, CMD->STATE echo
+  3 mrad, deadman bit3 latch) + full controller_manager stack on the PTY (100 Hz
+  /joint_states, round-trip 3 mrad). Full-gait rehearsal on the emulator: knee swing
+  ~330 mrad, /joint_states 99.96 Hz (sigma 0.43 ms).
+- Hardware day remainder: flash LoopCore, fill servo_bus_*/imu_read/power_read stubs,
+  `device:=/dev/ttyACM0`. (v1 = joints only; IMU broadcaster is a hardware-day add.)
+
+---
 ## 2026-06-11 — Sim made ST3215-true: actuation honesty + swing-drag fix (D-018, D-019)
 Sim-fidelity sweep so hardware drop-in meets a calibrated world, not a flattering one:
 - **Actuator envelope engine-verified** (`ign sdf -p`): effort 2.94 N·m, velocity 5.24 -> **4.71

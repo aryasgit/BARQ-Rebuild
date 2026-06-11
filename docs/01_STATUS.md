@@ -27,6 +27,9 @@ Bench tooling ready in `diagnostics/` for the day servos arrive.
 ## Next (pick)
 - [x] **Stage 3 opened**: Jetson<->Teensy protocol test-first on both ends (golden-vector pinned);
       loopback firmware v0 compiles for teensy41 — flash-day ready (docs/06_PROTOCOL.md)
+- [x] **Stage 4 interface DONE (D-020)**: barq_hw/BarqSystem + teensy_emulator (real LoopCore
+      on a PTY) — integration 9/9, full-gait rehearsal on the emulator at 100 Hz.
+      Drop-in = flash + fill servo/IMU/power stubs + device:=/dev/ttyACM0 (real.launch.py)
 - [x] **Sim actuation made ST3215-true (D-018)**: velocity caps 4.71, k=60/s servo stiffness
       (vendored plugin patch — external/gz_ros2_control), tracking 17.8 mrad RMS, friction
       parameterized + swept

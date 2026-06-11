@@ -312,6 +312,7 @@
   <!-- ═══════════════ ros2_control (Stage 2B) ═══════════════ -->
   <!-- mode: mock (now) | gazebo (2E) | real (Stage 4). Only the <hardware> plugin changes. -->
   <xacro:arg name="mode" default="mock"/>
+  <xacro:arg name="device" default="/dev/ttyACM0"/>  <!-- mode=real: serial port (or emulator PTY) -->
 
   <!-- init = startup joint position (the exact-model standing stance, stand_height 0.13):
        prevents the spawn collapse + first-command snap found in the 2E review. -->
@@ -336,7 +337,11 @@
       <xacro:if value="${'$(arg mode)' == 'gazebo'}">
         <plugin>ign_ros2_control/IgnitionSystem</plugin>
       </xacro:if>
-      <!-- mode=real (Stage 4) plugin slots in here -->
+      <xacro:if value="${'$(arg mode)' == 'real'}">
+        <plugin>barq_hw/BarqSystem</plugin>
+        <param name="device">$(arg device)</param>
+        <param name="state_timeout_ms">300</param>
+      </xacro:if>
     </hardware>
 
     <xacro:barq_joint_if name="FL_hip_joint"   lower="-0.785" upper="0.785" init="0.0"/>

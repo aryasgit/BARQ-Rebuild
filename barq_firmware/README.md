@@ -18,9 +18,13 @@ pio run  -e teensy41      # full firmware build (.pio/build/teensy41/firmware.he
 ```
 Flash (when hardware exists): `pio run -e teensy41 -t upload` with the Teensy on USB.
 
-## Superloop (main.cpp)
+## Superloop (loop_core.{h,cpp} — shared with the host emulator)
+ALL protocol/deadman/telemetry logic lives in `LoopCore` (pure C++, caller owns clock+IO):
 500 Hz loop: drain USB -> frame decoder -> CMD updates targets / PING gets PONG;
 deadman (200 ms without CMD -> torque off + fault bit3; LED: solid=driven, blink=idle);
-100 Hz STATE telemetry. Hardware stubs to fill at Stage 3 proper:
+100 Hz STATE telemetry. `main.cpp` is a thin Arduino shim; `barq_hw`'s `teensy_emulator`
+runs the SAME LoopCore on a PTY, so the Stage-4 interface integration-tests against real
+firmware logic with zero hardware (barq_hw/test/integration_pty.py, 9/9). Hardware stubs
+to fill at Stage 3 proper (inside LoopCore):
 `servo_bus_*` (ST3215 sync-write over 4 UARTs — register map already proven in
 `diagnostics/st3215_diag.py`), `imu_read` (BNO085 SH-2), `power_read` (INA226).

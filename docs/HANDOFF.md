@@ -58,11 +58,22 @@ stance trim (D-016)**. All pushed to `origin/stage-2` (github.com/aryasgit/BARQ-
 
 ## Current frontier
 - **Autonomy in sim is LIVE**: `sim.launch.py gait:=true slam:=true nav:=true` + RViz 2D Goal Pose.
-- **Stage 3 OPENED**: protocol implemented + cross-verified both ends (docs/06_PROTOCOL.md);
-  loopback firmware compiles for teensy41 (`barq_firmware/`, pio on the Jetson). Awaiting parts.
-- Open: Q-013 (gait realizes ~half of commanded speed; tuning levers listed), Q-014 (exact CoM
-  coordinates pending from Aryaman → base_link inertial origin), D-012 follow-up (check physical
-  link collision at tibia −2.2 before driving real servos), Q-009 (RT scheduling, Stage 4).
+- **Sim is ST3215-true (D-018)**: engine-verified envelope (2.94 N·m / 4.71 rad/s), servo
+  stiffness k=60/s via the VENDORED PATCHED plugin in `external/gz_ros2_control` — fresh clones
+  must `GZ_VERSION=fortress colcon build --packages-select gz_ros2_control` once or the sim
+  silently falls back to the soft /opt binary. Fidelity tools live in `diagnostics/` (actuation
+  probe, walk metric, bag-tracking analyzer).
+- **Q-013 SOLVED (D-019)**: swing-foot drag (mu-invariant) — smoothstep swing + `gait_duty`
+  trade: 0.6 = ~60% realized (nav2 absorbs the veer), 0.55 = dead straight. Q-016 tracks yaw.
+- **Stage 3 OPENED + Stage 4 interface DONE (D-020)**: `barq_hw/BarqSystem` + `teensy_emulator`
+  (the real firmware LoopCore on a PTY). Verify any time, zero hardware:
+  `ros2 run barq_hw integration_pty.py` (9 checks) or
+  `ros2 run barq_hw teensy_emulator` + `real.launch.py device:=<PTY> gait:=true`.
+  Hardware day = flash (`pio run -e teensy41 -t upload`), fill servo/IMU/power stubs in
+  `barq_firmware/src/loop_core.*`, `device:=/dev/ttyACM0`.
+- Open: Q-014 (exact CoM coordinates pending from Aryaman → base_link inertial origin), Q-016
+  (open-loop yaw-vs-duty), D-012 follow-up (physical collision check at tibia −2.2 before real
+  servos), Q-009 (RT scheduling for real control loop), lidar purchase (STL-27L recommended).
 
 ## Working agreements with Aryaman
 Maintain the `docs/` system after EVERY change/decision (standing instruction). Commit per
