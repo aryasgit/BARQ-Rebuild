@@ -86,6 +86,15 @@ through mass and posture changes, i.e., the residual physics is now explained by
 | Stack | lidar -> slam_toolbox -> nav2 (NavFn + RegulatedPurePursuit @ 0.12 m/s cmd) -> trot gait |
 | Defects found by live human scrutiny | missing cmd_vel deadman (fixed, 1 s timeout); RViz late-join durability; cross-container FastDDS /dev/shm data loss |
 
+## 2d. Obstacle-course iteration (2026-06-11)
+| Probe | Result |
+|---|---|
+| Course | 10x8 m unknown map: 1 m doorway, 3-pillar slalom, box field; one NavigateThroughPoses command, 2 waypoints, ~16 m |
+| Outcome | **PHYSICALLY COMPLETED**: final pose (-3.48, 2.30) vs WP2 (-3.6, 2.4) = 0.157 m; mapped the course en route |
+| Autonomous recovery | behavior_server log: `spin completed successfully`, `wait completed successfully` — mid-course stalls self-recovered (observed by Aryaman as "rotated wrong, corrected itself") |
+| Dynamic speed | RPP cost+curvature regulation enabled LIVE mid-mission via dynamic params: 0.22 m/s open-space ceiling, auto-slow near obstacles/turns |
+| Compute finding | full sim load (physics+SLAM+nav2+2 GUI renderers) on one Orin times out action handshakes -> goal silently lost. Sim-only problem (physics/GUI loads absent on real robot), but informed the mission protocol: no robot-side GUIs, robust action clients, verify by telemetry not exit codes |
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.
