@@ -25,7 +25,8 @@ Everything tunable in sim first (offsets, balance, stability); RL outlook improv
 Bench tooling ready in `diagnostics/` for the day servos arrive.
 
 ## Next (pick)
-- [ ] **Stage 3 — Teensy firmware** (parallel track; BNO085 + INA226 in hand)
+- [x] **Stage 3 opened**: Jetson<->Teensy protocol test-first on both ends (golden-vector pinned);
+      loopback firmware v0 compiles for teensy41 — flash-day ready (docs/06_PROTOCOL.md)
 - [ ] Gait quality in sim: realized speed ~40% of command (Q-013) — tune period/friction/steps
 - [x] **Sim perception**: lidar (STL-27L-class) + SLAM mapping the 8x6 room in Gazebo (slam:=true)
 - [x] **Autonomy**: nav2 mission SUCCEEDED — click-to-navigate via RViz "2D Goal Pose" (nav:=true)

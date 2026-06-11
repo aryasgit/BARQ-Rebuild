@@ -3,6 +3,21 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-11 — Stage 3 opened: Jetson<->Teensy protocol, test-first on BOTH ends
+The binary protocol (docs/06_PROTOCOL.md) implemented twice and pinned to shared golden vectors:
+- **Python** `barq_control/barq_protocol.py` (CRC16-CCITT-FALSE framing, CMD/STATE/PING-PONG,
+  resync-capable stream decoder) — 6 pytest cases incl. corruption-reject + byte-split streams.
+- **C++** `barq_firmware/src/protocol.{h,cpp}` (pure C++, no Arduino deps) — 6 Unity tests run
+  NATIVELY on the Jetson (`pio test -e native`), asserting the SAME golden bytes as Python.
+  (Hand-rolled hex in the first draft had two byte-swaps — generators write vectors, not humans.)
+- **Firmware v0 "loopback"** (`barq_firmware/src/main.cpp`): 500 Hz superloop skeleton — decoder,
+  200 ms deadman (fault bit3, LED state), 100 Hz STATE telemetry; servo-bus/BNO085/INA226 stubbed.
+  Flash-day plan: Stage-4 hardware interface integration-tests against a bare Teensy.
+PlatformIO 6.1.19 installed on the Jetson host; gotcha: `test_build_src = yes` required or tests
+do not link src/. Protocol scaling: positions mrad(i16), vel 10mrad/s, quat 1e-4, STATE=98 B
+payload @ 100 Hz ≈ 10.3 kB/s.
+
+---
 ## 2026-06-11 — State estimator v1: SLAM now runs on honest legged odometry (D-017)
 The last ground-truth seam closed. Added: sim IMU (BNO085-class noise, `/imu/data` — Stage-3
 hardware topic parity) + imu-system plugin in both worlds; `state_estimator_node` (stance-diagonal

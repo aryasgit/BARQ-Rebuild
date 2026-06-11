@@ -58,7 +58,8 @@ stance trim (D-016)**. All pushed to `origin/stage-2` (github.com/aryasgit/BARQ-
 
 ## Current frontier
 - **Autonomy in sim is LIVE**: `sim.launch.py gait:=true slam:=true nav:=true` + RViz 2D Goal Pose.
-- **Next stage: 3 — Teensy firmware** (BNO085 + INA226 in hand; PlatformIO on the Mac).
+- **Stage 3 OPENED**: protocol implemented + cross-verified both ends (docs/06_PROTOCOL.md);
+  loopback firmware compiles for teensy41 (`barq_firmware/`, pio on the Jetson). Awaiting parts.
 - Open: Q-013 (gait realizes ~half of commanded speed; tuning levers listed), Q-014 (exact CoM
   coordinates pending from Aryaman → base_link inertial origin), D-012 follow-up (check physical
   link collision at tibia −2.2 before driving real servos), Q-009 (RT scheduling, Stage 4).
