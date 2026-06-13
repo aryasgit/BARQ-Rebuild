@@ -3,6 +3,16 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-13 — MASTER_PROMPT.md: the portable entry point
+Repo-root master prompt for any fresh session (human or any LLM): nine-line project summary,
+prime directives (precedence rules, docs/git law), the COMPLETE map — every file in docs/,
+all 33 roadmap docs, and the load-bearing code files — each with a precise content statement
+and when-to-open guidance; a task routing table ("task X -> read exactly these files");
+convenience facts card with authoritative sources cited; known-traps list; state snapshot
+@ eddb7a3 with a 3-read refresh procedure. Anti-crawl by design: orients without indexing the
+workspace. Pointed to from HANDOFF + STATUS headers.
+
+---
 ## 2026-06-13 — Doomsday Roadmap shipped: docs/roadmap/, 33 docs, P0->P7 + appendices (D-021, D-022)
 Full post-sim execution bible, written for zero-LLM execution: environment rebuild from bare
 metal; power tree (4S + mandatory 12 V buck — the power architecture decision is now recorded as

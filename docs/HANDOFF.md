@@ -57,6 +57,8 @@ straight, level, with measured masses (2.448 kg) and real torque caps (2.94 N·m
 stance trim (D-016)**. All pushed to `origin/stage-2` (github.com/aryasgit/BARQ-Rebuild).
 
 ## Current frontier
+- **ENTRY POINT FOR ANY FRESH SESSION (human or LLM): `MASTER_PROMPT.md` at the repo root**
+  — the complete navigational index + task routing table; supersedes crawling the tree.
 - **DOOMSDAY ROADMAP: `docs/roadmap/`** — the complete post-sim execution plan (P0-P7 +
   appendices), self-sufficient without an LLM. Any hardware-phase work starts THERE
   (README -> 00_DOOMSDAY_PROTOCOL -> phase folder). Power architecture: D-021 (4S + 12 V buck).

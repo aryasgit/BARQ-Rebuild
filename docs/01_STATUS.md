@@ -1,5 +1,7 @@
 # BARQ — Current Status
 
+> Fresh session? Start at **`MASTER_PROMPT.md`** (repo root): the complete index + routing table.
+
 **Last updated:** 2026-06-13
 **Current stage:** 2E complete — BARQ walks in Gazebo physics
 
