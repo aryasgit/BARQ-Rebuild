@@ -11,8 +11,8 @@ ros2_control -> Gazebo Fortress (gravity + ground contact) -> the body actually 
 head-first, level, straight. Settle height matches prediction to 0.2 mm.
 
 ## Done
-- [x] **2A** RViz viz (`c04a3a8`) · **2B** ros2_control mock (`2d792aa`) · **2C** IK (`938cab9`)
-      · **2D** trot gait (`2982b06`) + fold/direction/crouch fixes (`1affccf`..`276b67d`)
+- [x] **2A** RViz viz (`1366d81`) · **2B** ros2_control mock (`5809dcb`) · **2C** IK (`39b5b69`)
+      · **2D** trot gait (`b9e1362`) + fold/direction/crouch fixes (`2010792`..`7e7d0b7`)
 - [x] **2E** Gazebo Fortress sim:
   - barq:dev image + slim ros-gz set (OpenCV-conflict workaround for dustynv base)
   - mode:=gazebo (ign_ros2_control), foot-sphere contacts, offline world, `sim.launch.py`

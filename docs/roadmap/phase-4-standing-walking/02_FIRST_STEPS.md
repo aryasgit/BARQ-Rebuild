@@ -1,6 +1,6 @@
 # P4-02 — First Steps: walking progression + the tuning decision tree
 
-> Phase P4 · verified against repo @ 4ea53a0
+> Phase P4 · verified against repo @ 0e5ddaf
 
 ## Objective
 From standing (G4.1/G4.2) to repeatable walking: in-place weight shift, then a speed

@@ -7,7 +7,7 @@
 > this cold: start with `00_DOOMSDAY_PROTOCOL.md`, then go phase by phase.
 
 ## Who/what this assumes
-A competent engineer (Aryaman/Krish-level), the BARQ-Rebuild repo at or after commit `4ea53a0`,
+A competent engineer (Aryaman/Krish-level), the BARQ-Rebuild repo at or after commit `0e5ddaf`,
 and the parts listed in `phase-0-environment/02_BOM_PROCUREMENT.md`. No other context needed —
 but the main `docs/` system (00–06, HANDOFF) is the project's living truth; this roadmap is the
 **forward plan**. Where they disagree, the dated docs + code win.

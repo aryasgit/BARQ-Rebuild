@@ -1,6 +1,6 @@
 # P1-02 — Power Monitoring with INA260 (±15 A/unit ceiling)
 
-> Phase P1 · verified against repo @ 4ea53a0
+> Phase P1 · verified against repo @ 0e5ddaf
 
 ## Objective
 Design and bench-validate the current/voltage monitoring that feeds the protocol's

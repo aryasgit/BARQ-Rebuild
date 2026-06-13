@@ -1,6 +1,6 @@
 # Appendix D — Risk Register
 
-> Appendix · verified against repo @ 4ea53a0
+> Appendix · verified against repo @ 0e5ddaf
 
 Twenty risks, ranked review-first. **L/I** = likelihood / impact, H/M/L. Expected damage ≈ L × I.
 ID convention: appendix A cites these rows as `D-R<n>` (= "appendix D, risk n") — `D-R1` is R-01

@@ -1,6 +1,6 @@
 # P3-02 — IMU (BNO085) + Power (INA260) Integration (fill `imu_read` / `power_read`)
 
-> Phase P3 · verified against repo @ 4ea53a0
+> Phase P3 · verified against repo @ 0e5ddaf
 
 ## Objective
 Fill the remaining LoopCore stubs behind the P3-01 `HwIface` seam: BNO085 orientation/gyro/

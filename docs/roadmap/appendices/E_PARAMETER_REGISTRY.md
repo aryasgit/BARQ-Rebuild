@@ -1,6 +1,6 @@
 # Appendix E — Parameter Registry
 
-> Appendix · verified against repo @ 4ea53a0
+> Appendix · verified against repo @ 0e5ddaf
 
 Every tunable that exists in the repo TODAY, with its actual current value, plus a FUTURE-TBD
 block for constants the roadmap will create. **Scope**: `sim` / `hw` / `both` (both = consumed in

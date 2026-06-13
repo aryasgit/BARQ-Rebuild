@@ -3,6 +3,15 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-13 — History rewrite: sole authorship (D-013 amended)
+All 32 commits already carried Aryaman as author+committer; GitHub's "25 commits by claude"
+came from Co-Authored-By trailers (Pulse counts co-author credits). filter-branch removed the
+trailers across history and the practice is ended. All commit hashes from the first trailered
+commit onward changed; the 13 hashes cited in docs were remapped in the same pass (the roadmap's
+"verified against repo @" anchor is now `0e5ddaf`, the MASTER_PROMPT snapshot `edf9b85`).
+Force-pushed to both `stage-2` and `main`.
+
+---
 ## 2026-06-13 — Repo face: real README, scaffold cleanup, main fast-forwarded to stage-2
 Root README rewritten (was the day-one scaffold): status summary, start-here routing table
 (MASTER_PROMPT first), accurate package table, real quick-start commands (sim container line,
@@ -18,7 +27,7 @@ prime directives (precedence rules, docs/git law), the COMPLETE map — every fi
 all 33 roadmap docs, and the load-bearing code files — each with a precise content statement
 and when-to-open guidance; a task routing table ("task X -> read exactly these files");
 convenience facts card with authoritative sources cited; known-traps list; state snapshot
-@ eddb7a3 with a 3-read refresh procedure. Anti-crawl by design: orients without indexing the
+@ edf9b85 with a 3-read refresh procedure. Anti-crawl by design: orients without indexing the
 workspace. Pointed to from HANDOFF + STATUS headers.
 
 ---
@@ -323,7 +332,7 @@ one the real hardware can reach (strong evidence toward Q-001's one-directional 
 Live-verified walking: knees +0.45..+0.70, ankles -1.03..-1.34 (inside the servo range), trot diagonals
 preserved. NOTE: direction-of-travel / which end is +X is deliberately deferred (Aryaman: "that's for
 later") — only the fold direction changed; gait paths and URDF untouched.
-(An earlier frame-flip attempt (f4cd735) was reverted by request — branch reset to 2982b06 first.)
+(An earlier frame-flip attempt (f4cd735) was reverted by request — branch reset to b9e1362 first.)
 
 ---
 ## 2026-06-10 — Stage 2D: trot gait planner (verified — BARQ walks)

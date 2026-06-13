@@ -1,6 +1,6 @@
 # P7-02 — Operations Runbook: the daily driver
 
-> Phase P7 · verified against repo @ 4ea53a0
+> Phase P7 · verified against repo @ 0e5ddaf
 
 ## Objective
 Make every field session boringly repeatable: one PRE-RUN checklist, one RUN block, one POST-RUN

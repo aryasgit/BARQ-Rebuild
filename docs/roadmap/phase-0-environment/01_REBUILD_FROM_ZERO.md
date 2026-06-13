@@ -1,6 +1,6 @@
 # P0-01 — Rebuild the dev environment from zero (bare Jetson → sim walks)
 
-> Phase P0 · verified against repo @ 4ea53a0
+> Phase P0 · verified against repo @ 0e5ddaf
 
 ## Objective
 From a bare (or replacement) Jetson Orin Nano, reach the proven Stage-4 state with nothing but

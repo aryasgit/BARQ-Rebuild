@@ -1,6 +1,6 @@
 # P3-01 — ST3215 Servo Bus Driver (fill `servo_bus_*` stubs)
 
-> Phase P3 · verified against repo @ 4ea53a0
+> Phase P3 · verified against repo @ 0e5ddaf
 
 ## Objective
 Replace the loopback `servo_bus_write_targets` / `servo_bus_read_state` stubs in
@@ -351,7 +351,7 @@ timestamps. Note: passive mode sends no CMD ⇒ bit3 set is EXPECTED there.
    STATE frames refresh; note it as a standing TBD to fix before P4 gait tuning.
 
 ## Rollback
-`git checkout 4ea53a0 -- barq_firmware/` restores v0 loopback; or rebuild with
+`git checkout 0e5ddaf -- barq_firmware/` restores v0 loopback; or rebuild with
 `--fitted ""` (kFittedMask = 0 ⇒ all-loopback even with the new code). Keep the last-good
 `firmware.hex` from `.pio/build/teensy41/` archived in `artifacts/fw/` before every flash —
 re-flashing it is the 30-second rollback.

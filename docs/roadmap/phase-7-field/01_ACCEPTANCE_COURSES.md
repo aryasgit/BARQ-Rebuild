@@ -1,6 +1,6 @@
 # P7-01 — Acceptance Courses: graduated physical trials with sim-bound regression tables
 
-> Phase P7 · verified against repo @ 4ea53a0
+> Phase P7 · verified against repo @ 0e5ddaf
 
 ## Objective
 Prove the robot in the real world on five graduated courses — from a tape line in a hallway to a

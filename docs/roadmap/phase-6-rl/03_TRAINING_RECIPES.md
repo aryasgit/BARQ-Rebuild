@@ -1,6 +1,6 @@
 # P6-03 — Training Recipes (PPO, per compute track)
 
-> Phase P6 · verified against repo @ 4ea53a0
+> Phase P6 · verified against repo @ 0e5ddaf
 
 ## Objective
 Turn the P6-02 env into a policy that passes the in-sim gates: **G6.4** (eval suite) and **G6.5**

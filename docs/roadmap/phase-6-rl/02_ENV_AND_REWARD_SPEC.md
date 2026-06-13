@@ -1,6 +1,6 @@
 # P6-02 — Environment & Reward Spec (simulator-agnostic, code-ready)
 
-> Phase P6 · verified against repo @ 4ea53a0
+> Phase P6 · verified against repo @ 0e5ddaf
 
 ## Objective
 One env spec that compiles to ANY backend (MuJoCo CPU, MJX, Isaac Lab): model import + parity

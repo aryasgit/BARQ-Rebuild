@@ -1,6 +1,6 @@
 # P0-02 — BOM: what we own, what to buy, and how to choose it
 
-> Phase P0 · verified against repo @ 4ea53a0
+> Phase P0 · verified against repo @ 0e5ddaf
 
 ## Objective
 A complete parts picture before any hardware phase starts: an OWNED inventory (verify it

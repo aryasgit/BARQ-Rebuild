@@ -1,6 +1,6 @@
 # P5-02 — SLAM and nav2 on the real robot
 
-> Phase P5 · verified against repo @ 4ea53a0
+> Phase P5 · verified against repo @ 0e5ddaf
 
 ## Objective
 Take the sim-proven autonomy stack (lidar → slam_toolbox → nav2 RPP → trot gait) onto the real

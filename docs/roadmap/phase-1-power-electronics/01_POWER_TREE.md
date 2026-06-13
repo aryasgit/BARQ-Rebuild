@@ -1,6 +1,6 @@
 # P1-01 — Power Tree: 4S pack → fused branches → 12 V servo rail
 
-> Phase P1 · verified against repo @ 4ea53a0
+> Phase P1 · verified against repo @ 0e5ddaf
 
 ## Objective
 Build and verify the robot's electrical backbone: one 4S LiPo feeding (a) the Jetson directly,

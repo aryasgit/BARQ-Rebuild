@@ -1,6 +1,6 @@
 # P4-01 — First Stand: cradle → spotter → free-standing
 
-> Phase P4 · verified against repo @ 4ea53a0
+> Phase P4 · verified against repo @ 0e5ddaf
 
 ## Objective
 Take the robot from P3's air-walk (cradle, feet free) to a free stand on the floor:

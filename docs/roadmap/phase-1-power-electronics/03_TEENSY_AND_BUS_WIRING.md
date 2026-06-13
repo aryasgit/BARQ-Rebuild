@@ -1,6 +1,6 @@
 # P1-03 — Teensy 4.1 ↔ 4 Servo Buses: wiring, interface determination, smoke tests
 
-> Phase P1 · verified against repo @ 4ea53a0
+> Phase P1 · verified against repo @ 0e5ddaf
 
 ## Objective
 Wire the Teensy 4.1 to the four Waveshare driver boards (one per leg, 3 servos each) on four

@@ -1,6 +1,6 @@
 # P6-04 — Sim2Real Transfer & Deployment
 
-> Phase P6 · verified against repo @ 4ea53a0
+> Phase P6 · verified against repo @ 0e5ddaf
 
 ## Objective
 Carry a G6.4/G6.5 policy from the env to the robot: re-center the env on measured hardware

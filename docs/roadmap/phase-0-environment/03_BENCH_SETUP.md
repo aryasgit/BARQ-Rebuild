@@ -1,6 +1,6 @@
 # P0-03 — Physical bench: stations, test cradle, safety, labels
 
-> Phase P0 · verified against repo @ 4ea53a0
+> Phase P0 · verified against repo @ 0e5ddaf
 
 ## Objective
 A bench that makes the hardware phases boring: a servo bench station wired exactly as

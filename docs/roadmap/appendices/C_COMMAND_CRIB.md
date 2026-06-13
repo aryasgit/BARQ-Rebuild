@@ -1,6 +1,6 @@
 # Appendix C — Command Crib
 
-> Appendix · verified against repo @ 4ea53a0
+> Appendix · verified against repo @ 0e5ddaf
 
 Every command that matters, copy-paste ready. Convention: **host** = Jetson shell (no ROS on the
 host); **container** = inside `barq:dev`; **Mac** = the operator's machine. Anything `ros2 ...`

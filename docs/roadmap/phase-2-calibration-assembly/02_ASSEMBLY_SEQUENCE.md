@@ -1,6 +1,6 @@
 # P2-02 — Assembly sequence (leg-by-leg, horn-at-midpoint discipline)
 
-> Phase P2 · verified against repo @ 4ea53a0
+> Phase P2 · verified against repo @ 0e5ddaf
 
 ## Objective
 Four legs and the body assembled such that **every servo horn was attached with the servo held at
@@ -28,7 +28,7 @@ written to survive any bracket shape — when a printed part fights the discipli
 
 ## What "link at URDF-zero" MEANS — derive once, tape it to the bench
 At all-q = 0 the URDF leg hangs straight down. Exact invariants (computed from `fk_exact` /
-`barq.urdf.xacro` joint origins at @4ea53a0):
+`barq.urdf.xacro` joint origins at @0e5ddaf):
 
 | Link | URDF-zero orientation (physical) | Inclinometer target | Tol |
 |---|---|---|---|

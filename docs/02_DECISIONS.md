@@ -121,7 +121,9 @@ settle height within 0.2 mm of prediction, walk direction correct. Legacy fk_leg
 ## D-013 — Git workflow: commit as we go, push to origin/stage-2, author = Aryaman
 **Date:** 2026-06-10 · **Status:** Accepted (resolves Q-003)
 Commits land on `stage-2` as milestones complete, authored `Aryaman Gupta <rayman3304@gmail.com>`
-(global git config; Claude co-author trailer retained). Push to GitHub after each milestone. Network
+(global git config). Push to GitHub after each milestone. AMENDED 2026-06-13: co-author
+trailers removed from all history and the practice ended (Aryaman's call — GitHub Pulse counted
+trailer credits as commits); sole authorship throughout. Network
 detail: port 22 blocked -> SSH over 443 via ~/.ssh/config (Host github.com -> ssh.github.com:443);
 Jetson key registered to Aryaman's GitHub. Merge to main via PR when the team chooses.
 

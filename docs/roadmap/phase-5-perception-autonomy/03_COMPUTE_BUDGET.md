@@ -1,6 +1,6 @@
 # P5-03 — Orin Nano compute budget for the on-robot stack
 
-> Phase P5 · verified against repo @ 4ea53a0
+> Phase P5 · verified against repo @ 0e5ddaf
 
 ## Objective
 Keep the full mission stack (ros2_control + estimator + gait + lidar driver + slam_toolbox +

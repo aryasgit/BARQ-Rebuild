@@ -1,6 +1,6 @@
 # P3-03 — HIL Validation: graduating from emulator to metal
 
-> Phase P3 · verified against repo @ 4ea53a0
+> Phase P3 · verified against repo @ 0e5ddaf
 
 ## Objective
 Prove, in five locked steps, that the P3-01/P3-02 firmware on a real Teensy 4.1 + servos is a

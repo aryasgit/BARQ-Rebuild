@@ -1,6 +1,6 @@
 # P4-03 — Estimator on Hardware + Safety Systems
 
-> Phase P4 · verified against repo @ 4ea53a0
+> Phase P4 · verified against repo @ 0e5ddaf
 
 ## Objective
 (1) Qualify the v1 legged odometry on real metal — drift vs tape truth on an L-course,

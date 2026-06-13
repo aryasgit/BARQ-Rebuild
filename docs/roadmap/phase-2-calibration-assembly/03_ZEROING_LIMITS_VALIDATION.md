@@ -1,6 +1,6 @@
 # P2-03 — Zeroing, direction & limits validation (incl. the D-012 fold test)
 
-> Phase P2 · verified against repo @ 4ea53a0
+> Phase P2 · verified against repo @ 0e5ddaf
 
 ## Objective
 Software-true zero for the assembled robot: per-joint `zero_offset` and `direction` measured and
@@ -114,7 +114,7 @@ partial updates create URDF ≠ yaml ≠ clamp skew, the exact bug class D-012 e
 | `barq_control/barq_control/gait.py`, `gait_planner_node.py` | the comment lines citing −2.2 / 0.1079 / the stand−step constraint — update the numbers so the next reader isn't lied to |
 | `docs/02_DECISIONS.md` | dated amendment under D-012 with the measured table |
 
-> **KNOWN INCONSISTENCY @4ea53a0 — fix in the same commit:** the URDF ankle **upper** limit is
+> **KNOWN INCONSISTENCY @0e5ddaf — fix in the same commit:** the URDF ankle **upper** limit is
 > `1.57` in both the `<limit>` lines and the ros2_control `barq_joint_if` lines, while
 > robot_params (`max_angle: 0.0`) and ik_node (`ANKLE_MAX = 0.0`) say the design max is **0**.
 > D-012 claims all four layers agree — the URDF upper does not. Set it to `0.0` while editing

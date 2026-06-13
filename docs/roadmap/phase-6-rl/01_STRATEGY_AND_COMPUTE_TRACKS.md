@@ -1,6 +1,6 @@
 # P6-01 — RL Strategy & the Three Compute Tracks
 
-> Phase P6 · verified against repo @ 4ea53a0
+> Phase P6 · verified against repo @ 0e5ddaf
 
 ## Objective
 Decide HOW the locomotion policy gets trained (which compute track), lock what the policy is and
@@ -28,7 +28,7 @@ on hardware without leaning on the estimator's 4–5 % drift — optional varian
 No torque control — the ST3215 is a position servo; actions are position targets, full stop.
 
 ## Prerequisites
-- Repo at/after `4ea53a0`; read P6-02 before writing env code (this file only picks the track).
+- Repo at/after `0e5ddaf`; read P6-02 before writing env code (this file only picks the track).
 - `docs/02_DECISIONS.md` D-014/D-016/D-018/D-019 read. `robot_params.yaml` is geometry truth.
 - Money/hardware question answered honestly: cloud budget? x86+RTX physically present? Otherwise
   the Mac mini (Apple Silicon) + Jetson are what exist.

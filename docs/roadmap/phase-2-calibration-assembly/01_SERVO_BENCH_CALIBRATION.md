@@ -1,6 +1,6 @@
 # P2-01 — Servo bench calibration (all 12 × ST3215, pre-assembly)
 
-> Phase P2 · verified against repo @ 4ea53a0
+> Phase P2 · verified against repo @ 0e5ddaf
 
 ## Objective
 Every one of the 12 ST3215 servos is individually ID'd, mid-calibrated, proven mechanically and

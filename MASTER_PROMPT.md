@@ -7,7 +7,7 @@
 > precise pointer with a statement of what lives there and when to open it. Trust this map; it
 > was generated from the actual tree at the commit in §8.
 >
-> Written 2026-06-13 at repo commit `eddb7a3`, branch `stage-2`. If the repo has moved on, §8
+> Written 2026-06-13 at repo commit `edf9b85`, branch `stage-2`. If the repo has moved on, §8
 > tells you how to refresh your picture in three reads — the map's *paths* stay valid because
 > document locations are a stable convention of this project.
 
@@ -82,7 +82,7 @@ research-log entries / decisions / changelog lines in `docs/`.
 
 Conventions used in every roadmap file: measurable **acceptance gates** `G<phase>.<n>`;
 **fallback ladders** A→B→C with explicit switch criteria; **rollback** sections; **TBD-tables**
-naming the producing procedure; header `verified against repo @ 4ea53a0`; each file ends with an
+naming the producing procedure; header `verified against repo @ 0e5ddaf`; each file ends with an
 "if this entire approach fails" escape hatch.
 
 | File | One-line content statement |
@@ -206,7 +206,7 @@ naming the producing procedure; header `verified against repo @ 4ea53a0`; each f
 
 ## 8. State snapshot + how to refresh it
 
-**As of `eddb7a3` (2026-06-13):** Stages 2 (sim) and 4-interface are DONE and validated; Stage 3
+**As of `edf9b85` (2026-06-13):** Stages 2 (sim) and 4-interface are DONE and validated; Stage 3
 firmware is protocol-complete with hardware stubs pending parts; the sim is actuation-calibrated
 to the servo spec; autonomy (SLAM+nav2+estimator) is course-proven in sim; the Doomsday Roadmap
 (33 docs) is the forward plan; power architecture is decided (D-021). No hardware assembled yet.

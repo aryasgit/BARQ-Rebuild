@@ -1,6 +1,6 @@
 # Appendix A — Failure Trees
 
-> Appendix · verified against repo @ 4ea53a0
+> Appendix · verified against repo @ 0e5ddaf
 
 Symptom-indexed. Find your symptom, walk the CHECK ladder top-down (cheapest first), apply the
 FIX for the first check that bites. Entries marked **[hit]** have already happened to this

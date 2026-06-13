@@ -1,6 +1,6 @@
 # Appendix B — Master Acceptance-Gate Index
 
-> Appendix · verified against repo @ 4ea53a0
+> Appendix · verified against repo @ 0e5ddaf
 
 Phase docs were written in parallel with this index, so **each phase folder is authoritative for
 its own G-numbers, exact bars, and fallback ladders**. This appendix gives (1) the gate THEMES

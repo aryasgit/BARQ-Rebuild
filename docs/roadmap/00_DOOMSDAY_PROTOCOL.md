@@ -1,6 +1,6 @@
 # 00 — Doomsday Protocol: how to execute this roadmap without an LLM
 
-> verified against repo @ 4ea53a0 · applies to every phase folder
+> verified against repo @ 0e5ddaf · applies to every phase folder
 
 This file is the operating system for the rest of the roadmap. It exists because the plan must
 survive the loss of the assistant that wrote it. Everything here is discipline, not cleverness.

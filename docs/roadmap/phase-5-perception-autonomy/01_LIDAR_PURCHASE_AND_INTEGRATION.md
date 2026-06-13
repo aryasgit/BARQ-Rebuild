@@ -1,6 +1,6 @@
 # P5-01 — Lidar: purchase decision, bench bringup, mount, scan QA
 
-> Phase P5 · verified against repo @ 4ea53a0
+> Phase P5 · verified against repo @ 0e5ddaf
 
 ## Objective
 Buy the right 2D lidar inside the ₹24,000 ceiling, bring its driver up on the Jetson, mount it
