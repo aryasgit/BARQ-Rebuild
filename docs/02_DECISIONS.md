@@ -3,6 +3,33 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-022 — The Doomsday Roadmap: docs/roadmap/ is the forward execution plan
+**Date:** 2026-06-13 · **Status:** Accepted
+33 documents / ~6,900 lines under `docs/roadmap/`: P0 environment-rebuild -> P1 power/electronics
+-> P2 calibration/assembly -> P3 firmware -> P4 standing/walking -> P5 perception/autonomy ->
+P6 RL (three compute tracks + a no-RL bypass ladder) -> P7 field, plus appendices (failure trees,
+master gates, command crib, risk register, parameter registry). Written to be executable by a
+competent engineer with NO LLM access: every procedure carries measurable acceptance gates
+(G<phase>.<n>), fallback ladders (A->B->C with switch criteria), rollback, and TBD-tables that
+name the measurement procedure instead of guessing values. **Why:** continuity insurance — the
+project must survive loss of assistant access; the roadmap is the bus-factor mitigation (risk
+R-15). Relationship to the living docs: `docs/` (00-06, HANDOFF) records what IS; `docs/roadmap/`
+records what is PLANNED and how to execute it; where they disagree, dated docs + code win.
+
+## D-021 — Power architecture: 4S pack + mandatory 12 V buck servo rail; INA260 monitoring
+**Date:** 2026-06-13 · **Status:** Accepted (team decision relayed by Aryaman 2026-06-12)
+One 4S LiPo (GENX Premium 5200 mAh, 512 g — mass ALREADY included in the 1420 g body and in the
+pending Q-014 CoM measurement; full ~17.1 V, verify cell chemistry 4.20 vs 4.35 V/cell before
+first charge; team operational floor 13.6 V). Consequence: 4S exceeds the 12.6 V max of the
+ST3215 servos and Waveshare driver boards, so the servo rail REQUIRES a high-current 12 V buck
+(sizing worksheet + gates in roadmap P1-01); the Jetson Orin Nano (9-20 V input) feeds directly
+from 4S, fused; Teensy over USB. Monitoring: INA260s are OWNED (integrated shunt, +/-15 A/unit
+ceiling) — older docs' "INA226" is the documented fallback (external shunt) where a rail exceeds
+15 A; protocol vbus/current fields are chip-agnostic. Brownout ladder (defaults to confirm on
+bench): warn 14.0 V -> fault bit2 at 13.8 V -> controlled sit at 13.6 V -> firmware hard
+torque-off 13.2 V.
+
+---
 ## D-020 — Stage-4 hardware interface: shared firmware core + PTY emulator = drop-in contract
 **Date:** 2026-06-11 · **Status:** Accepted
 `barq_hw/BarqSystem` (C++ SystemInterface) speaks protocol v1 over a serial fd: CMD @ 100 Hz out,

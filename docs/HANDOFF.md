@@ -57,6 +57,9 @@ straight, level, with measured masses (2.448 kg) and real torque caps (2.94 N·m
 stance trim (D-016)**. All pushed to `origin/stage-2` (github.com/aryasgit/BARQ-Rebuild).
 
 ## Current frontier
+- **DOOMSDAY ROADMAP: `docs/roadmap/`** — the complete post-sim execution plan (P0-P7 +
+  appendices), self-sufficient without an LLM. Any hardware-phase work starts THERE
+  (README -> 00_DOOMSDAY_PROTOCOL -> phase folder). Power architecture: D-021 (4S + 12 V buck).
 - **Autonomy in sim is LIVE**: `sim.launch.py gait:=true slam:=true nav:=true` + RViz 2D Goal Pose.
 - **Sim is ST3215-true (D-018)**: engine-verified envelope (2.94 N·m / 4.71 rad/s), servo
   stiffness k=60/s via the VENDORED PATCHED plugin in `external/gz_ros2_control` — fresh clones

@@ -1,6 +1,6 @@
 # BARQ — Current Status
 
-**Last updated:** 2026-06-11
+**Last updated:** 2026-06-13
 **Current stage:** 2E complete — BARQ walks in Gazebo physics
 
 ## Snapshot
@@ -19,6 +19,12 @@ head-first, level, straight. Settle height matches prediction to 0.2 mm.
     locked by chain-composition tests; stance initial_values kill the startup snap
   - Physics verified: settle z 0.1418 (predicted 0.142); walk cmd +x -> **+X = forward**
     (D-015, ruled by Aryaman against the physics walk; forward_sign=+1); 19 unit tests green
+
+## NEW: the Doomsday Roadmap (2026-06-13)
+`docs/roadmap/` — 33-doc execution bible from here to a fully functioning quadruped (calibration
+-> assembly -> firmware -> walking -> autonomy -> RL with 3 compute tracks + no-RL bypass),
+executable WITHOUT LLM access. Start at `docs/roadmap/README.md` -> `00_DOOMSDAY_PROTOCOL.md`.
+Power architecture decided + recorded: 4S GENX 5200 + 12 V buck servo rail (D-021).
 
 ## Direction (Aryaman 2026-06-11): SIM-TO-THE-MAX until parts arrive
 Everything tunable in sim first (offsets, balance, stability); RL outlook improved by sim fidelity.

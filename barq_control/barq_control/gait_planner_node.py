@@ -32,7 +32,7 @@ class GaitPlanner(Node):
         self.declare_parameter('period', 0.5)
         # duty >0.5 = stance overlap: calmer load transfer, less heave (D-019)
         self.declare_parameter('duty', 0.6)
-        # Exact-model geometry; constraint: stand - step >= ~0.095 m (tibia -2.2 at apex).
+        # Exact-model geometry; constraint: stand - step >= ~0.108 m (D-019 reach floor).
         # step 0.02 gives real swing clearance (foot sphere r=0.012 + contact/staircase margins).
         self.declare_parameter('step_height', 0.02)
         self.declare_parameter('stand_height', 0.13)

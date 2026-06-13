@@ -3,6 +3,24 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-13 — Doomsday Roadmap shipped: docs/roadmap/, 33 docs, P0->P7 + appendices (D-021, D-022)
+Full post-sim execution bible, written for zero-LLM execution: environment rebuild from bare
+metal; power tree (4S + mandatory 12 V buck — the power architecture decision is now recorded as
+D-021, incl. INA260-not-INA226 corrigendum); Teensy/bus/IMU bringup; per-servo bench calibration
++ assembly-at-midpoint discipline + D-012 fold check; firmware stub-fill specs (ST3215 sync-write
+timing budget, SH-2 IMU, INA260) + HIL graduation incl. re-tuning the sim servo gain to the
+bench; first-stand/first-steps protocols with tuning decision trees; lidar purchase gate
+(24k INR ceiling) + on-robot SLAM/nav2 + Orin compute-budget ladder; RL with THREE compute
+tracks (cloud / local RTX / Mac-CPU), code-ready env+reward spec, training recipes,
+sim2real+deployment (rl_policy_node + shared rl_obs.py spec), and a 6-rung no-RL bypass ladder;
+field acceptance courses replicating the sim obstacle course + operations runbook. Conventions
+throughout: acceptance gates G<phase>.<n>, A->B->C fallback ladders, TBD-tables naming the
+producing procedure. Review pass fixed one stale code comment (gait_planner reach-floor 0.095 ->
+0.108, D-019 value). Agents' cross-checks caught: kill-gait-node does NOT trip the deadman
+(stop-ladder documented in P4-03 and adopted by P6-04), estimator needs the /imu/data bridge on
+hardware (P4-CODE-1), nav2 yamls carry sim-only odom_topic/use_sim_time (P5-02 deltas).
+
+---
 ## 2026-06-11 — Stage 4: hardware interface DONE, integration-tested against real firmware logic (D-020)
 - **barq_hw** package: `BarqSystem` SystemInterface (protocol v1 over serial; activation
   requires live STATE -> controllers start from measured pose; stale-link ERROR; name-keyed

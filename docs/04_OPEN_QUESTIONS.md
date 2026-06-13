@@ -41,7 +41,9 @@ Sim integration plan is lidar-agnostic and ready (§5 of the report) — build i
 The base_link inertial origin is currently (0,0,0) = geometric center. Aryaman shifted the physical
 CoM toward center and will measure exact coordinates; when they arrive, set them as the base_link
 inertial `<origin xyz>` and re-check the D-016 stance trim (rear_raise may shrink if the CoM is
-already forward). Until then the trim compensates empirically.
+already forward). Until then the trim compensates empirically. NOTE (2026-06-13): measure with the
+battery INSTALLED — the 4S pack (512 g, D-021) is part of the 1420 g body mass and dominates CoM;
+rod-balance procedure in roadmap P4-01.
 
 ## Q-013 — Open-loop gait realizes ~40-50% of commanded speed — RESOLVED 2026-06-11 -> D-019
 Root cause found by elimination: invariant to foot friction (mu 0.25-0.9 sweep) AND to actuator
