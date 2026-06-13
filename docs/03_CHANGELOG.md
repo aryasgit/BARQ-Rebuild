@@ -3,6 +3,15 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-13 — Repo face: real README, scaffold cleanup, main fast-forwarded to stage-2
+Root README rewritten (was the day-one scaffold): status summary, start-here routing table
+(MASTER_PROMPT first), accurate package table, real quick-start commands (sim container line,
+zero-hardware robot stack, regression spine). Removed `barq_hardware/` — the empty initial
+scaffold superseded by `barq_hw` (D-020); it built an empty package and invited confusion.
+Branch policy: `main` is now fast-forwarded to stage-2 at each milestone push (visitors see
+the real project); development continues on `stage-2` per D-013.
+
+---
 ## 2026-06-13 — MASTER_PROMPT.md: the portable entry point
 Repo-root master prompt for any fresh session (human or any LLM): nine-line project summary,
 prime directives (precedence rules, docs/git law), the COMPLETE map — every file in docs/,
