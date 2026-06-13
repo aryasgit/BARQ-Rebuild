@@ -61,6 +61,16 @@ closes the heading loop (obstacle course completed with worse) — so default st
 speed; `gait_duty:=0.55` for straight open-loop demos. Candidate proper fix: estimator yaw-rate
 feedback into `wz` in the gait planner (~20 lines); measure both before/after for the log.
 
+## Q-017 — Rear-leg torque headroom: the D-016 load-forward trim costs rear-ankle torque
+Torque-budget (research/2026-06-13-torque-budget.md): rear ankles bear ~2x the front ankles' RMS
+(RL ankle 1.31 vs FL 0.72 N·m) and the sustained cyclic peak reaches 1.86 N·m (63% of cap) on the
+RL ankle. Mechanism: D-016 shifts the vertical LOAD forward by EXTENDING the rear legs, which
+lengthens their moment arms -> more torque despite less force. Not blocking (2.2x continuous
+margin) but it sets where to watch first on hardware (rear ankle/knee current at touchdown, P4)
+and what the RL torque penalty should target (P6). Revisit alongside Q-014 (exact CoM): if the
+real CoM is already forward, rear_raise can shrink, recovering rear-leg headroom. Re-measure the
+*transient* peaks on the bench (P3-03) — they are partly a rigid-contact sim artifact.
+
 ## Q-009 — Real-time scheduling under Docker (defer to Stage 3/4)
 ros2_control_node warns "Could not enable FIFO RT scheduling policy (Operation not permitted)" in the
 container. Harmless for mock/sim. For real hardware: add RT privileges to the container

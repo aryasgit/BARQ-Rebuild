@@ -326,6 +326,12 @@
         <param name="initial_value">${init}</param>
       </state_interface>
       <state_interface name="velocity"/>
+      <!-- Gazebo only: exposes the joint's TRANSMITTED-wrench torque (ground reaction
+           included) on /joint_states.effort for torque-budget analysis. Guarded to gazebo
+           because mock (GenericSystem) and real (barq_hw/BarqSystem) don't export effort. -->
+      <xacro:if value="${'$(arg mode)' == 'gazebo'}">
+        <state_interface name="effort"/>
+      </xacro:if>
     </joint>
   </xacro:macro>
 

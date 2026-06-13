@@ -3,6 +3,17 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-13 — Servo torque budget measured from sim (research artifact)
+Added a gazebo-only effort state interface to the URDF joint macro so Gazebo's
+JointTransmittedWrench torque (ground reaction included) reaches /joint_states; guarded to
+mode:=gazebo (mock/real don't export effort). New tooling: diagnostics/torque_from_bag.py
+(phase-binned per-servo torque + headroom table) and plot_torque.py. Result (normal trot, vx 0.15,
+duty 0.6): continuous worst-case RMS 1.31 N·m (45% of the 2.94 cap, 2.2x margin); foot-strike
+transients reach the cap, worst on the rear legs. Finding: rear legs bear more torque than front
+(the D-016 load-forward trim lengthens rear moment arms) -> Q-017. Writeup + figure + CSVs in
+docs/research/2026-06-13-torque-budget.{md,png,csv}; research log 2g.
+
+---
 ## 2026-06-13 — History rewrite: sole authorship (D-013 amended)
 All 32 commits already carried Aryaman as author+committer; GitHub's "25 commits by claude"
 came from Co-Authored-By trailers (Pulse counts co-author credits). filter-branch removed the

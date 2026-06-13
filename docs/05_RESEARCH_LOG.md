@@ -146,6 +146,30 @@ Lessons:
 5. **Between-run state is part of the experiment**: mid-stride teleports made every gait config look
    broken (collapses to -10%) until runs were isolated to fresh spawns.
 
+## 2g. Servo torque budget — normal trot (2026-06-13)
+Goal: per-servo torque vs the 2.94 N·m (30 kg·cm) cap during a normal gait (servo-sizing +
+P4/P6 input). Method: Gazebo exposes the joint's TRANSMITTED-wrench torque (ground reaction
+included) — added an effort state interface (gazebo-only) so it reaches /joint_states; recorded a
+7 s / ~14-cycle steady walk (vx 0.15, duty 0.6), phase-binned. Full writeup +
+figure: docs/research/2026-06-13-torque-budget.md.
+
+| Quantity | Value | vs cap |
+|---|---|---|
+| Continuous load, worst RMS (RL ankle) | 1.31 N·m | 45% |
+| Sustained cyclic peak (RL ankle, phase-mean) | 1.86 N·m | 63% |
+| Transient foot-strike peak (all servos) | 2.95-3.08 N·m | ~100% |
+| Continuous safety factor (cap / worst RMS) | 2.2x | — |
+
+Findings: (1) load sits on the REAR legs (rear ankles ~2x front RMS) — the D-016 load-FORWARD
+trim extends the rear legs, lengthening their moment arms, so they bear more TORQUE even with less
+vertical force (stability bought at rear-ankle headroom; -> Q-017). (2) Foot-strike transients
+reach the cap, worst on rear legs. Caveat: transmitted wrench = total structural torque (actuator
++ contact impulse), not pure motor demand; the >cap spikes are impact impulses reacted by the
+structure, partly a rigid-contact artifact (no modeled foot/servo compliance) — sustained numbers
+transfer, transient peaks are a conservative upper bound to re-measure on the bench (P3-03).
+Lesson: the right torque question has TWO answers (continuous RMS vs impact peak); reporting only
+the peak would have falsely flagged the servos as overloaded.
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.

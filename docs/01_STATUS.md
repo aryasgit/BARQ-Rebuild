@@ -50,6 +50,8 @@ Bench tooling ready in `diagnostics/` for the day servos arrive.
 - [x] **State estimator v1**: sim IMU + stance-diagonal legged odometry, drift ~4-5%; SLAM validated
       on honest odometry (`odom_source:=estimated`) — last ground-truth seam closed (D-017)
 - [x] ~~Q-012 leg-label rename~~ — resolved: labels match quadrants (D-015)
+- [x] **Servo torque budget measured**: continuous worst-RMS 1.31 N·m (45% of cap, 2.2x
+      margin); rear legs bear most (Q-017); foot-strike peaks at cap. research/2026-06-13-torque-budget.md
 
 ## How to run
 - **Physics sim (walks for real):** `ros2 launch barq_bringup sim.launch.py gait:=true gui:=true`
