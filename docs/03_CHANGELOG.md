@@ -10,7 +10,8 @@ on the Jetson). Content derived from the logs: abstract, executive summary, 7-pa
 progress (sim/control, calibration, locomotion, perception+autonomy, estimation, firmware+hw
 interface, actuator-load analysis with the torque figure), a quantitative-results table, an
 engineering-process/risk section, and a status+next-steps table. Reproducible via
-docs/reports/generate_report2.py (copy for Report 3).
+docs/reports/generate_report2.py (copy for Report 3). Companion genuine-LaTeX source added:
+BARQ_Report_2.tex + BARQ_Report_2_fig1.png (compiles to Computer Modern with pdflatex on the Mac).
 
 ---
 ## 2026-06-13 — Servo torque budget measured from sim (research artifact)
