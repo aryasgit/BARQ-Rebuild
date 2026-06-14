@@ -3,6 +3,16 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-06-14 — Funder progress report (Report 2) generated
+docs/reports/BARQ_Report_2.pdf — LaTeX-style A4 progress report for the funder (title BARQ,
+subtitle Report 2, authors Aryaman Gupta + Krish Agarwal), built with reportlab (no TeX toolchain
+on the Jetson). Content derived from the logs: abstract, executive summary, 7-part status &
+progress (sim/control, calibration, locomotion, perception+autonomy, estimation, firmware+hw
+interface, actuator-load analysis with the torque figure), a quantitative-results table, an
+engineering-process/risk section, and a status+next-steps table. Reproducible via
+docs/reports/generate_report2.py (copy for Report 3).
+
+---
 ## 2026-06-13 — Servo torque budget measured from sim (research artifact)
 Added a gazebo-only effort state interface to the URDF joint macro so Gazebo's
 JointTransmittedWrench torque (ground reaction included) reaches /joint_states; guarded to
