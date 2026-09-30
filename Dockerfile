@@ -45,8 +45,9 @@ RUN pip3 install --index-url https://pypi.org/simple/ \
     pyyaml \
     pyserial
 
-# Init rosdep
-RUN rosdep init || true && rosdep update
+# Init rosdep. Update is best-effort: flaky networks reset raw.githubusercontent.com on unused
+# sources (osx-homebrew, fuerte) and fail the whole build; nothing at runtime needs rosdep.
+RUN (rosdep init || true) && (rosdep update || rosdep update || echo 'rosdep update incomplete (non-fatal)')
 
 # Source ROS on every shell
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc

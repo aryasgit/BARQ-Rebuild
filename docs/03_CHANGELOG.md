@@ -3,6 +3,19 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-09-30 — New Jetson (JetPack 6.2) back to the proven state: all P0 gates green
+barq:dev rebuilt on L4T R36.4.4 (base r36.4.0 image runs fine on the 36.4.4 host). New landmine:
+`rosdep update` failed the build on connection resets to raw.githubusercontent.com for unused
+sources (osx-homebrew, fuerte) -> made best-effort in the Dockerfile (rosdep unused at runtime).
+Added `tools/barq_run.sh` (in-repo replacement for the lost ~/run_barq*.sh: GPU, host net,
+/dev/shm, :0 display, `-n NAME` detached mode). Gates: pytest 30 pass + 1 skip; pio native 6/6 +
+teensy41 build SUCCESS; integration_pty 9/9 (3.0 mrad); G0.1 walk with Gazebo GUI on the VNC
+display: `fwd=+0.907m lat=+0.152m yaw=+0.257rad speed=0.091m/s (60% of commanded)`, gain canary
+0.6 — identical to the June baseline. Power: ~11 W VDD_IN during sim+GUI (MAXN_SUPER).
+Note: `ros2 run barq_hw integration_pty.py` reports "No executable found"; running the installed
+script with python3 works (minor, to fix).
+
+---
 ## 2026-09-30 — Session resume after Jetson reflash; BARQ_REFERENCE.md facts sheet
 Jetson was reflashed (~2026-09-21) to JetPack 6.2 / L4T R36.4.4, hostname `barq-desktop`; only
 `~/barq_ws` survived (no barq:dev image, no helper scripts, no git/SSH config, display 640x480).
