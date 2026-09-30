@@ -15,7 +15,7 @@
 | | |
 |---|---|
 | Project | BARQ 2.0 — 12-DOF quadruped, in-house design, final-year project |
-| Team | Aryaman Gupta (git author for every commit, `rayman3304@gmail.com`) · Krish Agarwal |
+| Team | Aryaman Gupta (GitHub `aryasgit`; git author for every commit, `rayman3304@gmail.com`) · Krish Agarwal |
 | Repo | `github.com/aryasgit/BARQ-Rebuild`, working branch **`stage-2`** (main via PR) |
 | Workspace | Jetson `~/barq_ws/` — repo is `~/barq_ws/src/`; `build/ install/ log/ artifacts/` sit outside the repo |
 | Docs system | `docs/00–06` = what IS · `docs/roadmap/` = what's PLANNED · `docs/research/` = dated studies · `docs/reports/` = funder/prof reports |
@@ -135,7 +135,7 @@ ros2 launch barq_bringup sim.launch.py gait:=true gui:=true            # + slam:
 
 - Hostname **`barq-desktop`** → mDNS `barq-desktop.local` (older docs say `barq.local`). Wi-Fi IP at time of writing 172.18.60.151 (DHCP — may change).
 - Mac (MacBook Pro M1 Pro) is the SSH client; Jetson is headless, GNOME on Xorg `:0`, autologin `barq`, Wayland disabled.
-- Remote screen: x11vnc service `barq-vnc` on :5900 → Mac Finder ⌘K `vnc://barq-desktop.local`.
+- Remote screen: x11vnc service `barq-vnc` on :5900, virtual 1920×1080 monitor (CustomEDID `/etc/X11/barq-edid-1080p.bin`) → Mac Finder ⌘K `vnc://barq-desktop.local` (or the IP). Avahi also advertises it as "BARQ Jetson Screen" (`/etc/avahi/services/barq-vnc.service`). Gotcha fixed 2026-09-30: `avahi-daemon.conf` had `allow-interfaces=wLP1p1s0` (capital L ≠ `wlP1p1s0`) so mDNS never announced on Wi-Fi.
 - GitHub over **SSH port 443** (`~/.ssh/config`); new Jetson key `barq-jetson` must be added to GitHub.
 - Hard rules: one ROS stack at a time · `-v /dev/shm:/dev/shm` on every container · `timeout -k 2 N ros2 …` always · no robot-side GUIs during nav missions (Orin saturates) · trust VNC not screenshots for GL.
 
