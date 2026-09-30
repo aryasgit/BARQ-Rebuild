@@ -20,8 +20,20 @@ from rclpy.node import Node
 from rclpy.parameter import Parameter
 
 
+NOMINAL_PITCH = 0.0793   # designed stance trim (D-016), rad nose-down
+
+
 def yaw_of(q):
-    return 2.0 * math.atan2(q.z, q.w)
+    return math.atan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z))
+
+
+def roll_pitch_of(q):
+    roll = math.atan2(2.0 * (q.w * q.x + q.y * q.z), 1.0 - 2.0 * (q.x * q.x + q.y * q.y))
+    return roll, math.asin(max(-1.0, min(1.0, 2.0 * (q.w * q.y - q.z * q.x))))
+
+
+def _rms(v):
+    return math.sqrt(sum(x * x for x in v) / len(v)) if v else float('nan')
 
 
 class WalkMetric(Node):
@@ -30,11 +42,16 @@ class WalkMetric(Node):
         super().__init__('sim_walk_metric')
         self.set_parameters([Parameter('use_sim_time', value=True)])
         self.odom = None
+        self.recording = False
+        self.samples = []
         self.create_subscription(Odometry, '/odom_gt', self._on_odom, 20)
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
 
     def _on_odom(self, msg):
         self.odom = msg
+        if self.recording:
+            r, p = roll_pitch_of(msg.pose.pose.orientation)
+            self.samples.append((r, p, msg.pose.pose.position.z))
 
     def _now(self):
         return self.get_clock().now().nanoseconds * 1e-9
@@ -56,7 +73,9 @@ class WalkMetric(Node):
 
         cmd = Twist()
         cmd.linear.x = vx
+        self.recording = True
         self.spin_until(self._now() + duration, tick=lambda: self.pub.publish(cmd))
+        self.recording = False
         for _ in range(5):
             self.pub.publish(Twist())
             rclpy.spin_once(self, timeout_sec=0.05)
@@ -72,6 +91,18 @@ class WalkMetric(Node):
         print(f'WALK vx={vx:.2f} T={duration:.1f}s  fwd={fwd:+.3f}m lat={lat:+.3f}m '
               f'yaw={dyaw:+.3f}rad  speed={fwd / duration:.3f}m/s '
               f'({fwd / duration / vx * 100.0:.0f}% of commanded)')
+        # Attitude from GROUND TRUTH (not the IMU the controller uses): skip first cycle.
+        a = self.samples[len(self.samples) // 10:]
+        rolls = [x[0] for x in a]
+        perr = [x[1] - NOMINAL_PITCH for x in a]
+        zs = [x[2] for x in a]
+        zm = sum(zs) / len(zs)
+        print(f'ATT  n={len(a)} roll_rms={_rms(rolls) * 1e3:.1f}mrad '
+              f'roll_max={max(abs(x) for x in rolls) * 1e3:.1f}mrad '
+              f'pitch_err_rms={_rms(perr) * 1e3:.1f}mrad '
+              f'pitch_err_mean={sum(perr) / len(perr) * 1e3:+.1f}mrad '
+              f'pitch_err_max={max(abs(x) for x in perr) * 1e3:.1f}mrad '
+              f'heave_rms={_rms([z - zm for z in zs]) * 1e3:.1f}mm z_mean={zm:.4f}m')
 
 
 def main():
