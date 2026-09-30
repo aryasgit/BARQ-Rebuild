@@ -13,8 +13,9 @@ import math
 import os
 
 from ament_index_python.packages import get_package_share_directory
-from barq_control.attitude import (AxisPID, HeadingHold, limit_to_reach, nominal_pitch,
-                                   PhaseILC, roll_pitch_of, rotate_feet)
+from barq_control.attitude import (AbsHeadingHold, AxisPID, HeadingHold, limit_to_reach,
+                                   nominal_pitch, PhaseILC, roll_pitch_of, rotate_feet,
+                                   yaw_of)
 from barq_control.gait import foot_targets, LEGS
 from geometry_msgs.msg import Twist
 import rclpy
@@ -84,6 +85,8 @@ class GaitPlanner(Node):
         self.declare_parameter('yaw_kp', 0.5)
         self.declare_parameter('yaw_ki', 1.0)
         self.declare_parameter('yaw_limit', 0.4)        # max yaw-rate correction (rad/s)
+        # 'abs' = hold the world heading from the IMU quaternion; 'rate' = PI on gyro z
+        self.declare_parameter('heading_mode', 'abs')
         gp = self.get_parameter
         self.att_on = bool(gp('attitude_ctrl').value)
         self.hdg_on = bool(gp('heading_hold').value)
@@ -102,6 +105,9 @@ class GaitPlanner(Node):
         self.ilc_on = g > 0.0
         self.ilc_r = PhaseILC(nb, g, lead)
         self.ilc_p = PhaseILC(nb, g, lead)
+        self.hdg_mode = str(gp('heading_mode').value)
+        if self.hdg_mode == 'abs':
+            self.hdg = AbsHeadingHold(1.5, 0.2, float(gp('yaw_limit').value))
         self.roll_ref = float(gp('roll_ref').value)
         pr = float(gp('pitch_ref').value)
         self.pitch_ref = nominal_pitch(self.hip, self.rear_raise) if math.isnan(pr) else pr
@@ -153,7 +159,12 @@ class GaitPlanner(Node):
         wz = self.wz
         moving = abs(self.vx) + abs(self.vy) + abs(self.wz) > 1e-3
         if self.hdg_on and fresh and moving:
-            wz = self.hdg.step(self.wz, self.imu.angular_velocity.z, self.dt)
+            if self.hdg_mode == 'abs':
+                q = self.imu.orientation
+                wz = self.hdg.step(self.wz, yaw_of(q.x, q.y, q.z, q.w),
+                                   self.imu.angular_velocity.z, self.dt)
+            else:
+                wz = self.hdg.step(self.wz, self.imu.angular_velocity.z, self.dt)
         elif self.hdg_on:
             self.hdg.reset()
         ft = foot_targets(self.t, self.fwd * self.vx, self.fwd * self.vy, wz, self.hip,

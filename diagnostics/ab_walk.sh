@@ -16,7 +16,7 @@ for spec in "$@"; do
     done
     sleep 4
     out=$(docker exec barq_ab bash -lc "$SRC; timeout -k 2 120 python3 \
-      /root/barq_ws/src/diagnostics/sim_walk_metric.py --vx $VX --duration $DUR" 2>&1 | grep -E '^(WALK|ATT)')
+      /root/barq_ws/src/diagnostics/sim_walk_metric.py --vx $VX --duration $DUR" 2>&1 | grep -E '^(WALK|ATT|TORQ)')
     echo "== $label (rep $r) [$extra]"; echo "$out"
     docker rm -f barq_ab >/dev/null 2>&1
   done

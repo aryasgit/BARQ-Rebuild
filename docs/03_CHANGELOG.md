@@ -3,6 +3,16 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-09-30 — exp/attitude-control: IMU closed-loop gait (D-023)
+New `barq_control/attitude.py` (roll_pitch_of, nominal_pitch, rotate_feet, leg_feasible,
+limit_to_reach, AxisPID, HeadingHold, AbsHeadingHold, PhaseILC); gait_planner_node wiring +
+`/gait/attitude` diag topic; sim.launch.py args attitude_ctrl/att_kp/att_ki/att_kd/att_lpf/
+ilc_gain/ilc_lead/heading_hold/heading_mode (all default = open-loop behaviour);
+`test/test_attitude.py` (11 tests, suite 41 pass + 1 skip); `diagnostics/sim_walk_metric.py` now
+also prints ATT (ground-truth roll/pitch/heave) and TORQ (effort) lines and uses exact yaw;
+new `diagnostics/ab_walk.sh` fresh-spawn A/B runner. Results: research log 2h.
+
+---
 ## 2026-09-30 — New Jetson (JetPack 6.2) back to the proven state: all P0 gates green
 barq:dev rebuilt on L4T R36.4.4 (base r36.4.0 image runs fine on the 36.4.4 host). New landmine:
 `rosdep update` failed the build on connection resets to raw.githubusercontent.com for unused

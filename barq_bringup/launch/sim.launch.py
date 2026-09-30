@@ -94,6 +94,7 @@ def generate_launch_description():
         DeclareLaunchArgument('ilc_gain', default_value='0.0',
                               description='phase-indexed learning gain for the trot rock; 0 = off'),
         DeclareLaunchArgument('ilc_lead', default_value='3'),
+        DeclareLaunchArgument('heading_mode', default_value='abs'),
         DeclareLaunchArgument('att_lpf', default_value='0.0',
                               description='attitude error low-pass time constant (s); 0 = off'),
 
@@ -230,7 +231,8 @@ def generate_launch_description():
                          'ilc_gain': ParameterValue(LaunchConfiguration('ilc_gain'),
                                                     value_type=float),
                          'ilc_lead': ParameterValue(LaunchConfiguration('ilc_lead'),
-                                                    value_type=int)}],
+                                                    value_type=int),
+                         'heading_mode': LaunchConfiguration('heading_mode')}],
             condition=IfCondition(use_gait),
         ),
     ])

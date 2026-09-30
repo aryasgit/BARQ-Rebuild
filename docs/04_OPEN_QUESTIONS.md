@@ -23,6 +23,12 @@ buses; code exists and passes 9/9 on the emulator. Alternative: Jetson drives Wa
 adapters over USB directly (new hardware interface, deadman moves to software). Does not block sim
 work. Decide before P3 (firmware integration).
 
+## Q-019 — Why does a fast attitude PID nearly double realized speed? (raised 2026-09-30)
+Reproducible: fast PID (kp .6 ki 1.5 kd .04, no LPF) -> 93-99% realized vs ~58%, heave 0.6 -> 2.4 mm,
+z_mean -3.5 mm, but heading destabilised. Hypothesis: in-phase roll correction lifts the swing-side
+hips = more swing clearance = less swing drag (the Q-013 root cause). Test: log /gait/attitude +
+foot clearance; try the fast loop on roll only with abs heading hold on. Potential big speed win.
+
 ## Non-blocking notes (track, resolve opportunistically)
 ## Q-010 — IK knee-bend direction — RESOLVED 2026-06-10 -> D-009
 Visual check showed +1 folded the legs backward; default flipped to `knee_bend=-1` (forward fold).

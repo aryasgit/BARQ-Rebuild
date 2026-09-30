@@ -106,3 +106,17 @@ def test_ilc_cancels_a_delayed_periodic_disturbance():
             acc += e * e
         rms.append(math.sqrt(acc / n))
     assert rms[-1] < 0.25 * rms[0]
+
+
+def test_abs_heading_hold():
+    from barq_control.attitude import AbsHeadingHold
+    h = AbsHeadingHold(1.5, 0.0, 0.4)
+    h.step(0.0, 0.0, 0.0, 0.02)                        # capture ref = 0
+    assert h.step(0.0, 0.1, 0.0, 0.02) < 0.0           # drifted left -> turn right
+    h2 = AbsHeadingHold(1.5, 0.0, 0.4)
+    yaw = 0.0
+    h2.step(0.3, yaw, 0.3, 0.02)                       # ref captured, then advanced one step
+    for _ in range(50):                                # commanded turn is not fought
+        yaw += 0.3 * 0.02
+        wz = h2.step(0.3, yaw, 0.3, 0.02)
+    assert abs(wz - 0.3) < 1e-6

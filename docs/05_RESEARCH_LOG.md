@@ -170,6 +170,49 @@ transfer, transient peaks are a conservative upper bound to re-measure on the be
 Lesson: the right torque question has TWO answers (continuous RMS vs impact peak); reporting only
 the peak would have falsely flagged the servos as overloaded.
 
+## 2h. Closing the loop on the IMU: attitude, heading, and learning the trot rock (2026-09-30)
+Branch `exp/attitude-control`, all features default OFF (fallback = the open-loop gait, D-019).
+Question (Aryaman): can IMU feedback (IMU at base_link = model CoM) hold roll/pitch while walking,
+and make the gait more solid? Method: `diagnostics/ab_walk.sh` (fresh spawn per run), vx 0.15,
+duty 0.6; attitude + height from GROUND TRUTH `/odom_gt` (not the IMU the controller uses);
+torque = transmitted joint wrench (as in 2g). Actuation: corrective body rotation realised as a
+rigid rotation of the 12 foot targets about the CoM, every leg reach-checked with the exact IK
+and bisected back if infeasible (front swing apex sits ~2 mm from the fold floor).
+
+| Iteration (fresh spawns) | roll RMS | pitch-err RMS / mean | yaw /10-20 s | speed | verdict |
+|---|---|---|---|---|---|
+| open loop (baseline) | 50-57 mrad | 35-40 / -29..-32 | +0.26..+0.55 | 53-60% | ref |
+| + heading hold (PI on gyro z) | 57 | 40 / -32 | 0.00..-0.15 /10 s | 56-60% | keep |
+| + fast attitude PID (kp .6 ki 1.5 kd .04) | 60-62 (worse) | 42-44 / -8..-11 | +-0.3..0.5 (worse) | **93-99%** | reject (see note) |
+| + high D (kd .15) | 65 (worse) | 44 / ~0 | -1.29 | 64% | reject |
+| + integral only | 60-64 | 25 / -2 | small | 55-62% | ok |
+| + attitude on 0.5 s low-passed error | 56-58 | **24 / -0.5** | small | 58-59% | keep |
+| + phase-indexed ILC, lead 3 | **16-18** | **11-12** | | 60-61% | keep |
+| ILC lead 2 / lead 5 | 16-17 / 20.5 | 12 / 13 | | 61-68% | lead 2-3 plateau |
+| **FULL (abs heading + LPF attitude + ILC) x3, 20 s** | **14.2** | **9.8 / -0.3** | **0.01..0.12 /20 s** | **61%** | **-72% roll, -72% pitch** |
+
+FULL vs baseline (3 reps each, 20 s): roll max 110 -> 71 mrad; lateral drift +0.52 -> -0.12 m;
+heading drift 0.52 -> <=0.12 rad; torque worst RMS 1.31 -> 1.28 N.m (RL/RR ankle), mean RMS 0.92
+-> 0.94, samples >2.5 N.m 5.1% -> 6.0% (the one cost: slightly more near-cap impact samples).
+Baseline torque reproduces 2g (1.31 N.m) -> the instrument is stable across machines.
+
+Findings:
+1. **Plain feedback cannot cancel the trot rock.** It is periodic (gait-locked, ~2 Hz) and the
+   servo + 50 Hz pipeline lag (~2-3 ticks) turns any fast feedback into amplification; every
+   higher-bandwidth PID variant INCREASED roll. Splitting the problem worked: a slow loop on the
+   low-passed error owns the MEAN attitude, a phase-indexed learning controller owns the PERIODIC
+   part, applying each correction `lead` ticks early. Lead 2-3 is a plateau; 5 over-leads.
+2. **The open-loop walk is 29 mrad nose-UP of its own design trim** (the D-016 trim is partly
+   lost dynamically). The slow loop restores it to -0.3 mrad.
+3. **Heading from the quaternion beats integrating gyro z**: with a 4.5 deg trim and roll rock,
+   body-z rate is not world yaw rate; absolute heading hold took 20 s drift to <=0.12 rad.
+4. Open thread: the fast PID reproducibly raised realized speed to 93-99% while destabilising
+   heading. Hypothesis: in-phase roll correction lifts the swing-side hips -> more swing
+   clearance -> less of the swing-foot drag that caps speed (Q-013/D-019). Worth isolating (Q-019).
+
+Tests: `test_attitude.py` (signs of every correction, rigid rotation, reach-safety across a full
+cycle at aggressive correction, ILC convergence on a delayed plant, abs heading hold) - 41 pass.
+
 ## 3. Methodology notes (for the write-up)
 1. **Stage-gated bring-up with a fidelity metric at each gate** (RViz kinematics → mock control →
    IK round-trip 1e-9 → physics settle-error 0.2 mm) localises faults to one layer at a time.

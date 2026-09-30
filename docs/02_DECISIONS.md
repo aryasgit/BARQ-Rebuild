@@ -3,6 +3,19 @@
 ADR-style. Newest first. Each decision: context, the call, and why. Referenced from code + changelog.
 
 ---
+## D-023 — IMU closed-loop gait (experimental): slow attitude loop + phase-indexed ILC + abs heading hold
+**Date:** 2026-09-30 · **Status:** Accepted on branch `exp/attitude-control`, default OFF; merge pending team review
+`gait_planner_node` gains `attitude_ctrl`, `att_lpf`, `ilc_gain`, `ilc_lead`, `heading_hold`,
+`heading_mode` (launch args in sim.launch.py). Recommended set: `heading_hold:=true
+attitude_ctrl:=true att_lpf:=0.5 ilc_gain:=0.3 ilc_lead:=3`. Corrections are body rotations applied
+as rigid rotations of the foot targets about the CoM (IMU at base_link), reach-limited through
+the exact IK so no infeasible target is ever emitted; IMU stale >200 ms -> corrections decay to
+zero (open-loop fallback). **Why:** -72% roll RMS, -72% pitch error, heading drift -87% at equal
+torque (research log 2h). Plain high-bandwidth feedback was measured to amplify the trot rock and
+was rejected. **Hardware note:** identical topic (/imu/data) on the BNO085 path; gains will need
+re-validation against real servo lag (ILC lead is in 20 ms ticks).
+
+---
 ## D-022 — The Doomsday Roadmap: docs/roadmap/ is the forward execution plan
 **Date:** 2026-06-13 · **Status:** Accepted
 33 documents / ~6,900 lines under `docs/roadmap/`: P0 environment-rebuild -> P1 power/electronics

@@ -185,3 +185,37 @@ class PhaseILC:
         """Fade the table (used while standing still)."""
         self.ff = [factor * v for v in self.ff]
         self._last_k = None
+
+
+def yaw_of(qx, qy, qz, qw):
+    """Return the world yaw of a quaternion."""
+    return math.atan2(2.0 * (qw * qz + qx * qy), 1.0 - 2.0 * (qy * qy + qz * qz))
+
+
+class AbsHeadingHold:
+    """
+    Hold the ABSOLUTE world heading (from the IMU quaternion), not an integrated body rate.
+
+    The reference heading integrates the commanded yaw rate, so turning commands still turn;
+    straight commands hold the heading captured when walking started. Output = commanded
+    rate + kp * wrap(ref - yaw) + kd * (commanded rate - measured rate), clamped.
+    """
+
+    def __init__(self, kp=1.5, kd=0.2, out_limit=0.4):
+        """Store gains; no reference until the first step."""
+        self.kp, self.kd, self.out_limit = kp, kd, out_limit
+        self.ref = None
+
+    def step(self, wz_cmd, yaw, wz_meas, dt):
+        """Return the corrected yaw-rate command."""
+        if self.ref is None:
+            self.ref = yaw
+        err = math.atan2(math.sin(self.ref - yaw), math.cos(self.ref - yaw))
+        nxt = self.ref + wz_cmd * dt           # advance AFTER comparing: no one-tick lead
+        self.ref = math.atan2(math.sin(nxt), math.cos(nxt))
+        corr = self.kp * err + self.kd * (wz_cmd - wz_meas)
+        return wz_cmd + max(-self.out_limit, min(self.out_limit, corr))
+
+    def reset(self):
+        """Forget the reference (re-captured on the next step)."""
+        self.ref = None

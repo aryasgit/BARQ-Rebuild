@@ -15,6 +15,7 @@ import math
 
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import JointState
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
@@ -45,7 +46,14 @@ class WalkMetric(Node):
         self.recording = False
         self.samples = []
         self.create_subscription(Odometry, '/odom_gt', self._on_odom, 20)
+        self.create_subscription(JointState, '/joint_states', self._on_js, 50)
+        self.effort = {}
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
+
+    def _on_js(self, msg):
+        if self.recording and msg.effort:
+            for n, e in zip(msg.name, msg.effort):
+                self.effort.setdefault(n, []).append(e)
 
     def _on_odom(self, msg):
         self.odom = msg
@@ -103,6 +111,13 @@ class WalkMetric(Node):
               f'pitch_err_mean={sum(perr) / len(perr) * 1e3:+.1f}mrad '
               f'pitch_err_max={max(abs(x) for x in perr) * 1e3:.1f}mrad '
               f'heave_rms={_rms([z - zm for z in zs]) * 1e3:.1f}mm z_mean={zm:.4f}m')
+        if self.effort:   # transmitted joint torque (gazebo effort interface), cap 2.94 N.m
+            rms = {n: _rms(v[len(v) // 10:]) for n, v in self.effort.items()}
+            worst = max(rms, key=rms.get)
+            allv = [abs(x) for v in self.effort.values() for x in v[len(v) // 10:]]
+            print(f'TORQ worst_rms={rms[worst]:.2f}Nm({worst}) mean_rms='
+                  f'{sum(rms.values()) / len(rms):.2f}Nm p99={sorted(allv)[int(0.99 * len(allv))]:.2f}Nm '
+                  f'frac>2.5Nm={sum(x > 2.5 for x in allv) / len(allv) * 100:.1f}%')
 
 
 def main():
