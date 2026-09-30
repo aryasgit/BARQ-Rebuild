@@ -17,6 +17,12 @@ Both: **Gazebo for Stage 2E** (gz_ros2_control, drop-in for our stack; add to Do
 Commit per milestone on `stage-2`, push to origin after each, author Aryaman Gupta. SSH over 443.
 
 ---
+## Q-018 — Teensy 4.1 in or out? (raised 2026-09-30, UNDECIDED)
+Current architecture (D-020) assumes Jetson <-> Teensy (500 Hz superloop, 200 ms deadman) <-> 4 servo
+buses; code exists and passes 9/9 on the emulator. Alternative: Jetson drives Waveshare bus-servo
+adapters over USB directly (new hardware interface, deadman moves to software). Does not block sim
+work. Decide before P3 (firmware integration).
+
 ## Non-blocking notes (track, resolve opportunistically)
 ## Q-010 — IK knee-bend direction — RESOLVED 2026-06-10 -> D-009
 Visual check showed +1 folded the legs backward; default flipped to `knee_bend=-1` (forward fold).

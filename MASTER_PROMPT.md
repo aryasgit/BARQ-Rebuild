@@ -71,6 +71,7 @@ and run artifacts (`~/barq_ws/artifacts/` — bags, CSVs) sit OUTSIDE the repo b
 | `docs/04_OPEN_QUESTIONS.md` | Q-001…Q-016: pending ambiguities; resolved ones keep their entry with "RESOLVED → D-NNN" | before investigating any oddity — it may be a known, even SOLVED, question |
 | `docs/05_RESEARCH_LOG.md` | the publication record: metric series (walk benchmarks, tracking RMS, sweeps), every OVERRIDDEN decision with measured deltas, methodology lessons | writing up results; before re-running any experiment (the baseline numbers live here) |
 | `docs/06_PROTOCOL.md` | BARQ binary protocol v1 spec: framing (magic 0xBA51, CRC16-CCITT-FALSE), CMD/STATE/PING-PONG layouts, field scalings, fault bits, golden-vector policy | touching anything that speaks Jetson↔Teensy bytes |
+| `docs/BARQ_REFERENCE.md` | **the facts sheet ("holy grail")**: hardware, geometry, masses, conventions, limits, stance, rates, protocol, sim params, baselines, paths, post-reflash environment | any time you need a number or a convention fast |
 | `docs/HANDOFF.md` | the 1-page quick bootstrap: read order, what is PROVEN (don't re-verify), current frontier, working agreements | fast session resume when you don't need this full map |
 | `docs/research/2026-06-11-lidar-selection.md` | the lidar market analysis (A2M12 rejected, STL-27L recommended, full spec tables, Jetson serial prep findings) | lidar purchase or integration work |
 

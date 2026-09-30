@@ -3,6 +3,19 @@
 Dated log of concrete repo changes. Newest first.
 
 ---
+## 2026-09-30 — Session resume after Jetson reflash; BARQ_REFERENCE.md facts sheet
+Jetson was reflashed (~2026-09-21) to JetPack 6.2 / L4T R36.4.4, hostname `barq-desktop`; only
+`~/barq_ws` survived (no barq:dev image, no helper scripts, no git/SSH config, display 640x480).
+Re-indexed the project from MASTER_PROMPT + docs. Added `docs/BARQ_REFERENCE.md` (one-page facts
+sheet, every value citing its owning file) and linked it from MASTER_PROMPT §4.1 + docs/README.
+Host prep outside the repo: `~/barq_setup/jetson_bootstrap.sh` (docker/dialout groups, brltty
+removal, x11vnc boot service `barq-vnc` on :5900, virtual 1080p monitor via CustomEDID with
+fallback to the known-good ConnectedMonitor 1024x768), new SSH key `barq-jetson`, git author
+config, PlatformIO 6.2.0 in ~/.local/bin. Team inputs recorded: hardware/CAD unchanged since June
+(model in repo is exact); Teensy in/out undecided (Q-018); presentation = live over VNC; demo
+focus = stable + sustained walking and behaviour at servo peak load (payload lowest priority).
+
+---
 ## 2026-06-14 — Funder progress report (Report 2) generated
 docs/reports/BARQ_Report_2.pdf — LaTeX-style A4 progress report for the funder (title BARQ,
 subtitle Report 2, authors Aryaman Gupta + Krish Agarwal), built with reportlab (no TeX toolchain
